@@ -1,0 +1,258 @@
+/* Index button box */
+.header{
+border-bottom: 5px solid white;
+background-color: #616161;
+}
+
+h1{
+font-weight: bold !important;
+}
+
+.center-box
+{
+margin-top: 10px;
+margin-left: 25%;
+margin-right: 25%;
+}
+
+.column{
+float:left;
+width: 50%;
+}
+
+.index-button
+{
+font-size: 1.2em;
+font-weight: bold;
+margin-top: 30px;
+width: 20vw;
+height: 20vw;
+}
+
+.login-button{
+background-color: rgba(0,150,136,0.5) !important;
+background-size: 100%;
+box-shadow: 9px 9px rgba(0, 0, 0, 0.3);
+}
+
+.login-button:hover, .faq-button:hover{
+background-color: rgba(0,0,0,0.5) !important;
+
+}
+
+.login-button:active, .faq-button:active{
+box-shadow: 5px 5px rgba(0, 0, 0, 0.3);
+transform: translate(4px, 4px);
+}
+
+.faq-button{
+background-color: rgba(0,150,136,0.5) !important;
+background-size: 100%;
+box-shadow: 9px 9px rgba(0, 0, 0, 0.3);
+}
+
+.problem-button{
+background-size: 100%;
+}
+
+.error
+{
+color: red;
+}
+
+/* FAQ */
+
+.faq-h4{
+cursor: pointer;
+margin-bottom: 0px;
+}
+.faq-h4 + div {
+hidden: true;
+padding: 1px 0;
+position: relative;
+display:hidden;
+}
+
+.faq-h4 + div p {
+margin-top: 5px;
+margin-bottom: 5px;
+width:100%;
+}
+
+/* User pages */
+.menu {
+    border-radius: 2px;
+margin-top: 30px;
+position: absolute;
+left: 50%;
+max-width: 600px;
+    width: 35%;
+transform: translate(-50%, 0);
+min-width: 300px;
+background-color: white;
+}
+
+.menu-item {
+width: 90%;
+min-width: 200px;
+margin-top: 8px !important;
+margin-bottom: 8px !important;
+z-index: 2;
+}
+
+.fill
+{
+width: 100% !important;
+height: 100% !important;
+margin: 0px !important;
+}
+.blank
+{
+text-decoration: none;
+}
+.noPadding
+{
+padding: 0px !important;
+height: 50px;
+}
+
+/* Problem CSS */
+.number
+{
+text-align: right;
+}
+
+.problem-table
+{
+background-color: #FFFFFF;
+}
+.problem-table, .problem-table th, .problem-table td
+{
+background-color: #FFFFFF;
+border-width: 1px;
+border-spacing: 0px;
+border-style: solid;
+border-color: grey;
+padding: 10px;
+}
+
+.ongoing td
+{
+background-color: #FFB4B0 !important;
+}
+
+.resolved td
+{
+background-color: #BBEEBB !important;
+}
+
+
+/* LOGIN.PHP */
+.login {
+min-width: 450px;
+max-width: 40%;
+width: 50%;
+min-height: 250px;
+max-height: 450px;
+padding: 25px 40px 25px 40px;
+margin-top: 30px;
+border-radius: 10px;
+position: absolute;
+left: 50%;
+top: 120px;
+/* Center login box */
+transform: translate(-50%, 0px);
+}
+
+.login input[type="submit"]
+{
+min-width: 100px;
+max-width: 150px;
+width: 20%;
+background-color: white;
+border: solid;
+border-width: 2px;
+border-radius: 5px;
+border-color: white;
+}
+
+.login input[type="submit"]:hover
+{
+background: #009688;
+cursor: pointer;
+transition: 0.5s;
+color: black;
+border-color: black;
+}
+
+/*REGISTER.PHP*/
+.register {
+min-width: 450px;
+max-width: 40%;
+width: 50%;
+min-height: 250px;
+padding: 25px 40px 25px 40px;
+margin-top: 30px;
+border-radius: 10px;
+position: absolute;
+left: 50%;
+top: 120px;
+/* Center login box */
+transform: translate(-50%, 0px);
+}
+
+.register input[type="submit"]
+{
+min-width: 100px;
+max-width: 150px;
+width: 20%;
+background-color: white;
+border: solid;
+border-width: 2px;
+border-radius: 5px;
+border-color: white;
+}
+
+.register input[type="submit"]:hover
+{
+background: #009688;
+cursor: pointer;
+transition: 0.5s;
+color: black;
+border-color: black;
+}
+
+
+body{
+background: linear-gradient(312deg, #008477, #14cebf);
+background-size: 400% 400%;
+
+animation: grad 8s ease infinite;
+-webkit-animation: grad 8s ease infinite;
+
+
+}
+
+
+animation: grad 6s ease infinite;
+
+@-webkit-keyframes grad {
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+@keyframes grad {
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+@-moz-keyframes grad {
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+*
+{
+font-family: 'Verdana', sans-serif !important;
+}
