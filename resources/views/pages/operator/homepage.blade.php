@@ -5,17 +5,17 @@
 
         <div class="w3-padding w3-white" style='text-align:center'>
             <h3>Problem Related Tasks</h3><hr />
-            <a class="blank" href="http://cort.sci-project.lboro.ac.uk/team4/problems/view_all.php">
+            <a class="blank" href="view-problems">
                 <div class="menu-item w3-card w3-button w3-row">
                     View All Problems
                 </div>
             </a><br />
-            <a class="blank" href="http://cort.sci-project.lboro.ac.uk/team4/operator/new_call.php">
+            <a class="blank" href="log-call">
                 <div class="menu-item w3-card w3-button w3-row">
                     Log New Call
                 </div>
             </a><br />
-            <a class="blank" href="http://cort.sci-project.lboro.ac.uk/team4/operator/caller_details.php">
+            <a class="blank" href="caller-info">
                 <div class="menu-item w3-card w3-button w3-row">
                     Find Caller Details
                 </div>
