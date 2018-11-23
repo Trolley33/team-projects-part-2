@@ -43,21 +43,21 @@
                             <td> 0001 </td>
                             <td> Unresponsive Keyboard </td>
                             <td> Not able to type on keyboard properly. </td>
-                            <td><button class="w3-button fill w3-light-grey"><a class="blank" href="operator/problem_viewer.php">Add Details</a></button></td>
+                            <td><button class="w3-button fill w3-light-grey"><a class="blank" href="view-single-problem/1">Add Details</a></button></td>
                         </tr>
                         <tr id="2" class="w3-hover-light-grey solve">
                             <td> #23 </td>
                             <td> 0001, 0024 </td>
                             <td> Network Error </td>
                             <td> Cannot connect to company internet. </td>
-                            <td><button class="w3-button fill  w3-light-grey"><a class="blank" href="operator/problem_viewer.php">Add Details</a></button></td>
+                            <td><button class="w3-button fill  w3-light-grey"><a class="blank" href="view-single-problem/23">Add Details</a></button></td>
                         </tr>
                         <tr id="3" class="w3-hover-light-grey solve">
                             <td> #3 </td>
                             <td> 0007 </td>
                             <td> Monitor Failure </td>
                             <td> PC monitor won't power on. </td>
-                            <td><button class="w3-button fill  w3-light-grey"><a class="blank" href="operator/problem_viewer.php">Add Details</a></button></td>
+                            <td><button class="w3-button fill  w3-light-grey"><a class="blank" href="view-single-problem/3">Add Details</a></button></td>
                         </tr>
                     </tbody>
                 </table>

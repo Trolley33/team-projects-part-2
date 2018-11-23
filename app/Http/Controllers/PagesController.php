@@ -40,12 +40,21 @@ class PagesController extends Controller
         // do database query
         if ($_POST['username'] == "alice" && $_POST['password'] == "password")
         {
-            $data = array(
-                'title' => "Operator Homepage",
-                'desc' => "Please select a task."
-            );
-            return redirect('operator/homepage')->with($data);
+            return redirect('operator/');
         }
+
+        if ($_POST['username'] == "terry" && $_POST['password'] == "password")
+        {
+            return redirect('specialist/');
+
+        }
+        if ($_POST['username'] == "analyst" && $_POST['password'] == "password")
+        {
+            return redirect('analyst/');
+
+        }
+        return redirect('login');
+
     }
 
     public function register()
@@ -102,11 +111,36 @@ class PagesController extends Controller
     {
         $data = array(
             'title' => "Log New Call",
-            'desc' => ""
+            'desc' => "",
+            'id' => ''
         );
 
         return view('pages.operator.log_call')->with($data);
     }
+
+    // ==== Specialist pages. ====
+    public function specialist_homepage()
+    {
+        $data = array(
+            'title' => "Specialist Homepage",
+            'desc' => "Please select a task."
+        );
+        return view('pages.specialist.homepage')->with($data);
+    }
+
+
+    // ==== Analyst pages. ====
+    public function analyst_homepage()
+    {
+        $data = array(
+            'title' => "Analyst Homepage",
+            'desc' => "Please select a task."
+        );
+        return view('pages.analyst.homepage')->with($data);
+    }
+
+
+
     // ==== Problem pages. ====
 
     public function view_problems()

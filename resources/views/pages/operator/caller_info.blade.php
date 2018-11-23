@@ -21,7 +21,7 @@
 
       <br>
       <div class="w3-padding w3-white" style='text-align:center'>
-        <a class="blank" href="new_call">
+        <a class="blank" href="log-call">
             <input class="menu-item w3-card w3-btn w3-row" value = "Log New Call for Selected User">
         </a><br />
       </div>
