@@ -49,3 +49,8 @@ Route::get('/problems/view-problems', 'PagesController@view_problems');
 // Post routes. =================================
 Route::post('/verify', 'PagesController@verify');
 Route::post('/register', 'PagesController@registerPOST');
+
+
+
+// Resource routes. =============================
+Route::resource('users', 'UserController');
