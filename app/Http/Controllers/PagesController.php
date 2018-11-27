@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PagesController extends Controller
 {
@@ -38,7 +39,29 @@ class PagesController extends Controller
     public function verify()
     {
         // do database query
-        if ($_POST['username'] == "alice" && $_POST['password'] == "password")
+        $name = $_POST['username'];
+        $pass = $_POST['password'];
+
+        $user = DB::select('SELECT type FROM users
+                            WHERE username=? AND password=?', [$name, $pass]);
+        if (count($user) > 0)
+        {
+            $type = $user[0]->{'type'};
+            if ($type == 1)
+            {
+                return redirect('operator/');
+            }
+            if ($type == 2)
+            {
+                return redirect('specialist/');
+            }
+            if ($type == 3)
+            {
+                return redirect('analyst/');
+            }
+        }
+        /*
+        if (== "alice" && $_POST['password'] == "password")
         {
             return redirect('operator/');
         }
@@ -53,6 +76,7 @@ class PagesController extends Controller
             return redirect('analyst/');
 
         }
+        */
         return redirect('login');
 
     }
