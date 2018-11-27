@@ -11,4 +11,5 @@
             style="background-image: url({{asset('images/Team-FAQ.png')}});"></button></a>
     </div>
 </div>
+
 @endsection

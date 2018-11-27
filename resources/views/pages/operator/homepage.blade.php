@@ -5,7 +5,7 @@
 
         <div class="w3-padding w3-white" style='text-align:center'>
             <h3>Problem Related Tasks</h3><hr />
-            <a class="blank" href="view-problems">
+            <a class="blank" href="operator/view-problems">
                 <div class="menu-item w3-card w3-button w3-row">
                     View All Problems
                 </div>
