@@ -10,12 +10,12 @@
                     View All Problems
                 </div>
             </a><br />
-            <a class="blank" href="log-call">
+            <a class="blank" href="operator/log-call">
                 <div class="menu-item w3-card w3-button w3-row">
                     Log New Call
                 </div>
             </a><br />
-            <a class="blank" href="caller-info">
+            <a class="blank" href="operator/caller-info">
                 <div class="menu-item w3-card w3-button w3-row">
                     Find Caller Details
                 </div>

@@ -24,7 +24,6 @@ Route::get('/register', 'PagesController@register');
 
 // Operator pages.
 Route::get('/operator/', 'PagesController@operator_homepage');
-Route::get('/operator/homepage', 'PagesController@operator_homepage');
 Route::get('/operator/caller-info', 'PagesController@caller_info');
 Route::get('/operator/caller-info/{name}', ['uses' => 'PagesController@caller_info_from_name']);
 Route::get('/operator/view-problems', 'PagesController@view_problems');
@@ -34,13 +33,10 @@ Route::get('/operator/view-single-problem/{id}', ['uses' => 'PagesController@vie
 
 // Specialist pages.
 Route::get('/specialist/', 'PagesController@specialist_homepage');
-Route::get('/specialist/homepage', 'PagesController@specialist_homepage');
 Route::get('/specialist/view-problems', 'PagesController@view_problems');
 
 // Analyst pages.
 Route::get('/analyst/', 'PagesController@analyst_homepage');
-Route::get('/analyst/homepage', 'PagesController@analyst_homepage');
-
 
 // Problem pages.
 Route::get('/problems/view-problems', 'PagesController@view_problems');
