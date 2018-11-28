@@ -26,21 +26,26 @@ Route::get('/register', 'PagesController@register');
 Route::get('/operator/', 'PagesController@operator_homepage');
 Route::get('/operator/caller-info', 'PagesController@caller_info');
 Route::get('/operator/caller-info/{name}', ['uses' => 'PagesController@caller_info_from_name']);
-Route::get('/operator/view-problems', 'PagesController@view_problems');
-Route::get('/operator/log-call', 'PagesController@log_call');
-Route::get('/operator/view-single-problem/{id}', ['uses' => 'PagesController@view_problem']);
+//Route::get('/operator/view-problems', 'PagesController@view_problems');
+//Route::get('/operator/log-call', 'PagesController@log_call');
+//Route::get('/operator/view-single-problem/{id}', ['uses' => 'PagesController@view_problem']);
 
 
 // Specialist pages.
 Route::get('/specialist/', 'PagesController@specialist_homepage');
-Route::get('/specialist/view-problems', 'PagesController@view_problems');
+//Route::get('/specialist/view-problems', 'PagesController@view_problems');
 
 // Analyst pages.
 Route::get('/analyst/', 'PagesController@analyst_homepage');
 
 // Problem pages.
-Route::get('/problems/view-problems', 'PagesController@view_problems');
-
+Route::get   ('/problems/{id}/edit', 'ProblemController@edit')->name('pages.problems.edit');
+Route::put   ('/problems/{id}', 'ProblemController@update')->name('pages.problems.update');
+Route::get   ('/problems/{id}', 'ProblemController@show')->name('pages.problems.show');
+Route::get   ('/problems/create','ProblemController@create')->name('pages.problems.create');
+Route::post  ('/problems', 'ProblemController@store')->name('pages.problems.store');
+Route::get   ('/problems','ProblemController@index')->name('pages.problems.index');
+Route::delete('/problems/{id}', 'ProblemController@destroy')->name('pages.problems.destroy');
 
 // Post routes. =================================
 Route::post('/verify', 'PagesController@verify');
@@ -48,5 +53,12 @@ Route::post('/register', 'PagesController@registerPOST');
 
 
 
-// Resource routes. =============================
-Route::resource('users', 'UserController');
+// User routes. =============================
+Route::get   ('/users/{id}/edit', 'UserController@edit')->name('users.edit');
+Route::put   ('/users/{id}', 'UserController@update')->name('users.update');
+Route::get   ('/users/{id}', 'UserController@show')->name('users.show');
+Route::get   ('/users/create','UserController@create')->name('users.create');
+Route::post  ('/users', 'UserController@store')->name('users.store');
+Route::get   ('/users','UserController@index')->name('users.index');
+Route::delete('/users/{id}', 'UserController@destroy')->name('users.destroy');
+
