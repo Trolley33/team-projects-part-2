@@ -17,9 +17,9 @@
             <input class="w3-input w3-border w3-round" type="text" name="department" placeholder="Department"/><br />
             <label>Select Role</label> <br />
             <select class='role w3-input'required>
-                  <option>Helpesk Operator</option>
-                  <option>Helpesk Specialist</option>
-                  <option>Helpesk Analyst</option>
+                  <option>Helpdesk Operator</option>
+                  <option>Helpdesk Specialist</option>
+                  <option>Helpdesk Analyst</option>
             </select> <br /><br />
             <label>Username</label> <br />
             <input class="w3-input w3-border w3-round" type="text" name="username" placeholder="Username" required/><br />
