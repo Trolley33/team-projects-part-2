@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 <style>
-    .call_menu{
+    .call_menu
+    {
         border-radius: 2px;
         margin-top: 30px;
         position: absolute;
@@ -10,15 +11,6 @@
         min-width: 300px;
         background-color: white;
         margin-bottom: 100px;
-    }
-
-    .technician-select{
-        width: 60%;
-    }
-
-
-    textarea{
-        width: 100%;
     }
 
     table{
@@ -39,7 +31,7 @@
 @section('content')
 <div class="call_menu w3-center w3-padding w3-light-grey">
         <div>
-            <div class="w3-padding-large w3-white" style="text-align:center">
+            <div class="w3-padding-large w3-white">
                 <h2>Problem</h2>
                 <table>
                     <tbody>
@@ -66,9 +58,34 @@
                             <td> N/A </td>
                         </tr>
                         <tr id = "5" class="w3-hover-light-grey solve">
-                            <th>Status</th>
-                            <td id = "status" class="w3-red" > Unsolved </td>
+                            <th>Description</th>
+                            <td> {{$problem->description}} </td>
                         </tr>
+                        <tr id = "6" class="w3-hover-light-grey solve">
+                            <th>Notes</th>
+                            <td> {{$problem->notes}} </td>
+                        </tr>
+                        <tr id = "7" class="w3-hover-light-grey solve">
+                            <th>Status</th>
+                            @if (count($resolved) === 1)
+
+                                <td id = "status" class="w3-green" > Solved 
+                                </td>
+                            @else
+                                <td id = "status" class="w3-red" > Unsolved </td>
+                            @endif
+                        </tr>
+                        @if (count($resolved) === 1)
+
+                            <tr id = "8" class="w3-hover-light-grey solve">
+                                <th>Solution Notes</th>
+                                <td>
+                                @foreach ($resolved as $r)
+                                    {{$r->solution_notes}}
+                                @endforeach
+                                </td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
 
@@ -82,12 +99,22 @@
                             <th> Time </th>
                             <th> Reason </th>
                         </tr>
+
+                        @foreach ($callers as $caller)
+                        <tr>
+                            <td>{{$caller->username}}</td>
+                            <td>{{$caller->created_at}}</td>
+                            <td>{{$caller->notes}}</td>
+                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
 
                 <br />
-                <h2>Assigned Technician</h2>
-                {{$problem->assigned_to}}
+                <h2>Assigned Specialist</h2>
+                    @foreach ($specialist as $s)
+                        {{$s->username}}
+                    @endforeach
                 <br />
                 <br />
 
@@ -105,52 +132,12 @@
     </div>
 
     <script>
-    var solved = false;
-
-    $(document).ready(function () {
-        if(solved) $('#solve').hide();
-        $('#addCall').hide();
-        $('#submitCallButton').hide();
-        $('.problem-select').select2();
-        $('.technician-select').select2();
-    });
-
-    function solve()
-    {
-        $('#solve').hide();
-        var solved = true;
-        var d = new Date($.now());
-        $('#date').text();
-        $('#status').text("Solved: " + d.getFullYear() +"-"+pad(d.getMonth())+"-"+pad(d.getDate())+ " " + pad(d.getHours()) + ":" + pad(d.getMinutes()) + " by 'Username'");
-        $('#status').removeClass("w3-red");
-        $('#status').addClass("w3-green");
-    }
-
-    function showAddCall()
-    {
-        $('#addCall').show();
-        $('#newCallButton').hide();
-        $('#submitCallButton').show();
-        var d = new Date($.now());
-        $('#date').text(d.getFullYear() +"-"+pad(d.getMonth())+"-"+pad(d.getDate())+ " " + pad(d.getHours()) + ":" + pad(d.getMinutes()));
-    }
 
     function pad(v)
     {
         v=v.toString();
         if(v.length == 1) return "0" + ""+ v;
         else return v;
-    }
-
-    function submitCall()
-    {
-        $('#newCallButton').show();
-        $('#submitCallButton').hide();
-        $('#addCall').before("<tr id='_3' class='w3-hover-light-grey solve'><td>" + $('#callerName').val()+ "</td><td>" + $('#date').text()+ "</td><td>" + $('#callerReason').val()+ "</td></tr>");
-        $('#addCall').hide();
-        $('#callerReason').val("");
-        $('#callerName').val("");
-
     }
     </script>
 @endsection
