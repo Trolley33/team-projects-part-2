@@ -23,7 +23,7 @@ class ResolvedProblemController extends Controller
      */
     public function create()
     {
-        //
+        return "resolved";
     }
 
     /**

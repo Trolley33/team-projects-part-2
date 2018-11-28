@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+
 class UserController extends Controller
 {
     /**
@@ -27,7 +28,12 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $data = array(
+            'title' => "Create New System Account",
+            'desc' => "To create a caller account, please log in.",
+            'username' => ""
+        );
+        return view('pages.register')->with($data);
     }
 
     /**

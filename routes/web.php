@@ -39,10 +39,10 @@ Route::get('/specialist/', 'PagesController@specialist_homepage');
 Route::get('/analyst/', 'PagesController@analyst_homepage');
 
 // Problem pages.
+Route::get   ('/problems/create','ProblemController@create')->name('pages.problems.create');
 Route::get   ('/problems/{id}/edit', 'ProblemController@edit')->name('pages.problems.edit');
 Route::put   ('/problems/{id}', 'ProblemController@update')->name('pages.problems.update');
 Route::get   ('/problems/{id}', 'ProblemController@show')->name('pages.problems.show');
-Route::get   ('/problems/create','ProblemController@create')->name('pages.problems.create');
 Route::post  ('/problems', 'ProblemController@store')->name('pages.problems.store');
 Route::get   ('/problems','ProblemController@index')->name('pages.problems.index');
 Route::delete('/problems/{id}', 'ProblemController@destroy')->name('pages.problems.destroy');
@@ -54,10 +54,10 @@ Route::post('/register', 'PagesController@registerPOST');
 
 
 // User routes. =============================
+Route::get   ('/users/create','UserController@create')->name('users.create');
 Route::get   ('/users/{id}/edit', 'UserController@edit')->name('users.edit');
 Route::put   ('/users/{id}', 'UserController@update')->name('users.update');
 Route::get   ('/users/{id}', 'UserController@show')->name('users.show');
-Route::get   ('/users/create','UserController@create')->name('users.create');
 Route::post  ('/users', 'UserController@store')->name('users.store');
 Route::get   ('/users','UserController@index')->name('users.index');
 Route::delete('/users/{id}', 'UserController@destroy')->name('users.destroy');

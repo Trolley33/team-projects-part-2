@@ -7,31 +7,34 @@
             <span class="error"><?php if (isset($error)) echo $error; ?></span>
             <span class="success"><?php if (isset($success)) echo $success; ?></span>
             <br />
-            <label>Name</label> <br />
-            <input class="w3-input w3-border w3-round" type="text" name="name" placeholder="Name" value="{{$username}}" required/><br />
-            <label>ID Number</label> <br />
-            <input class="w3-input w3-border w3-round" type="text" name="IDNumber" placeholder="ID Number" required/><br />
+            <label>First Name</label> <br />
+            <input class="w3-input w3-border w3-round" type="text" name="forename" placeholder="First Name" required/><br />
+            <label>Last Name</label> <br />
+            <input class="w3-input w3-border w3-round" type="text" name="surname" placeholder="Last Name" required/><br />
             <label>Job Title</label> <br />
             <input class="w3-input w3-border w3-round" type="text" name="job-title" placeholder="Job Title"/><br />
             <label>Department</label> <br />
             <input class="w3-input w3-border w3-round" type="text" name="department" placeholder="Department"/><br />
-            <label>Email Address</label> <br />
-            <input class="w3-input w3-border w3-round" type="text" name="email-address" placeholder="Email Address" required/><br />
             <label>Select Role</label> <br />
-            <select class="problem-select" required>
-                  <option>Operator</option>
-                  <option>Technician</option>
-                  <option>Analyst</option>
-            </select> <br />
+            <select class='role w3-input'required>
+                  <option>Helpesk Operator</option>
+                  <option>Helpesk Specialist</option>
+                  <option>Helpesk Analyst</option>
+            </select> <br /><br />
             <label>Username</label> <br />
             <input class="w3-input w3-border w3-round" type="text" name="username" placeholder="Username" required/><br />
-            <label>Select Password</label> <br />
+            <label>Choose Password</label> <br />
             <input class="w3-input w3-border w3-round" type="password" name="password" placeholder="Password" required/><br />
             <label>Confirm Password</label> <br />
             <input class="w3-input w3-border w3-round" type="password" name="confirm-password" placeholder="Password" required/><br />
-            <input class="w3-right w3-button w3-teal" type="submit" name="submit" value="Log in"/><br /><br />
+            <input class="w3-right w3-button w3-teal" type="submit" name="submit" value="Register"/><br /><br />
         </form>
-
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('.role').select2();
+    });
+</script>
 
 @endsection
