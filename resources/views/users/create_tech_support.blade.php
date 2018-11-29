@@ -11,6 +11,7 @@
                 <br />
                 {{Form::number('empID', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Employee ID'])}}
                 <br />
+
                 {{Form::label('firstName', 'First Name')}}
                 <br />
                 {{Form::text('firstName', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'First Name'])}}
@@ -21,16 +22,21 @@
                 {{Form::text('lastName', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Last Name'])}}
                 <br />
 
-                {{Form::label('role', 'Job Role')}}
+                {{Form::label('job-select', 'Job Role')}}
 
                 <br />
-                <select id='role' class="w3-input" required>
+                <select id='job-select' name='job-select' class="w3-input" required>
                     @foreach($jobs as $job)
                         <option value='{{$job->id}}'>
                             {{$job->title}}
                         </option>
                     @endforeach
                 </select>
+
+                {{Form::label('phone', 'Phone Number')}}
+                <br />
+                {{Form::number('phone', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Phone Number'])}}
+                <br />
 
                 {{Form::label('username', 'Username')}}
                 <br />
@@ -83,7 +89,7 @@
 
 <script>
     $(document).ready(function () {
-        $('#role').select2();
+        $('#job-select').select2();
     });
 </script>
 

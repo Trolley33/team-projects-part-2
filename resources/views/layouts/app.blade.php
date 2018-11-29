@@ -17,11 +17,18 @@
 
 </head>
 <body>
-
-    <div class="header w3-container w3-dark-grey w3-center">
-        <h1>{{$title}}</h1>
-        <h4>{{$desc}}</h4>
+    <div class="header w3-container w3-dark-grey">
+        <div class="w3-center">
+            <h1>{{$title}}</h1>
+            <h4>{{$desc}}</h4>
+            @if(!isset($noback))
+                <button class="w3-button w3-grey" style="margin-bottom: 10px;" onclick="window.history.back();">Back</button>
+            @endif
+        </div>
     </div>
+
+    <span id="cutoff"></span>
+    @include('messages')
 
     @yield('content')
 </body>

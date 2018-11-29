@@ -11,7 +11,8 @@ class PagesController extends Controller
     {
         $data = array(
             'title' => "Make-It-All Helpdesk",
-            'desc' => "For submitting and receiving tehnical queries."
+            'desc' => "For submitting and receiving tehnical queries.",
+            'noback'=>'true'
         );
         return view('pages.index')->with($data);
     }
@@ -42,22 +43,24 @@ class PagesController extends Controller
         $name = $_POST['username'];
         $pass = $_POST['password'];
 
-        $user = DB::select('SELECT type FROM users
-                            WHERE username=? AND password=?', [$name, $pass]);
+        $user = DB::select('SELECT jobs.access_level FROM users
+                            JOIN jobs
+                            ON jobs.id = users.job_id
+                            WHERE users.username=? AND users.password=?', [$name, $pass]);
         if (count($user) > 0)
         {
-            $type = $user[0]->{'type'};
-            if ($type == 1)
+            $level = $user[0]->{'access_level'};
+            if ($level == 1)
             {
                 // do cookie authentication
                 return redirect('operator/');
             }
-            if ($type == 2)
+            if ($level == 2)
             {
                 // do cookie authentication
                 return redirect('specialist/');
             }
-            if ($type == 3)
+            if ($level == 3)
             {
                 // do cookie authentication
                 return redirect('analyst/');

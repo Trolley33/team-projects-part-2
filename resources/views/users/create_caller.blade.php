@@ -25,21 +25,26 @@
                 {{Form::label('department-select', 'Department')}}
                 <br />
 
-                <select id='department-select' class="w3-input" required>
+                <select id='department-select' name='department-select' class="w3-input" required>
                 </select>
                 <br /><br />
 
                 {{Form::label('job-select', 'Job Title')}}
                 <br />
 
-                <select id='job-select' class="w3-input" required>
+                <select id='job-select' name='job-select' class="w3-input" required>
                 </select>
 
                 <br /><br />
 
+                {{Form::label('phone', 'Phone Number')}}
+                <br />
+                {{Form::number('phone', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Phone Number'])}}
+                <br />
+
                 {{Form::hidden('isCaller', 'true')}}
 
-                {{Form::submit('Submit', ['required', 'class'=>'w3-right w3-button w3-teal'])}}
+                {{Form::submit('Submit', ['class'=>'w3-right w3-button w3-teal'])}}
             </div>
 
         {!! Form::close() !!}

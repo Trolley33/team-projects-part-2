@@ -18,7 +18,8 @@ class ProblemController extends Controller
         $data = array(
             'title' => "Problem Viewer",
             'desc' => "Displays all problems.",
-            'info' => Problem::all());
+            'info' => Problem::all()
+        );
 
         return view('pages.problems.index')->with($data);
     }
@@ -30,7 +31,18 @@ class ProblemController extends Controller
      */
     public function create()
     {
-        return "problem";
+        $header_types = DB::table('problem_types')->select('problem_types.*')->where('problem_types.parent', '=', '-1')->get();
+
+        $types = DB::table('problem_types')->select('problem_types.*')->where('problem_types.parent', '!=', '-1')->get();
+
+       $data = array(
+            'title' => "Problem Creator",
+            'desc' => "Create a New Problem",
+            'header_types' => $header_types,
+            'types' => $types
+        );
+
+        return view('pages.problems.create')->with($data);
     }
 
     /**

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+
+
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
 	<table id='user-table' class="display cell-border stripe hover">
@@ -11,19 +13,21 @@
 		<tbody>
 			@foreach ($info as $user)
 			<tr>
-				<td>{{$user->employee_id}}</td><td>{{$user->username}}</td><td>{{$user->forename}} {{$user->surname}}</td>
+				<td>{{sprintf('%04d',$user->employee_id)}}</td><td>{{$user->username}}</td><td>{{$user->forename}} {{$user->surname}}</td>
 				<td>
-					@if ($user->type == 1)
+					@if ($user->job_id == 1)
 						Operator
-					@elseif ($user->type == 2)
+					@elseif ($user->job_id == 2)
 						Specialist
-					@elseif ($user->type == 3)
+					@elseif ($user->job_id == 3)
 						Analyst
 					@else
 						Caller
 					@endif
 				</td>
-				<td><button class='editbutton w3-button' value='{{$user->id}}' style="margin: 0 auto;">Edit</button></td>
+				<td class="editbutton" value='{{$user->id}}' style="text-align: center;">
+					View/Edit
+				</td>
 			</tr>
 			@endforeach
 
@@ -31,12 +35,12 @@
 	</table>
 
 	<div style="text-align: center;">
-        <a class="blank" href="users/create/tech-support">
+        <a class="blank" href="/users/create/tech-support">
             <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
                 Create New Technical Support Account
             </div>
         </a><br />
-        <a class="blank" href="users/create/caller">
+        <a class="blank" href="/users/create/caller">
             <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
                 Create New Caller Account
             </div>
@@ -44,13 +48,27 @@
 	</div>
 </div>
 
+<style>
+.editbutton:hover
+{
+	background-color: #BBBBBB !important;
+	cursor: pointer;
+}
+</style>
+
 <script>
-$(document).ready( function () {
-    $('#user-table').DataTable();
-    $('.editbutton').click(function() {
-    	window.location.href = '/users/' + $(this).attr('value') + "/edit";
-    })
-} );
+$(document).ready( function () 
+{
+    var table = $('#user-table').DataTable();
+    $('.editbutton').click(function() 
+    {
+    	window.location.href = '/users/' + $(this).attr('value');
+    });
+
+    // If we provide some sort of search term through the redirect, search it here.
+    var search = "<?php if (session('search')) echo session('search'); ?>";
+    table.search(search).draw();
+});
 </script>
 
 @endsection

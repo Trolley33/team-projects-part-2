@@ -85,6 +85,7 @@ width:100%;
 margin-top: 30px;
 position: absolute;
 left: 50%;
+top: 250px;
 max-width: 600px;
     width: 35%;
 transform: translate(-50%, 0);
@@ -160,7 +161,7 @@ margin-top: 30px;
 border-radius: 10px;
 position: absolute;
 left: 50%;
-top: 120px;
+top: 200px;
 /* Center login box */
 transform: translate(-50%, 0px);
 }

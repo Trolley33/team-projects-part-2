@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="w3-center menu">
+<div class="">
 
-        <div class="w3-padding w3-white" style='text-align:center'>
+        <div class="w3-container w3-white login w3-mobile" style='text-align:center'>
             <h3>Problem Related Tasks</h3><hr />
             <a class="blank" href="problems/">
                 <div class="menu-item w3-card w3-button w3-row">
