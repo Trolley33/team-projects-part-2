@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\User;
 
 class UserController extends Controller
@@ -21,19 +22,42 @@ class UserController extends Controller
         return view('users.index')->with($data);
     }
 
+
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new caller resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create_caller()
     {
+        $departments = DB::table('departments')->select('departments.*')->where('departments.id', '!=', '1')->get();
+
+        $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '=', '0')->get();
+
         $data = array(
-            'title' => "Create New System Account",
-            'desc' => "To create a caller account, please log in.",
-            'username' => ""
+            'title' => "Create New Caller Account",
+            'desc' => "For creating employee accounts.",
+            'departments' => $departments,
+            'jobs' => $jobs
         );
-        return view('pages.register')->with($data);
+        return view('users.create_caller')->with($data);
+    }
+
+    /**
+     * Show the form for creating a new tech resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create_tech_support()
+    {
+        $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '!=', '0')->get();
+
+        $data = array(
+            'title' => "Create New Tech Support Account",
+            'desc' => "For creating system related accounts.",
+            'jobs' => $jobs
+        );
+        return view('users.create_tech_support')->with($data);
     }
 
     /**

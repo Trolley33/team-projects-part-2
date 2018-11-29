@@ -49,57 +49,22 @@ class PagesController extends Controller
             $type = $user[0]->{'type'};
             if ($type == 1)
             {
+                // do cookie authentication
                 return redirect('operator/');
             }
             if ($type == 2)
             {
+                // do cookie authentication
                 return redirect('specialist/');
             }
             if ($type == 3)
             {
+                // do cookie authentication
                 return redirect('analyst/');
             }
         }
-        /*
-        if (== "alice" && $_POST['password'] == "password")
-        {
-            return redirect('operator/');
-        }
-
-        if ($_POST['username'] == "terry" && $_POST['password'] == "password")
-        {
-            return redirect('specialist/');
-
-        }
-        if ($_POST['username'] == "analyst" && $_POST['password'] == "password")
-        {
-            return redirect('analyst/');
-
-        }
-        */
         return redirect('login');
 
-    }
-
-    public function register()
-    {
-        $data = array(
-           'title' => "Register Page",
-           'desc' => "Please enter your details below.",
-           'username' => ""
-       );
-
-       return view('pages.register')->with($data);
-    }
-
-    public function registerPOST ()
-    {
-       $data = array(
-            'title' => "Register Page",
-            'desc' => "Please enter your details below.",
-            'username' => $_POST['username']
-        );
-        return view('pages.register')->with($data);
     }
 
     // ==== Operator pages. ====

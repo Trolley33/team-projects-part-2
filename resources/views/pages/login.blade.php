@@ -12,7 +12,6 @@
             <label>Password</label> <br />
             <input class="w3-input w3-border w3-round" type="password" name="password" placeholder="Password"/><br />
             <input class="w3-right w3-button w3-teal" type="submit" name="submit" value="Log in" formaction="verify"/>
-            <input class="w3-right w3-button w3-teal" type="submit" name="submit" value="Register"  formaction="register"/>
 
         </form>
 

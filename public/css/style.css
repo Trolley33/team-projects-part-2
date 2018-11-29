@@ -125,6 +125,7 @@ text-align: right;
 .problem-table
 {
 background-color: #FFFFFF;
+width: fill;
 }
 .problem-table, .problem-table th, .problem-table td
 {

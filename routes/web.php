@@ -20,7 +20,6 @@ Route::get('/verify', function()
 {
     return redirect('login');
 });
-Route::get('/register', 'PagesController@register');
 
 // Operator pages.
 Route::get('/operator/', 'PagesController@operator_homepage');
@@ -49,12 +48,14 @@ Route::delete('/problems/{id}', 'ProblemController@destroy')->name('pages.proble
 
 // Post routes. =================================
 Route::post('/verify', 'PagesController@verify');
-Route::post('/register', 'PagesController@registerPOST');
 
 
 
 // User routes. =============================
-Route::get   ('/users/create','UserController@create')->name('users.create');
+Route::get   ('/users/create/caller','UserController@create_caller')->name('users.create_caller');
+
+Route::get   ('/users/create/tech-support','UserController@create_tech_support')->name('users.create_tech_support');
+
 Route::get   ('/users/{id}/edit', 'UserController@edit')->name('users.edit');
 Route::put   ('/users/{id}', 'UserController@update')->name('users.update');
 Route::get   ('/users/{id}', 'UserController@show')->name('users.show');
