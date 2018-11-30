@@ -25,7 +25,7 @@
 						Caller
 					@endif
 				</td>
-				<td class="editbutton" value='{{$user->id}}' style="text-align: center;">
+				<td class="editbutton" onclick="window.location.replace('/users/{{$user->id}}');" style="text-align: center;">
 					View/Edit
 				</td>
 			</tr>
@@ -60,10 +60,6 @@
 $(document).ready( function () 
 {
     var table = $('#user-table').DataTable();
-    $('.editbutton').click(function() 
-    {
-    	window.location.href = '/users/' + $(this).attr('value');
-    });
 
     // If we provide some sort of search term through the redirect, search it here.
     var search = "<?php if (session('search')) echo session('search'); ?>";

@@ -122,8 +122,8 @@ class UserController extends Controller
         {
             $this->validate($request, [
                 'username' => 'required',
-                'password' => 'required',
-                'password2' => 'required'
+                'pass' => 'required',
+                'pass2' => 'required'
             ]);
 
 
@@ -134,7 +134,7 @@ class UserController extends Controller
                 $user = new User;
                 $user->employee_id = $request->input('empID');
                 $user->username = $request->input('username');
-                $user->password = $request->input('password');
+                $user->password = $request->input('pass');
                 $user->forename = $request->input('firstName');
                 $user->surname = $request->input('lastName');
                 $user->job_id = $request->input('job-select');
@@ -191,7 +191,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $job = Job::find($user->job_id);
-        
+
         if ($job->access_level == 0)
         {
 
@@ -282,8 +282,8 @@ class UserController extends Controller
         {
             $this->validate($request, [
                 'username' => 'required',
-                'password' => 'required',
-                'password2' => 'required'
+                'pass' => 'required',
+                'pass2' => 'required'
             ]);
 
 
@@ -295,7 +295,7 @@ class UserController extends Controller
                     $user = User::find($id);
                     $user->employee_id = $request->input('empID');
                     $user->username = $request->input('username');
-                    $user->password = $request->input('password');
+                    $user->password = $request->input('pass');
                     $user->forename = $request->input('firstName');
                     $user->surname = $request->input('lastName');
                     $user->job_id = $request->input('job-select');

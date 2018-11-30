@@ -49,14 +49,14 @@
                 {{Form::text('username', $user->username, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Username'])}}
                 <br />
 
-                {{Form::label('password', 'Password')}}
+                {{Form::label('pass', 'Password')}}
                 <br />
-                {{Form::password('password', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Password'])}}
+                {{Form::password('pass', ['required', 'id'=>'password', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Password'])}}
                 <br />
 
-                {{Form::label('password2', 'Confirm Password')}}
+                {{Form::label('pass2', 'Confirm Password')}}
                 <br />
-                {{Form::password('password2', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Confirm Password'])}}
+                {{Form::password('pass2', ['required', 'id'=>'password2', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Confirm Password'])}}
                 <br />
                 {{Form::label('visible', 'Show Password')}}
                 {{Form::checkbox('visible', null, null, ['class'=>'w3-checkbox', 'id'=>'pass-visible'])}}
@@ -75,7 +75,7 @@
     $(document).ready(function () {
         $('#job-select').select2();
 
-        var pass = <?php echo $user->password ?>;
+        var pass = '<?php echo $user->password ?>';
         $('#password').val(pass);
         $('#password2').val(pass);
         $('#pass-visible').change(function()

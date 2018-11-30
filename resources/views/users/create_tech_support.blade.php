@@ -43,47 +43,19 @@
                 {{Form::text('username', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Username'])}}
                 <br />
 
-                {{Form::label('password', 'Password')}}
+                {{Form::label('pass', 'Password')}}
                 <br />
-                {{Form::password('password', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Password'])}}
+                {{Form::password('pass', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Password'])}}
                 <br />
 
-                {{Form::label('password2', 'Password')}}
+                {{Form::label('pass2', 'Password')}}
                 <br />
-                {{Form::password('password2', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Password'])}}
+                {{Form::password('pass2', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Password'])}}
                 <br />
 
                 {{Form::hidden('isCaller', 'false')}}
 
-                {{Form::submit('Submit', ['required', 'class'=>'w3-right w3-button w3-teal'])}}
-
-                <!--
-                <label>First Name</label> <br />
-                <input class="w3-input w3-border w3-round" type="text" name="forename" placeholder="First Name" required/><br />
-                <label>Last Name</label> <br />
-                <input class="w3-input w3-border w3-round" type="text" name="surname" placeholder="Last Name" required/><br />
-
-                <label>Job Title</label> <br />
-                <input class="w3-input w3-border w3-round" type="text" name="job-title" placeholder="Job Title"/><br />
-
-                <label>Department</label> <br />
-                <input class="w3-input w3-border w3-round" type="text" name="department" placeholder="Department"/><br />
-
-                <label>Select Role</label> <br />
-                <select class='role w3-input'required>
-                      <option>Helpesk Operator</option>
-                      <option>Helpesk Specialist</option>
-                      <option>Helpesk Analyst</option>
-                </select> <br /><br />
-                <label>Username</label> <br />
-                <input class="w3-input w3-border w3-round" type="text" name="username" placeholder="Username" required/><br />
-                <label>Choose Password</label> <br />
-                <input class="w3-input w3-border w3-round" type="password" name="password" placeholder="Password" required/><br />
-                <label>Confirm Password</label> <br />
-                <input class="w3-input w3-border w3-round" type="password" name="confirm-password" placeholder="Password" required/><br />
-                <input class="w3-right w3-button w3-teal" type="submit" name="submit" value="Register"/><br /><br />
-                -->
-            </div>
+                {{Form::submit('Submit', ['required', 'class'=>'w3-right w3-button w3-teal'])}
 
         {!! Form::close() !!}
 
