@@ -7,13 +7,13 @@
 	<table id='user-table' class="display cell-border stripe hover">
 		<thead>
 			<tr>
-				<th>Employee ID</th><th>Username</th><th>Full Name</th><th>Account Type</th><th>---</th>
+				<th>Employee ID</th><th>Full Name</th><th>Department</th><th>Phone Number</th><th>Account Type</th><th>---</th>
 			</tr>
 		</thead>
 		<tbody>
 			@foreach ($info as $user)
 			<tr>
-				<td>{{sprintf('%04d',$user->employee_id)}}</td><td>{{$user->username}}</td><td>{{$user->forename}} {{$user->surname}}</td>
+				<td>{{sprintf('%04d',$user->employee_id)}}</td><td>{{$user->forename}} {{$user->surname}}</td><td>{{$user->name}}</td><td>{{$user->phone_number}}</td>
 				<td>
 					@if ($user->job_id == 1)
 						Operator

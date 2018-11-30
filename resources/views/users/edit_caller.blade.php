@@ -2,24 +2,24 @@
 
 @section('content')
 <br />
-        {!! Form::open(['action' => 'UserController@store', 'method' => 'POST']) !!}
+        {!! Form::open(['action' => ['UserController@update', $user->id], 'method' => 'POST']) !!}
             <div class="w3-container w3-white login w3-mobile">
                 <span class="error"><?php if (isset($error)) echo $error; ?></span>
                 <span class="success"><?php if (isset($success)) echo $success; ?></span>
                 <br />
                 {{Form::label('empID', 'Employee ID')}}
                 <br />
-                {{Form::number('empID', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Employee ID'])}}
+                {{Form::number('empID', $user->employee_id, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Employee ID'])}}
                 <br />
 
                 {{Form::label('firstName', 'First Name')}}
                 <br />
-                {{Form::text('firstName', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'First Name'])}}
+                {{Form::text('firstName', $user->forename, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'First Name'])}}
                 <br />
 
                 {{Form::label('lastName', 'Last Name')}}
                 <br />
-                {{Form::text('lastName', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Last Name'])}}
+                {{Form::text('lastName', $user->surname, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Last Name'])}}
                 <br />
 
                 {{Form::label('department-select', 'Department')}}
@@ -39,10 +39,11 @@
 
                 {{Form::label('phone', 'Phone Number')}}
                 <br />
-                {{Form::number('phone', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Phone Number'])}}
+                {{Form::number('phone', $user->phone_number, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Phone Number'])}}
                 <br />
 
                 {{Form::hidden('isCaller', 'true')}}
+                {{Form::hidden('_method', 'PUT')}}
 
                 {{Form::submit('Submit', ['class'=>'w3-right w3-button w3-teal'])}}
             </div>
@@ -57,9 +58,24 @@
         var departments = <?php echo json_encode($departments) ;?>;
         var jobs = <?php echo json_encode($jobs); ?>;
 
+        var currentJob = 
+        <?php 
+        foreach($jobs as $job)
+        {
+            if ($job->id == $user->job_id)
+            {
+                echo json_encode($job);
+                break;
+            }
+        }
+        ?>;
+
+        var currentDepartment = currentJob.department_id;
+
         departments.forEach(function (department)
         {
-            var o = new Option(department.name, department.id);
+            console.log(currentDepartment == department.id);
+            var o = new Option(department.name, department.id, false, currentDepartment == department.id);
             $("#department-select").append(o);
         });
 
@@ -67,7 +83,7 @@
         {
             if (job.department_id == $('#department-select :selected').val())
             {
-                var o = new Option(job.title, job.id);
+                var o = new Option(job.title, job.id, false, job.id == currentJob.id);
                 $("#job-select").append(o);
             }
         });

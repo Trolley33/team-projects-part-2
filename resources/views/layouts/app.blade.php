@@ -22,7 +22,7 @@
             <h1>{{$title}}</h1>
             <h4>{{$desc}}</h4>
             @if(!isset($noback))
-                <button class="w3-button w3-grey" style="margin-bottom: 10px;" onclick="window.history.back();">Back</button>
+                <button id="back-btn" class="w3-button w3-grey" style="margin-bottom: 10px;" onclick="window.history.back();">Back</button>
             @endif
         </div>
     </div>
