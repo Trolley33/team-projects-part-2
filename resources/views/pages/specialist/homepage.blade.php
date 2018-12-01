@@ -33,9 +33,19 @@
 </div>
 
 <script>
+    $(document).ready(function() 
+    {
+        $('#back-btn').html("Logout");
+        $('#back-btn').click(function()
+        {
+            window.location.replace('/logout');
+        })
+    });
+    
     $('tr.solve').click(function() {
         location.href = "";
     })
+
 </script>
 
 @endsection

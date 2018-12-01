@@ -4,6 +4,8 @@
     <div class="">
         <form class="w3-container w3-white login w3-mobile" method="post">
             @csrf
+            <input type='hidden' name='tok' value = '<?php echo base64_encode(openssl_random_pseudo_bytes(16)); ?>' />
+
             <span class="error"><?php if (isset($error)) echo $error; ?></span>
             <span class="success"><?php if (isset($success)) echo $success; ?></span>
             <br />
@@ -16,4 +18,15 @@
         </form>
 
     </div>
+
+<script>
+$(document).ready(function() 
+{
+    $('#back-btn').html("Homepage");
+    $('#back-btn').click(function()
+    {
+        window.location.replace('/');
+    })
+});
+</script>
 @endsection

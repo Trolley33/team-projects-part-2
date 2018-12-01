@@ -5,11 +5,9 @@
 <style>
 .call_menu{
 	border-radius: 2px;
-	margin-top: 30px;
-	position: absolute;
-	left: 20%;
-	width: 60%;
-	min-width: 300px;
+	margin: 30px auto;
+	width: 80%;
+	min-width: 600px;
 	background-color: white;
 	margin-bottom: 100px;
 }
@@ -33,116 +31,110 @@ th{
 </style>
 
 <div class="call_menu w3-center w3-padding w3-light-grey">
-		<div>
-			<div class="w3-padding-large w3-white" style="text-align:center">
-				<h2>Problem</h2>
-				<table>
-					<tbody>
-						<tr id="2" class="w3-hover-light-grey solve">
-							<th>Problem Type</th>
-							<td>
-							<select id='problem-select' class="problem-select" multiple="multiple" required>
-								
-							</select>
-						</td>
-						</tr>
-						<tr id = "3" class="w3-hover-light-grey solve">
-							<th>Hardware Serial#</th>
-							<td>1234</td>
-						</tr>
-						<tr id = "4" class="w3-hover-light-grey solve">
-							<th>Operating System</th>
-							<td>N/A</td>
-						</tr>
-						<tr id = "5" class="w3-hover-light-grey solve">
-							<th>Software Affected</th>
-							<td>Microsoft Word</td>
-						</tr>
-						<tr id = "5" class="w3-hover-light-grey solve">
-							<th>Status</th>
-							<td id = "status" class="w3-red" >Unsolved</td>
-						</tr>
-					</tbody>
-				</table>
-
-				<div id = "solve" class="w3-padding-large w3-white" style="text-align:center">
-					<input onclick = "solve()" class="w3-card w3-btn w3-row w3-light-grey" value="Solve">
-				</div>
-
-				<br />
-
-				<h2>Calls</h2>
-				<table class = "w3-center">
-					<tbody>
-						<tr w3-light-grey>
-							<th> Caller Name </th>
-							<th> Time </th>
-							<th> Reason </th>
-						</tr>
-
-                        <tr id="_1" class="w3-hover-light-grey solve">
-							<td> Emma </td>
-							<td> 2018-11-12 09:30</td>
-							<td> Can't print things from word. </td>
-						</tr>
-
-
-    					<!--
-                        Not Needed On Technician Page
-                        <tr id = "addCall" class = "w3-hover-light-grey solve">
-    						<td><input id = 'callerName' type = "text"></td>
-    						<td><p id = "date"></p></td>
-    						<td><textarea id = 'callerReason' rows = 3></textarea></td>
-    					<tr>
-                        -->
-
-
+	<div>
+		<div class="w3-padding-large w3-white" style="text-align:center">
+			<h2>Problem</h2>
+			<table>
+				<tbody>
+					<tr id="2" class="w3-hover-light-grey solve">
+						<th>Problem Type</th>
+						<td>
+						<select id='problem-select' class="problem-select" multiple="multiple" required>
+							
+						</select>
+					</td>
+					</tr>
+					<tr id = "3" class="w3-hover-light-grey solve">
+						<th>Hardware Serial#</th>
+						<td>1234</td>
+					</tr>
+					<tr id = "4" class="w3-hover-light-grey solve">
+						<th>Operating System</th>
+						<td>N/A</td>
+					</tr>
+					<tr id = "5" class="w3-hover-light-grey solve">
+						<th>Software Affected</th>
+						<td>Microsoft Word</td>
+					</tr>
+					<tr id = "5" class="w3-hover-light-grey solve">
+						<th>Status</th>
+						<td id = "status" class="w3-red" >Unsolved</td>
+					</tr>
 				</tbody>
 			</table>
 
-				<br />
-
-				<div id = "newCallButton" class="w3-padding-large w3-white" style="text-align:center">
-					<input onclick = "showAddCall()" class="w3-card w3-btn w3-row w3-light-grey" value="New Call + ">
-				</div>
-
-				<!-- <div id = "submitCallButton" class="w3-padding-large w3-white" style="text-align:center">
-					<input onclick = "submitCall()" class="w3-card w3-btn w3-row w3-light-grey" value="Submit">
-				</div> -->
-
-				<br />
-
-				<!-- <h2>Assign Technician</h2>
-                  <select class="technician-select" required>
-                    <optgroup label=" Name &nbsp &nbsp -  &nbsp &nbsp &nbsp Speciality  &nbsp &nbsp &nbsp   - Current Jobs">
-                      <option><p class="text-left">Andrew - </p> <p class="text-center">Keyboards, Printers - </p> <p class="text-right">0</p> </option>
-                      <option><p class="text-left">Bert  &nbsp &nbsp - </p> <p class="text-center">Displays, Keyboards - </p> <p class="text-right">1</p> </option>
-                      <option><p class="text-left">Clara &nbsp - </p> <p class="text-center">General Software  &nbsp &nbsp  - </p> <p class="text-right">2</p> </option>
-                      <option><p class="text-left">Mo &nbsp &nbsp &nbsp - </p> <p class="text-center">Networks  &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp - </p> <p class="text-right">1</p> </option>
-                    </optgroup>
-                  </select> -->
-
-				<br />
-				<br />
-				<div id = "submitButton" class="w3-padding-large w3-white" style="text-align:center">
-				<a href = "../technician/main.php">
-					<input class="w3-card w3-btn w3-row w3-light-grey" value="Submit/Save">
-				</a>
-				</div>
-
+			<div id = "solve" class="w3-padding-large w3-white" style="text-align:center">
+				<input onclick = "solve()" class="w3-card w3-btn w3-row w3-light-grey" value="Solve">
 			</div>
+
+			<br />
+
+			<h2>Calls</h2>
+			<table class = "w3-center">
+				<tbody>
+					<tr w3-light-grey>
+						<th> Caller Name </th>
+						<th> Time </th>
+						<th> Reason </th>
+					</tr>
+
+                    <tr id="_1" class="w3-hover-light-grey solve">
+						<td> Emma </td>
+						<td> 2018-11-12 09:30</td>
+						<td> Can't print things from word. </td>
+					</tr>
+
+
+					<!--
+                    Not Needed On Technician Page
+                    <tr id = "addCall" class = "w3-hover-light-grey solve">
+						<td><input id = 'callerName' type = "text"></td>
+						<td><p id = "date"></p></td>
+						<td><textarea id = 'callerReason' rows = 3></textarea></td>
+					<tr>
+                    -->
+
+
+			</tbody>
+		</table>
+
+			<br />
+
+			<div id = "newCallButton" class="w3-padding-large w3-white" style="text-align:center">
+				<input onclick = "showAddCall()" class="w3-card w3-btn w3-row w3-light-grey" value="New Call + ">
+			</div>
+
+			<!-- <div id = "submitCallButton" class="w3-padding-large w3-white" style="text-align:center">
+				<input onclick = "submitCall()" class="w3-card w3-btn w3-row w3-light-grey" value="Submit">
+			</div> -->
+
+			<br />
+
+			<!-- <h2>Assign Technician</h2>
+              <select class="technician-select" required>
+                <optgroup label=" Name &nbsp &nbsp -  &nbsp &nbsp &nbsp Speciality  &nbsp &nbsp &nbsp   - Current Jobs">
+                  <option><p class="text-left">Andrew - </p> <p class="text-center">Keyboards, Printers - </p> <p class="text-right">0</p> </option>
+                  <option><p class="text-left">Bert  &nbsp &nbsp - </p> <p class="text-center">Displays, Keyboards - </p> <p class="text-right">1</p> </option>
+                  <option><p class="text-left">Clara &nbsp - </p> <p class="text-center">General Software  &nbsp &nbsp  - </p> <p class="text-right">2</p> </option>
+                  <option><p class="text-left">Mo &nbsp &nbsp &nbsp - </p> <p class="text-center">Networks  &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp - </p> <p class="text-right">1</p> </option>
+                </optgroup>
+              </select> -->
+
+			<br />
+			<br />
+			<div id = "submitButton" class="w3-padding-large w3-white" style="text-align:center">
+			<a href = "../technician/main.php">
+				<input class="w3-card w3-btn w3-row w3-light-grey" value="Submit/Save">
+			</a>
+			</div>
+
 		</div>
 	</div>
-
-
-<div id='userpage'>
-	Hello!
 </div>
 
-<button id='button'>
-	Click me
-</button>
-
+<div class="call_menu w3-center w3-padding w3-light-grey">
+	Test!
+</div>
 <script>
 $(document).ready(function() 
 {

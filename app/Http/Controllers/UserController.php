@@ -4,12 +4,40 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use App\User;
 use App\Job;
 use App\Department;
 
 class UserController extends Controller
 {
+    public function hasAccess($level)
+    {
+        if (isset($_COOKIE['csrf']))
+        {
+            $cookie = $_COOKIE['csrf'];
+        }
+        else
+        {
+            return false;
+        }
+        
+        $result = DB::table('users')->select('users.id')->where('users.remember_token', '=', $cookie)->get();
+
+        if (!is_null($result))
+        {
+            $id = $result->first()->id;
+            $user = User::find($id);
+            $job = Job::find($user->job_id);
+            if ($job->access_level == $level)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,15 +45,20 @@ class UserController extends Controller
      */
     public function index()
     {
-        $info = DB::table('users')->join('jobs', 'users.job_id', '=', 'jobs.id')->join('departments', 'jobs.department_id', '=', 'departments.id')->select('users.*', 'jobs.access_level', 'departments.name')->get();
+        if ($this->hasAccess(1))
+        {
+            $info = DB::table('users')->join('jobs', 'users.job_id', '=', 'jobs.id')->join('departments', 'jobs.department_id', '=', 'departments.id')->select('users.*', 'jobs.access_level', 'departments.name')->get();
 
-        $data = array(
-            'title' => "User information page.",
-            'desc' => "Displays information on user accounts.",
-            'info' => $info
-        );
+            $data = array(
+                'title' => "User information page.",
+                'desc' => "Displays information on user accounts.",
+                'info' => $info
+            );
 
-        return view('users.index')->with($data);
+            return view('users.index')->with($data);
+        }
+
+        return redirect('login')->with('error', 'Please log in first.');
     }
 
 
@@ -36,17 +69,21 @@ class UserController extends Controller
      */
     public function create_caller()
     {
-        $departments = DB::table('departments')->select('departments.*')->where('departments.id', '!=', '1')->get();
+        if ($this->hasAccess(1))
+        {
+            $departments = DB::table('departments')->select('departments.*')->where('departments.id', '!=', '1')->get();
 
-        $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '=', '0')->get();
+            $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '=', '0')->get();
 
-        $data = array(
-            'title' => "Create New Caller Account",
-            'desc' => "For creating employee accounts.",
-            'departments' => $departments,
-            'jobs' => $jobs
-        );
-        return view('users.create_caller')->with($data);
+            $data = array(
+                'title' => "Create New Caller Account",
+                'desc' => "For creating employee accounts.",
+                'departments' => $departments,
+                'jobs' => $jobs
+            );
+            return view('users.create_caller')->with($data);
+        }
+        return redirect('login')->with('error', 'Please log in first.');
     }
 
     /**
@@ -56,14 +93,18 @@ class UserController extends Controller
      */
     public function create_tech_support()
     {
-        $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '!=', '0')->get();
+        if ($this->hasAccess(1))
+        {
+            $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '!=', '0')->get();
 
-        $data = array(
-            'title' => "Create New Tech Support Account",
-            'desc' => "For creating system related accounts.",
-            'jobs' => $jobs
-        );
-        return view('users.create_tech_support')->with($data);
+            $data = array(
+                'title' => "Create New Tech Support Account",
+                'desc' => "For creating system related accounts.",
+                'jobs' => $jobs
+            );
+            return view('users.create_tech_support')->with($data);
+        }
+        return redirect('login')->with('error', 'Please log in first.');
     }
 
     /**
@@ -74,85 +115,87 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-
-        $this->validate($request, [
-            'isCaller' => 'required',
-            'empID' => 'required',
-            'firstName' => 'required',
-            'lastName' => 'required',
-            'job-select' => 'required',
-            'phone' => 'required'
-        ]);
-
-
-        // Caller account.
-        if ($request->input('isCaller') == 'true')
+        if ($this->hasAccess(1))
         {
             $this->validate($request, [
-                'department-select' => 'required',
-            ]);
-
-            $info = DB::table('users')->select('users.id')->where('users.employee_id', '=', $request->input('empID'))->get();
-
-            if (count($info) ==  0)
-            {
-                $caller = new User;
-                $caller->employee_id = $request->input('empID');
-                $caller->username = '---';
-                $caller->password = '';
-                $caller->forename = $request->input('firstName');
-                $caller->surname = $request->input('lastName');
-                $caller->job_id = $request->input('job-select');
-                $caller->phone_number = $request->input('phone');
-                $caller->save();
-
-                return redirect('/users')->with('success', 'Caller Added');
-            }
-
-            $data = array(
-                'error'=>'Duplicate Employee ID',
-                'search'=>$request->input('empID')
-            );
-
-            return redirect('/users')->with($data);
-        }
-
-        // System account.
-        elseif ($request->input('isCaller') == 'false')
-        {
-            $this->validate($request, [
-                'username' => 'required',
-                'pass' => 'required',
-                'pass2' => 'required'
+                'isCaller' => 'required',
+                'empID' => 'required',
+                'firstName' => 'required',
+                'lastName' => 'required',
+                'job-select' => 'required',
+                'phone' => 'required'
             ]);
 
 
-            $info = DB::table('users')->select('users.id')->where('users.employee_id', '=', $request->input('empID'))->get();
-
-            if (count($info) ==  0)
+            // Caller account.
+            if ($request->input('isCaller') == 'true')
             {
-                $user = new User;
-                $user->employee_id = $request->input('empID');
-                $user->username = $request->input('username');
-                $user->password = $request->input('pass');
-                $user->forename = $request->input('firstName');
-                $user->surname = $request->input('lastName');
-                $user->job_id = $request->input('job-select');
-                $user->phone_number = $request->input('phone');
-                $user->save();
+                $this->validate($request, [
+                    'department-select' => 'required',
+                ]);
 
-                return redirect('/users')->with('success', 'System Account Added');
+                $info = DB::table('users')->select('users.id')->where('users.employee_id', '=', $request->input('empID'))->get();
+
+                if (count($info) ==  0)
+                {
+                    $caller = new User;
+                    $caller->employee_id = $request->input('empID');
+                    $caller->username = '---';
+                    $caller->password = '';
+                    $caller->forename = $request->input('firstName');
+                    $caller->surname = $request->input('lastName');
+                    $caller->job_id = $request->input('job-select');
+                    $caller->phone_number = $request->input('phone');
+                    $caller->save();
+
+                    return redirect('/users')->with('success', 'Caller Added');
+                }
+
+                $data = array(
+                    'error'=>'Duplicate Employee ID',
+                    'search'=>$request->input('empID')
+                );
+
+                return redirect('/users')->with($data);
             }
 
-            $data = array(
-                'error'=>'Duplicate Employee ID',
-                'search'=>$request->input('empID')
-            );
+            // System account.
+            elseif ($request->input('isCaller') == 'false')
+            {
+                $this->validate($request, [
+                    'username' => 'required',
+                    'pass' => 'required',
+                    'pass2' => 'required'
+                ]);
 
-            return redirect('/users')->with($data);
+
+                $info = DB::table('users')->select('users.id')->where('users.employee_id', '=', $request->input('empID'))->get();
+
+                if (count($info) ==  0)
+                {
+                    $user = new User;
+                    $user->employee_id = $request->input('empID');
+                    $user->username = $request->input('username');
+                    $user->password = $request->input('pass');
+                    $user->forename = $request->input('firstName');
+                    $user->surname = $request->input('lastName');
+                    $user->job_id = $request->input('job-select');
+                    $user->phone_number = $request->input('phone');
+                    $user->save();
+
+                    return redirect('/users')->with('success', 'System Account Added');
+                }
+
+                $data = array(
+                    'error'=>'Duplicate Employee ID',
+                    'search'=>$request->input('empID')
+                );
+
+                return redirect('/users')->with($data);
+            }
+
         }
-
-        return "123";
+        return redirect('login')->with('error', 'Please log in first.');
     }
 
     /**
@@ -163,22 +206,26 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::find($id);
-
-        $info = DB::table('jobs')->join('users', 'jobs.id', '=', 'users.job_id')->join('departments' , 'jobs.department_id', '=', 'departments.id')->select( 'jobs.title', 'jobs.access_level', 'departments.name')->where('users.id', '=', $id)->get()->first();
-
-        if (!is_null($user) && !is_null($info))
+        if ($this->hasAccess(1))
         {
-            $data = array(
-                'title' => "User Viewer.",
-                'desc' => "View user account information.",
-                'user' => $user,
-                'job_info' => $info
-            );
+            $user = User::find($id);
 
-            return view('users.show')->with($data);
+            $info = DB::table('jobs')->join('users', 'jobs.id', '=', 'users.job_id')->join('departments' , 'jobs.department_id', '=', 'departments.id')->select( 'jobs.title', 'jobs.access_level', 'departments.name')->where('users.id', '=', $id)->get()->first();
+
+            if (!is_null($user) && !is_null($info))
+            {
+                $data = array(
+                    'title' => "User Viewer.",
+                    'desc' => "View user account information.",
+                    'user' => $user,
+                    'job_info' => $info
+                );
+
+                return view('users.show')->with($data);
+            }
+            return "Error completing that request.";
         }
-        return "Error completing that request.";
+        return redirect('login')->with('error', 'Please log in first.');
     }
 
     /**
@@ -189,40 +236,44 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::find($id);
-        $job = Job::find($user->job_id);
-
-        if ($job->access_level == 0)
+        if ($this->hasAccess(1))
         {
+            $user = User::find($id);
+            $job = Job::find($user->job_id);
 
-            $departments = DB::table('departments')->select('departments.*')->where('departments.id', '!=', '1')->get();
+            if ($job->access_level == 0)
+            {
 
-            $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '=', '0')->get();
+                $departments = DB::table('departments')->select('departments.*')->where('departments.id', '!=', '1')->get();
 
-            $data = array(
-                'title' => "Edit Caller Account.",
-                'desc' => "For changing details about a caller account.",
-                'user'=>$user,
-                'departments' => $departments,
-                'jobs' => $jobs
-            );
+                $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '=', '0')->get();
 
-            return view('users.edit_caller')->with($data);
+                $data = array(
+                    'title' => "Edit Caller Account.",
+                    'desc' => "For changing details about a caller account.",
+                    'user'=>$user,
+                    'departments' => $departments,
+                    'jobs' => $jobs
+                );
+
+                return view('users.edit_caller')->with($data);
+            }
+
+            else
+            {
+                $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '!=', '0')->get();
+
+                $data = array(
+                    'title' => "Edit System Account.",
+                    'desc' => "For changing details about an account related to the system.",
+                    'user'=>$user,
+                    'jobs' => $jobs
+                );
+
+                return view('users.edit_tech')->with($data);
+            }
         }
-
-        else
-        {
-            $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '!=', '0')->get();
-
-            $data = array(
-                'title' => "Edit System Account.",
-                'desc' => "For changing details about an account related to the system.",
-                'user'=>$user,
-                'jobs' => $jobs
-            );
-
-            return view('users.edit_tech')->with($data);
-        }
+        return redirect('login')->with('error', 'Please log in first.');
     }
 
     /**
@@ -234,87 +285,89 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'isCaller' => 'required',
-            'empID' => 'required',
-            'firstName' => 'required',
-            'lastName' => 'required',
-            'job-select' => 'required',
-            'phone' => 'required'
-        ]);
-
-
-        // Caller account.
-        if ($request->input('isCaller') == 'true')
+        if ($this->hasAccess(1))
         {
             $this->validate($request, [
-                'department-select' => 'required',
-            ]);
-
-            $info = DB::table('users')->select('users.id')->where('users.employee_id', '=', $request->input('empID'))->get();
-
-            if (count($info) !=  0)
-            {
-                if ($info->first()->id == $id)
-                {
-                    $caller = User::find($id);
-                    $caller->employee_id = $request->input('empID');
-                    $caller->forename = $request->input('firstName');
-                    $caller->surname = $request->input('lastName');
-                    $caller->job_id = $request->input('job-select');
-                    $caller->phone_number = $request->input('phone');
-                    $caller->save();
-
-                    return redirect("/users/$id")->with('success', 'Caller Info Updated');
-                }
-            }
-
-            $data = array(
-                'error'=>'Duplicate Employee ID',
-                'search'=>$request->input('empID')
-            );
-
-            return redirect("/users/$id")->with($data);
-        }
-
-        // System account.
-        elseif ($request->input('isCaller') == 'false')
-        {
-            $this->validate($request, [
-                'username' => 'required',
-                'pass' => 'required',
-                'pass2' => 'required'
+                'isCaller' => 'required',
+                'empID' => 'required',
+                'firstName' => 'required',
+                'lastName' => 'required',
+                'job-select' => 'required',
+                'phone' => 'required'
             ]);
 
 
-            $info = DB::table('users')->select('users.id')->where('users.employee_id', '=', $request->input('empID'))->get();
-            if (count($info) !=  0)
+            // Caller account.
+            if ($request->input('isCaller') == 'true')
             {
-                if ($info->first()->id == $id)
-                {
-                    $user = User::find($id);
-                    $user->employee_id = $request->input('empID');
-                    $user->username = $request->input('username');
-                    $user->password = $request->input('pass');
-                    $user->forename = $request->input('firstName');
-                    $user->surname = $request->input('lastName');
-                    $user->job_id = $request->input('job-select');
-                    $user->phone_number = $request->input('phone');
-                    $user->save();
+                $this->validate($request, [
+                    'department-select' => 'required',
+                ]);
 
-                    return redirect("/users/$id")->with('success', 'System Account Info Updated');
+                $info = DB::table('users')->select('users.id')->where('users.employee_id', '=', $request->input('empID'))->get();
+
+                if (count($info) !=  0)
+                {
+                    if ($info->first()->id == $id)
+                    {
+                        $caller = User::find($id);
+                        $caller->employee_id = $request->input('empID');
+                        $caller->forename = $request->input('firstName');
+                        $caller->surname = $request->input('lastName');
+                        $caller->job_id = $request->input('job-select');
+                        $caller->phone_number = $request->input('phone');
+                        $caller->save();
+
+                        return redirect("/users/$id")->with('success', 'Caller Info Updated');
+                    }
                 }
+
+                $data = array(
+                    'error'=>'Duplicate Employee ID',
+                    'search'=>$request->input('empID')
+                );
+
+                return redirect("/users/$id")->with($data);
             }
 
-            $data = array(
-                'error'=>'Duplicate Employee ID',
-                'search'=>$request->input('empID')
-            );
+            // System account.
+            elseif ($request->input('isCaller') == 'false')
+            {
+                $this->validate($request, [
+                    'username' => 'required',
+                    'pass' => 'required',
+                    'pass2' => 'required'
+                ]);
 
-            return redirect("/users/$id")->with($data);
+
+                $info = DB::table('users')->select('users.id')->where('users.employee_id', '=', $request->input('empID'))->get();
+                if (count($info) !=  0)
+                {
+                    if ($info->first()->id == $id)
+                    {
+                        $user = User::find($id);
+                        $user->employee_id = $request->input('empID');
+                        $user->username = $request->input('username');
+                        $user->password = $request->input('pass');
+                        $user->forename = $request->input('firstName');
+                        $user->surname = $request->input('lastName');
+                        $user->job_id = $request->input('job-select');
+                        $user->phone_number = $request->input('phone');
+                        $user->save();
+
+                        return redirect("/users/$id")->with('success', 'System Account Info Updated');
+                    }
+                }
+
+                $data = array(
+                    'error'=>'Duplicate Employee ID',
+                    'search'=>$request->input('empID')
+                );
+
+                return redirect("/users/$id")->with($data);
+            }
         }
-
-        return "123";
+        return redirect('login')->with('error', 'Please log in first.');
 ;    }
 
     /**
@@ -325,6 +378,12 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if ($this->hasAccess(1))
+        {
+            $user = User::find($id);
+            $user->delete();
+            return redirect('/users')->with('success', 'Account Deleted');
+        }
+        return redirect('login')->with('error', 'Please log in first.');
     }
 }

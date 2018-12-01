@@ -70,15 +70,18 @@
 
             <div style="text-align: center;">
                 <a class="blank" href="/users/{{$user->id}}/edit">
-                    <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                    <div class="menu-item w3-card w3-button w3-row">
                         Edit Information
                     </div>
                 </a><br />
-                <a class="blank" href="/users/{{$user->id}}/delete">
-                    <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
-                        Delete Account
-                    </div>
-                </a><br />
+                {!!Form::open(['action' => ['UserController@destroy', $user->id], 'method' => 'POST', 'onsubmit'=>"return confirm('Delete Account? This action cannot be undone.');"]) !!}
+
+                {{Form::hidden('_method', 'DELETE')}}
+                
+                {{Form::submit('Delete Account', ['class'=> "menu-item w3-card w3-button w3-row w3-red"])}}
+                
+                {!!Form::close() !!}
+                    <br />
             </div>
 
             <br />
