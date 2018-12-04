@@ -64,3 +64,23 @@ Route::post  ('/users', 'UserController@store')->name('users.store');
 Route::get   ('/users','UserController@index')->name('users.index');
 Route::delete('/users/{id}', 'UserController@destroy')->name('users.destroy');
 
+// Department routes. =============================
+Route::get   ('/departments/create','DepartmentController@create')->name('departments.create');
+
+Route::get   ('/departments/{id}/edit', 'DepartmentController@edit')->name('departments.edit');
+Route::put   ('/departments/{id}', 'DepartmentController@update')->name('departments.update');
+Route::get   ('/departments/{id}', 'DepartmentController@show')->name('departments.show');
+Route::post  ('/departments', 'DepartmentController@store')->name('departments.store');
+Route::get   ('/departments','DepartmentController@index')->name('departments.index');
+Route::delete('/departments/{id}', 'DepartmentController@destroy')->name('departments.destroy');
+
+// Job routes. =============================
+Route::get   ('/jobs/create','JobController@create')->name('jobs.create');
+
+Route::get   ('/jobs/{id}/edit', 'JobController@edit')->name('jobs.edit');
+Route::put   ('/jobs/{id}', 'JobController@update')->name('jobs.update');
+Route::get   ('/jobs/{id}', 'JobController@show')->name('jobs.show');
+Route::post  ('/jobs', 'JobController@store')->name('jobs.store');
+Route::get   ('/jobs','JobController@index')->name('jobs.index');
+Route::delete('/jobs/{id}', 'JobController@destroy')->name('jobs.destroy');
+

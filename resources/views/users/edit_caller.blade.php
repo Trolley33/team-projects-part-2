@@ -74,7 +74,6 @@
 
         departments.forEach(function (department)
         {
-            console.log(currentDepartment == department.id);
             var o = new Option(department.name, department.id, false, currentDepartment == department.id);
             $("#department-select").append(o);
         });

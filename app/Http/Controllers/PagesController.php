@@ -40,6 +40,32 @@ class PagesController extends Controller
 
     public function index()
     {
+
+        if ($this->hasAccess(1))
+        {
+            $data = array(
+                'title' => "Operator Homepage",
+                'desc' => "Please select a task."
+            );
+            return redirect('/operator')->with($data);
+        }
+        if ($this->hasAccess(2))
+        {
+            $data = array(
+                'title' => "Specialist Homepage",
+                'desc' => "Please select a task."
+            );
+            return redirect('/specialist')->with($data);
+        }
+        if ($this->hasAccess(3))
+        {
+            $data = array(
+                'title' => "Analyst Homepage",
+                'desc' => "Please select a task."
+            );
+            return redirect('/analyst')->with($data);
+        }
+
         $data = array(
             'title' => "Make-It-All Helpdesk",
             'desc' => "For submitting and receiving tehnical queries.",
@@ -50,6 +76,31 @@ class PagesController extends Controller
 
     public function login()
     {
+        if ($this->hasAccess(1))
+        {
+            $data = array(
+                'title' => "Operator Homepage",
+                'desc' => "Please select a task."
+            );
+            return redirect('/operator')->with($data);
+        }
+        if ($this->hasAccess(2))
+        {
+            $data = array(
+                'title' => "Specialist Homepage",
+                'desc' => "Please select a task."
+            );
+            return redirect('/specialist')->with($data);
+        }
+        if ($this->hasAccess(3))
+        {
+            $data = array(
+                'title' => "Analyst Homepage",
+                'desc' => "Please select a task."
+            );
+            return redirect('/analyst')->with($data);
+        }
+        
         $data = array(
             'title' => "Login Page",
             'desc' => "Please log in with your user credentials below."

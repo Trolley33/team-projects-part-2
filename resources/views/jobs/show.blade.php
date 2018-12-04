@@ -4,16 +4,17 @@
 
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
+	<h2>{{$job->title}}</h2>
 	<table id='user-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
 			<tr>
-				<th>Employee ID</th><th>Full Name</th><th>Department</th><th>Phone Number</th><th>Account Type</th><th>---</th>
+				<th>Employee ID</th><th>Full Name</th><th>Phone Number</th><th>Account Type</th><th>---</th>
 			</tr>
 		</thead>
 		<tbody>
-			@foreach ($info as $user)
+			@foreach ($users as $user)
 			<tr>
-				<td>{{sprintf('%04d',$user->employee_id)}}</td><td>{{$user->forename}} {{$user->surname}}</td><td>{{$user->name}}</td><td>{{$user->phone_number}}</td>
+				<td>{{sprintf('%04d',$user->employee_id)}}</td><td>{{$user->forename}} {{$user->surname}}</td><td>{{$user->phone_number}}</td>
 				<td>
 					@if ($user->job_id == 1)
 						Operator
@@ -25,7 +26,7 @@
 						Caller
 					@endif
 				</td>
-				<td class="editbutton" onclick="window.location.replace('/users/{{$user->id}}');" style="text-align: center;">
+				<td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}';" style="text-align: center;">
 					View/Edit
 				</td>
 			</tr>

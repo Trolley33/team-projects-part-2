@@ -2,7 +2,7 @@
 
 @section('content')
 <br />
-        {!! Form::open(['action' => ['UserController@update', $user->id], 'method' => 'POST']) !!}
+        {!! Form::open(['action' => ['UserController@update', $user->id], 'method' => 'POST', 'id' => 'techForm']) !!}
             <div class="w3-container w3-white login w3-mobile">
                 <span class="error"><?php if (isset($error)) echo $error; ?></span>
                 <span class="success"><?php if (isset($success)) echo $success; ?></span>
@@ -90,6 +90,21 @@
                 $('#password').attr('type', 'text');
                 $('#password2').attr('type', 'text'); 
             }
+        });
+
+        
+        $('#techForm').submit(function ()
+        {
+            // Verify form content.
+            var flag = true;
+            $('#messages').html("");
+            if ($('#password').val() != $('#password2').val())
+            {
+                $('#messages').append("<div class='w3-red' style='width: 100%;'>Passwords do not match.</div>");
+                flag = false;
+            }
+
+            return flag;
         });
     });
 </script>
