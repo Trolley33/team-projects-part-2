@@ -11,6 +11,18 @@ use App\Job;
 class PagesController extends Controller
 {
 
+    public $operator_links = [
+        ['href'=>'back','text'=>'back'],
+        ['href'=>'operator','text'=>'Home'],
+        ['href'=>'problems','text'=>'Problems'],
+        ['href'=>'users','text'=>'Users'],
+        ['href'=>'departments','text'=>'Departments'],
+        ['href'=>'jobs','text'=>'Jobs'],
+        ['href'=>'equipment','text'=>'Equipment'],
+        ['href'=>'software','text'=>'Software'],
+        ['href'=>'specialities','text'=>'Specialities']
+    ];
+
     public function hasAccess($level)
     {
         if (isset($_COOKIE['csrf']))
@@ -43,33 +55,20 @@ class PagesController extends Controller
 
         if ($this->hasAccess(1))
         {
-            $data = array(
-                'title' => "Operator Homepage",
-                'desc' => "Please select a task."
-            );
-            return redirect('/operator')->with($data);
+            return redirect('/operator');
         }
         if ($this->hasAccess(2))
         {
-            $data = array(
-                'title' => "Specialist Homepage",
-                'desc' => "Please select a task."
-            );
-            return redirect('/specialist')->with($data);
+            return redirect('/specialist');
         }
         if ($this->hasAccess(3))
         {
-            $data = array(
-                'title' => "Analyst Homepage",
-                'desc' => "Please select a task."
-            );
-            return redirect('/analyst')->with($data);
+            return redirect('/analyst');
         }
 
         $data = array(
             'title' => "Make-It-All Helpdesk",
-            'desc' => "For submitting and receiving tehnical queries.",
-            'noback'=>'true'
+            'desc' => "For submitting and receiving tehnical queries."
         );
         return view('pages.index')->with($data);
     }
@@ -78,27 +77,15 @@ class PagesController extends Controller
     {
         if ($this->hasAccess(1))
         {
-            $data = array(
-                'title' => "Operator Homepage",
-                'desc' => "Please select a task."
-            );
-            return redirect('/operator')->with($data);
+            return redirect('/operator');
         }
         if ($this->hasAccess(2))
         {
-            $data = array(
-                'title' => "Specialist Homepage",
-                'desc' => "Please select a task."
-            );
-            return redirect('/specialist')->with($data);
+            return redirect('/specialist');
         }
         if ($this->hasAccess(3))
         {
-            $data = array(
-                'title' => "Analyst Homepage",
-                'desc' => "Please select a task."
-            );
-            return redirect('/analyst')->with($data);
+            return redirect('/analyst');
         }
         
         $data = array(
@@ -175,55 +162,15 @@ class PagesController extends Controller
         {
             $data = array(
                 'title' => "Operator Homepage",
-                'desc' => "Please select a task."
+                'desc' => "Please select a task.",
+                'links'=>$this->operator_links,
+                'active'=>'Home'
             );
             return view('pages.operator.homepage')->with($data);
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
 
-    public function caller_info()
-    {
-        if ($this->hasAccess(1))
-        {
-            $data = array(
-                'title' => "Caller Details",
-                'desc' => "Search for Caller Details"
-            );
-            return view('pages.operator.caller_info')->with($data);
-        }
-        return redirect('login')->with('error', 'Please log in first.');
-    }
-
-    public function caller_info_from_name($name)
-    {
-        if ($this->hasAccess(1))
-        {
-            $data = array(
-                'title' => "Caller Details",
-                'desc' => "",
-                'name' => $name
-            );
-            return view('pages.operator.display_caller_info')->with($data);
-        }
-        return redirect('login')->with('error', 'Please log in first.');
-
-    }
-
-    public function log_call()
-    {
-        if ($this->hasAccess(1))
-        {
-            $data = array(
-                'title' => "Log New Call",
-                'desc' => "",
-                'id' => ''
-            );
-
-            return view('pages.operator.log_call')->with($data);
-        }
-        return redirect('login')->with('error', 'Please log in first.');
-    }
 
     // ==== Specialist pages. ====
     public function specialist_homepage()
@@ -250,40 +197,6 @@ class PagesController extends Controller
                 'desc' => "Please select a task."
             );
             return view('pages.analyst.homepage')->with($data);
-        }
-        return redirect('login')->with('error', 'Please log in first.');
-    }
-
-
-
-    // ==== Problem pages. ====
-
-    public function view_problems()
-    {
-        if ($this->hasAccess(1) || $this->hasAccess(2) || $this->hasAccess(3))
-        {
-            $data = array(
-                'title' => "Problem Viewer",
-                'desc' => "Shows all ongoing and resolved problems."
-            );
-
-            return view('pages.problems.view_all')->with($data);
-        }
-        return redirect('login')->with('error', 'Please log in first.');      
-    }
-
-    // Single problem
-    public function view_problem($id)
-    {
-        if ($this->hasAccess(1) || $this->hasAccess(2) || $this->hasAccess(3))
-        {
-            $data = array(
-                'title' => "Problem Viewer",
-                'desc' => "Shows all ongoing and resolved problems.",
-                'id' => $id
-            );
-
-            return view('pages.problems.view_problem')->with($data);
         }
         return redirect('login')->with('error', 'Please log in first.');
     }

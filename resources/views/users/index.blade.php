@@ -25,7 +25,7 @@
 						Caller
 					@endif
 				</td>
-				<td class="editbutton" onclick="window.location.replace('/users/{{$user->id}}');" style="text-align: center;">
+				<td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}';" style="text-align: center;">
 					View/Edit
 				</td>
 			</tr>

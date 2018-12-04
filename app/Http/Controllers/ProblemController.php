@@ -8,6 +8,19 @@ use App\Problem;
 
 class ProblemController extends Controller
 {
+    
+    public $operator_links = [
+        ['href'=>'back','text'=>'back'],
+        ['href'=>'operator','text'=>'Home'],
+        ['href'=>'problems','text'=>'Problems'],
+        ['href'=>'users','text'=>'Users'],
+        ['href'=>'departments','text'=>'Departments'],
+        ['href'=>'jobs','text'=>'Jobs'],
+        ['href'=>'equipment','text'=>'Equipment'],
+        ['href'=>'software','text'=>'Software'],
+        ['href'=>'specialities','text'=>'Specialities']
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +31,9 @@ class ProblemController extends Controller
         $data = array(
             'title' => "Problem Viewer",
             'desc' => "Displays all problems.",
-            'info' => Problem::all()
+            'info' => Problem::all(),
+            'links' => $this->operator_links,
+            'active' => 'Problems'
         );
 
         return view('pages.problems.index')->with($data);
@@ -39,7 +54,9 @@ class ProblemController extends Controller
             'title' => "Problem Creator",
             'desc' => "Create a New Problem",
             'header_types' => $header_types,
-            'types' => $types
+            'types' => $types,
+            'links' => $this->operator_links,
+            'active' => 'Problems'
         );
 
         return view('pages.problems.create')->with($data);
@@ -80,7 +97,9 @@ class ProblemController extends Controller
                 'problem' => $problem,
                 'callers' => $callers,
                 'specialist' => $assigned,
-                'resolved' => $resolved
+                'resolved' => $resolved,
+                'links' => $this->operator_links,
+                'active' => 'Problems'
             );
             return view('pages.problems.show')->with($data);
         }

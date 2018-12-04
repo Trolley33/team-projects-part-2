@@ -12,6 +12,19 @@ use App\Department;
 
 class DepartmentController extends Controller
 {
+
+    public $operator_links = [
+        ['href'=>'back','text'=>'back'],
+        ['href'=>'operator','text'=>'Home'],
+        ['href'=>'problems','text'=>'Problems'],
+        ['href'=>'users','text'=>'Users'],
+        ['href'=>'departments','text'=>'Departments'],
+        ['href'=>'jobs','text'=>'Jobs'],
+        ['href'=>'equipment','text'=>'Equipment'],
+        ['href'=>'software','text'=>'Software'],
+        ['href'=>'specialities','text'=>'Specialities']
+    ];
+
     // Workaround function for authemtication.
     public function hasAccess($level)
     {
@@ -54,7 +67,9 @@ class DepartmentController extends Controller
             $data = array(
                 'title' => "Department Info Page.",
                 'desc' => "Displays information on departments.",
-                'info' => $info
+                'info' => $info,
+                'links' => $this->operator_links,
+                'active' => 'Departments'
             );
 
             return view('departments.index')->with($data);
@@ -74,7 +89,9 @@ class DepartmentController extends Controller
         {
             $data = array(
                 'title' => "Create New Department",
-                'desc' => "For making a new department catagory."
+                'desc' => "For making a new department catagory.",
+                'links' => $this->operator_links,
+                'active' => 'Departments'
             );
 
             return view('departments.create')->with($data);
@@ -134,7 +151,9 @@ class DepartmentController extends Controller
                 'title' => $department->name,
                 'desc' => "View information on a department.",
                 'department' => $department,
-                'jobs' => $jobs
+                'jobs' => $jobs,
+                'links' => $this->operator_links,
+                'active' => 'Departments'
             );
 
             return view('departments.show')->with($data);
@@ -157,7 +176,9 @@ class DepartmentController extends Controller
             $data = array(
                 'title' => "Edit Existing Department",
                 'desc' => "For making a new department catagory.",
-                'department'=>$department
+                'department'=>$department,
+                'links' => $this->operator_links,
+                'active' => 'Departments'
             );
 
             return view('departments.edit')->with($data);

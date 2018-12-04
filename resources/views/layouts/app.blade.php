@@ -17,15 +17,66 @@
 
 </head>
 <body>
+
+<style>
+.navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+.navbar-item {
+    float: left;
+}
+
+.navbar-item a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar-item a:hover {
+    background-color: #111;
+}
+
+.active {
+    background-color: #FFF;
+}
+
+.active a {
+    color: black;
+}
+
+.active a:hover {
+    background-color: #FFF;
+    color: black;
+}
+</style>
     <div class="header w3-container w3-dark-grey">
         <div class="w3-center">
             <h1>{{$title}}</h1>
             <h4>{{$desc}}</h4>
-            @if(!isset($noback))
-                <button id="back-btn" class="w3-button w3-grey" style="margin-bottom: 10px;" onclick="window.history.back();">Back</button>
-            @endif
         </div>
     </div>
+        <ul class="navbar">
+            @if (isset($links))
+                @foreach ($links as $link)
+                @if ($link['href'] == 'back')
+                    <li class="navbar-item"><a href="javascript:history.back()"><img src="https://i.imgur.com/Cic9Xby.png" style="height: 1.45em;" /></a></li>
+                @elseif ($link['text'] == $active)
+                    <li class="navbar-item active"><a href="/{{$link['href']}}">{{$link['text']}}</a></li>
+                @else
+                    <li class="navbar-item"><a href="/{{$link['href']}}">{{$link['text']}}</a></li>
+                @endif
+
+                @endforeach
+                <li class="navbar-item" style="float: right !important; background-color: #515151;"><a href="/logout">Logout</a></li>
+            @endif
+        </ul>
 
     <span id="cutoff"></span>
     @include('messages')

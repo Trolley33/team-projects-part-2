@@ -12,6 +12,18 @@ use App\Department;
 
 class UserController extends Controller
 {
+    public $operator_links = [
+        ['href'=>'back','text'=>'back'],
+        ['href'=>'operator','text'=>'Home'],
+        ['href'=>'problems','text'=>'Problems'],
+        ['href'=>'users','text'=>'Users'],
+        ['href'=>'departments','text'=>'Departments'],
+        ['href'=>'jobs','text'=>'Jobs'],
+        ['href'=>'equipment','text'=>'Equipment'],
+        ['href'=>'software','text'=>'Software'],
+        ['href'=>'specialities','text'=>'Specialities']
+    ];
+
     public function hasAccess($level)
     {
         if (isset($_COOKIE['csrf']))
@@ -52,7 +64,9 @@ class UserController extends Controller
             $data = array(
                 'title' => "User information page.",
                 'desc' => "Displays information on user accounts.",
-                'info' => $info
+                'info' => $info,
+                'links' => $this->operator_links,
+                'active' => 'Users'
             );
 
             return view('users.index')->with($data);
@@ -79,7 +93,9 @@ class UserController extends Controller
                 'title' => "Create New Caller Account",
                 'desc' => "For creating employee accounts.",
                 'departments' => $departments,
-                'jobs' => $jobs
+                'jobs' => $jobs,
+                'links' => $this->operator_links,
+                'active' => 'Users'
             );
             return view('users.create_caller')->with($data);
         }
@@ -100,7 +116,9 @@ class UserController extends Controller
             $data = array(
                 'title' => "Create New Tech Support Account",
                 'desc' => "For creating system related accounts.",
-                'jobs' => $jobs
+                'jobs' => $jobs,
+                'links' => $this->operator_links,
+                'active' => 'Users'
             );
             return view('users.create_tech_support')->with($data);
         }
@@ -218,7 +236,9 @@ class UserController extends Controller
                     'title' => "User Viewer.",
                     'desc' => "View user account information.",
                     'user' => $user,
-                    'job_info' => $info
+                    'job_info' => $info,
+                    'links' => $this->operator_links,
+                    'active' => 'Users'
                 );
 
                 return view('users.show')->with($data);
@@ -253,7 +273,9 @@ class UserController extends Controller
                     'desc' => "For changing details about a caller account.",
                     'user'=>$user,
                     'departments' => $departments,
-                    'jobs' => $jobs
+                    'jobs' => $jobs,
+                    'links' => $this->operator_links,
+                    'active' => 'Users'
                 );
 
                 return view('users.edit_caller')->with($data);
@@ -267,7 +289,9 @@ class UserController extends Controller
                     'title' => "Edit System Account.",
                     'desc' => "For changing details about an account related to the system.",
                     'user'=>$user,
-                    'jobs' => $jobs
+                    'jobs' => $jobs,
+                    'links' => $this->operator_links,
+                    'active' => 'Users'
                 );
 
                 return view('users.edit_tech')->with($data);

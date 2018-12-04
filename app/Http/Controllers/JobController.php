@@ -13,6 +13,18 @@ use App\Department;
 class JobController extends Controller
 {
 
+    public $operator_links = [
+        ['href'=>'back','text'=>'back'],
+        ['href'=>'operator','text'=>'Home'],
+        ['href'=>'problems','text'=>'Problems'],
+        ['href'=>'users','text'=>'Users'],
+        ['href'=>'departments','text'=>'Departments'],
+        ['href'=>'jobs','text'=>'Jobs'],
+        ['href'=>'equipment','text'=>'Equipment'],
+        ['href'=>'software','text'=>'Software'],
+        ['href'=>'specialities','text'=>'Specialities']
+    ];
+
     // Workaround function for authemtication.
     public function hasAccess($level)
     {
@@ -58,7 +70,9 @@ class JobController extends Controller
             $data = array(
                 'title' => "Job Information Viewer",
                 'desc' => "View information on jobs.",
-                'jobs' => $jobs
+                'jobs' => $jobs,
+                'links'=>$this->operator_links,
+                'active'=>'Jobs'
             );
 
             return view('jobs.index')->with($data);
@@ -95,7 +109,9 @@ class JobController extends Controller
                 'title' => "Create New Job",
                 'desc' => "For making a new job title.",
                 'dept'=>$dept,
-                'departments'=>$departments
+                'departments'=>$departments,
+                'links'=>$this->operator_links,
+                'active'=>'Jobs'
             );
 
             return view('jobs.create')->with($data);
@@ -153,6 +169,7 @@ class JobController extends Controller
         if ($this->hasAccess(1))
         {
             $job = Job::find($id);
+            $department = Department::where('id', $job->department_id)->get()->first();
 
             $users = DB::table('users')->join('jobs', 'users.job_id', '=', 'jobs.id')->join('departments', 'jobs.department_id', '=', 'departments.id')->select('users.*', 'jobs.access_level', 'departments.name')->where('jobs.id', '=', $id)->get();
 
@@ -160,7 +177,10 @@ class JobController extends Controller
                 'title' => $job->title,
                 'desc' => "Display information on a job.",
                 'users' => $users,
-                'job' => $job
+                'job' => $job,
+                'department' => $department,
+                'links'=>$this->operator_links,
+                'active'=>'Jobs'
             );
 
             return view('jobs.show')->with($data);

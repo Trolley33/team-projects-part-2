@@ -38,14 +38,21 @@
 	<div style="text-align: center;">
         <a class="blank" href="/users/create/tech-support">
             <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
-                Create New Technical Support Account
+                Create User for Job
             </div>
         </a><br />
         <a class="blank" href="/users/create/caller">
             <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
-                Create New Caller Account
+                Edit Job
             </div>
         </a><br />
+        {!!Form::open(['action' => ['JobController@destroy', $user->job_id], 'method' => 'POST', 'onsubmit'=>"return confirmDelete()", 'id'=>'deleteForm']) !!}
+
+		{{Form::hidden('_method', 'DELETE')}}
+
+		{{Form::submit('Delete Job', ['class'=> "menu-item w3-card 	w3-button w3-row w3-red", 'style'=> 'width: 400px;'])}}
+
+		{!!Form::close() !!}
 	</div>
 </div>
 
@@ -58,6 +65,10 @@
 </style>
 
 <script>
+
+var department;
+var job;
+
 $(document).ready( function () 
 {
     var table = $('#user-table').DataTable();
@@ -65,7 +76,24 @@ $(document).ready( function ()
     // If we provide some sort of search term through the redirect, search it here.
     var search = "<?php if (session('search')) echo session('search'); ?>";
     table.search(search).draw();
+
+    department = <?php echo json_encode($department); ?>;
+    job = <?php echo json_encode($job); ?>;
+
+	if (department.id == 1)
+    {
+    	$('#deleteForm :input').prop('disabled', true);
+    }
 });
+
+function confirmDelete()
+{
+	if (department.id == 1)
+    {
+    	return false;
+    }
+	return confirm("Really delete Job '" + job.title + "'? This action cannot be undone, and will also delete all related users.");
+}
 </script>
 
 @endsection

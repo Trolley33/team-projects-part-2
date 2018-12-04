@@ -35,7 +35,7 @@
                 Edit Department
             </div>
         </a><br />
-        {!!Form::open(['action' => ['DepartmentController@destroy', $department->id], 'method' => 'POST', 'onsubmit'=>"confirmDelete()", 'id'=>'deleteForm']) !!}
+        {!!Form::open(['action' => ['DepartmentController@destroy', $department->id], 'method' => 'POST', 'onsubmit'=>"return confirmDelete()", 'id'=>'deleteForm']) !!}
 
 		{{Form::hidden('_method', 'DELETE')}}
 
