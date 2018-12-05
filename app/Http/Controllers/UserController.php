@@ -37,7 +37,7 @@ class UserController extends Controller
         
         $result = DB::table('users')->select('users.id')->where('users.remember_token', '=', $cookie)->get();
 
-        if (!is_null($result))
+        if (!is_null($result) && count($result) != 0)
         {
             $id = $result->first()->id;
             $user = User::find($id);
