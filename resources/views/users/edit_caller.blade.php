@@ -4,6 +4,7 @@
 <br />
         {!! Form::open(['action' => ['UserController@update', $user->id], 'method' => 'POST']) !!}
             <div class="w3-container w3-white login w3-mobile">
+                <h2>{{$user->forename}} {{$user->surname}}</h2>
                 <span class="error"><?php if (isset($error)) echo $error; ?></span>
                 <span class="success"><?php if (isset($success)) echo $success; ?></span>
                 <br />

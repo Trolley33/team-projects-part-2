@@ -25,16 +25,14 @@
 	</table>
 
 	<div style="text-align: center;">
-        <a class="blank" href="/jobs/create?department=<?php echo $department->id;?>">
-            <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
-                Create New Job Title
-            </div>
-        </a><br />
-        <a class="blank" href="/departments/{{$department->id}}/edit">
-            <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
-                Edit Department
-            </div>
-        </a><br />
+        {!!Form::open(['id'=>'createForm']) !!}
+
+		{{Form::submit('Create New Job Title', ['class'=> "menu-item w3-card 	w3-button w3-row", 'style'=> 'width: 400px;'])}}
+		{!!Form::close() !!}
+        {!!Form::open(['id'=>'editForm']) !!}
+
+		{{Form::submit('Edit Department', ['class'=> "menu-item w3-card 	w3-button w3-row", 'style'=> 'width: 400px;'])}}
+		{!!Form::close() !!}
         {!!Form::open(['action' => ['DepartmentController@destroy', $department->id], 'method' => 'POST', 'onsubmit'=>"return confirmDelete()", 'id'=>'deleteForm']) !!}
 
 		{{Form::hidden('_method', 'DELETE')}}
@@ -70,7 +68,20 @@ $(document).ready( function ()
 
     if (department.id == 1)
     {
+    	$('#createForm :input').prop('disabled', true);
+    	$('#editForm :input').prop('disabled', true);
     	$('#deleteForm :input').prop('disabled', true);
+    }
+    else
+    {
+    	$('#createForm').submit(function () {
+    		window.location.href = "/jobs/create?department={{$department->id}}";
+    		return false;
+    	});
+    	$('#editForm').submit(function () {
+    		window.location.href = "/departments/{{$department->id}}/edit";
+    		return false;
+    	});
     }
 
 });

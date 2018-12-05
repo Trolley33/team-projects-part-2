@@ -57,9 +57,13 @@
         var departments = <?php echo json_encode($departments) ;?>;
         var jobs = <?php echo json_encode($jobs); ?>;
 
+        var currentDept = <?php echo json_encode($dept);?>;
+
+        var currentJob = <?php echo json_encode($job);?>;
+
         departments.forEach(function (department)
         {
-            var o = new Option(department.name, department.id);
+            var o = new Option(department.name, department.id, false, currentDept.id == department.id);
             $("#department-select").append(o);
         });
 
@@ -67,7 +71,7 @@
         {
             if (job.department_id == $('#department-select :selected').val())
             {
-                var o = new Option(job.title, job.id);
+                var o = new Option(job.title, job.id, false, currentJob.id == job.id);
                 $("#job-select").append(o);
             }
         });

@@ -26,11 +26,6 @@
 
                 <br />
                 <select id='job-select' name='job-select' class="w3-input" required  style="width: 100% !important;">
-                    @foreach($jobs as $job)
-                        <option value='{{$job->id}}'>
-                            {{$job->title}}
-                        </option>
-                    @endforeach
                 </select>
                 <br /><br />
                 {{Form::label('phone', 'Phone Number')}}
@@ -79,6 +74,14 @@
                 $('#password').attr('type', 'text');
                 $('#password2').attr('type', 'text'); 
             }
+        });
+        var jobs = <?php echo json_encode($jobs); ?>;
+        var currentJob = <?php echo json_encode($job);?>;
+
+        jobs.forEach(function (job)
+        {
+            var o = new Option(job.title, job.id, false, currentJob.id == job.id);
+            $("#job-select").append(o);
         });
 
         $('#techForm').submit(function ()

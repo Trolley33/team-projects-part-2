@@ -85,15 +85,44 @@ class UserController extends Controller
     {
         if ($this->hasAccess(1))
         {
+
             $departments = DB::table('departments')->select('departments.*')->where('departments.id', '!=', '1')->get();
 
             $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '=', '0')->get();
+
+            $dept = $departments->first();
+
+            // If specified, grab the specified department,
+            // for the dropdown box.
+            if (isset($_GET['department']) && !empty($_GET['department']))
+            {
+                $dept = Department::find($_GET['department']);
+                if (is_null($dept))
+                {
+                    $dept = $departments->first();
+                }
+            }
+
+            $job = $jobs->first();
+
+            // If specified, grab the specified job,
+            // for the dropdown box.
+            if (isset($_GET['job']) && !empty($_GET['job']))
+            {
+                $job = Job::find($_GET['job']);
+                if (is_null($job))
+                {
+                    $job = $jobs->first();
+                }
+            }
 
             $data = array(
                 'title' => "Create New Caller Account",
                 'desc' => "For creating employee accounts.",
                 'departments' => $departments,
                 'jobs' => $jobs,
+                'dept'=>$dept,
+                'job'=>$job,
                 'links' => $this->operator_links,
                 'active' => 'Users'
             );
@@ -111,12 +140,28 @@ class UserController extends Controller
     {
         if ($this->hasAccess(1))
         {
+
+
             $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '!=', '0')->get();
+
+            $job = $jobs->first();
+
+            // If specified, grab the specified job,
+            // for the dropdown box.
+            if (isset($_GET['job']) && !empty($_GET['job']))
+            {
+                $job = Job::find($_GET['job']);
+                if (is_null($job))
+                {
+                    $job = $jobs->first();
+                }
+            }
 
             $data = array(
                 'title' => "Create New Tech Support Account",
                 'desc' => "For creating system related accounts.",
                 'jobs' => $jobs,
+                'job'=>$job,
                 'links' => $this->operator_links,
                 'active' => 'Users'
             );
@@ -260,42 +305,46 @@ class UserController extends Controller
         {
             $user = User::find($id);
             $job = Job::find($user->job_id);
-
-            if ($job->access_level == 0)
+            if (!is_null($user))
             {
+                if ($job->access_level == 0)
+                {
 
-                $departments = DB::table('departments')->select('departments.*')->where('departments.id', '!=', '1')->get();
+                    $departments = DB::table('departments')->select('departments.*')->where('departments.id', '!=', '1')->get();
 
-                $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '=', '0')->get();
+                    $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '=', '0')->get();
 
-                $data = array(
-                    'title' => "Edit Caller Account.",
-                    'desc' => "For changing details about a caller account.",
-                    'user'=>$user,
-                    'departments' => $departments,
-                    'jobs' => $jobs,
-                    'links' => $this->operator_links,
-                    'active' => 'Users'
-                );
+                    $data = array(
+                        'title' => "Edit Caller Account.",
+                        'desc' => "For changing details about a caller account.",
+                        'user'=>$user,
+                        'departments' => $departments,
+                        'jobs' => $jobs,
+                        'links' => $this->operator_links,
+                        'active' => 'Users'
+                    );
 
-                return view('users.edit_caller')->with($data);
+                    return view('users.edit_caller')->with($data);
+                }
+
+                else
+                {
+                    $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '!=', '0')->get();
+
+                    $data = array(
+                        'title' => "Edit System Account.",
+                        'desc' => "For changing details about an account related to the system.",
+                        'user'=>$user,
+                        'jobs' => $jobs,
+                        'links' => $this->operator_links,
+                        'active' => 'Users'
+                    );
+
+                    return view('users.edit_tech')->with($data);
+                }
             }
 
-            else
-            {
-                $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '!=', '0')->get();
-
-                $data = array(
-                    'title' => "Edit System Account.",
-                    'desc' => "For changing details about an account related to the system.",
-                    'user'=>$user,
-                    'jobs' => $jobs,
-                    'links' => $this->operator_links,
-                    'active' => 'Users'
-                );
-
-                return view('users.edit_tech')->with($data);
-            }
+            return redirect('/users');
         }
         return redirect('login')->with('error', 'Please log in first.');
     }

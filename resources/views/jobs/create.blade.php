@@ -19,13 +19,6 @@
                 <br />
                 {{Form::text('jobTitle', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Job Title'])}}
                 <br />
-
-                <div id="accessDiv">
-                    <label for="accessLevel">Access Level</label>
-                    <select id="accessLevel" name="accessLevel" class='w3-input w3-border w3-round'>
-                    </select>
-                </div>
-                <br />
                 {{Form::submit('Submit', ['class'=>'w3-right w3-button w3-teal'])}}
             </div>
         {!! Form::close() !!}
@@ -43,50 +36,6 @@
         {
             var o = new Option(department.name, department.id, false, currentDept.id == department.id);
             $("#department-select").append(o);
-        });
-
-        if ($('#department-select :selected').val() == 1)
-        {
-            $('#accessLevel').empty();
-
-            $('#accessLevel').append("<option value='0' disabled>Caller</option>");
-            $('#accessLevel').append("<option value='1' selected>Operator</option>");
-            $('#accessLevel').append("<option value='2'>Specialist</option>");
-            $('#accessLevel').append("<option value='3'>Analyst</option>");
-        }
-        else
-        {
-            $('#accessLevel').empty();
-
-            $('#accessLevel').append("<option value='0' selected>Caller</option>");
-            $('#accessLevel').append("<option value='1' disabled>Operator</option>");
-            $('#accessLevel').append("<option value='2' disabled>Specialist</option>");
-            $('#accessLevel').append("<option value='3' disabled>Analyst</option>");
-        }
-        $('#accessLevel').select2();
-
-        $('#department-select').change(function() 
-        {
-            if ($('#department-select :selected').val() == 1)
-            {
-                $('#accessLevel').empty();
-
-                $('#accessLevel').append("<option value='0' disabled>Caller</option>");
-                $('#accessLevel').append("<option value='1' selected>Operator</option>");
-                $('#accessLevel').append("<option value='2'>Specialist</option>");
-                $('#accessLevel').append("<option value='3'>Analyst</option>");
-            }
-            else
-            {
-                $('#accessLevel').empty();
-
-                $('#accessLevel').append("<option value='0' selected>Caller</option>");
-                $('#accessLevel').append("<option value='1' disabled>Operator</option>");
-                $('#accessLevel').append("<option value='2' disabled>Specialist</option>");
-                $('#accessLevel').append("<option value='3' disabled>Analyst</option>");
-            }
-
-            $('#accessLevel').select2();
         });
     });
 

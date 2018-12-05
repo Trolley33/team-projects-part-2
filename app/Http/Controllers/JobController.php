@@ -62,9 +62,6 @@ class JobController extends Controller
     {
         if ($this->hasAccess(1))
         {
-
-            // $jobs = DB::table('jobs')->join('users', 'users.job_id', '=', 'jobs.id')->join('departments', 'jobs.department_id', '=', 'departments.id')->selectRaw('jobs.id, jobs.title, departments.name, COUNT(users.id) as employees')->groupBy('jobs.id')->get();
-
             $jobs = Department::join('jobs', 'departments.id', '=', 'jobs.department_id')->leftJoin('users', 'jobs.id', '=', 'users.job_id')->selectRaw('jobs.id, jobs.title, departments.name, IFNULL(COUNT(users.id),0) as employees')->groupBy('jobs.id')->get();
 
             $data = array(
@@ -131,8 +128,7 @@ class JobController extends Controller
         {            
             $this->validate($request, [
                 'department-select' => 'required',
-                'jobTitle' => 'required',
-                'accessLevel'=>'required'
+                'jobTitle' => 'required'
             ]);
 
             $job = Job::where('title', $request->input('jobTitle'))->get();
@@ -142,10 +138,10 @@ class JobController extends Controller
                 $newJob = new Job();
                 $newJob->title = $request->input('jobTitle');
                 $newJob->department_id = $request->input('department-select');
-                $newJob->access_level = $request->input('accessLevel');
+                $newJob->access_level = '0';
                 $newJob->save();
 
-                return redirect('/departments/'+$request->input('department-select'))->with('success', 'Job Added');
+                return redirect('/departments/'.$request->input('department-select'))->with('success', 'Job Added');
             }
 
             $data = array(
@@ -197,7 +193,28 @@ class JobController extends Controller
      */
     public function edit($id)
     {
-        //
+        if ($this->hasAccess(1))
+        {
+            $job = Job::find($id);
+            $dept = Department::find($job->department_id);
+            if (!is_null($job))
+            {
+                $departments = Department::where('id', '!=', '1')->get();
+                $data = array(
+                    'title' => "Edit Existing Job",
+                    'desc' => "For making a new department catagory.",
+                    'job'=>$job,
+                    'dept'=>$dept,
+                    'departments'=>$departments,
+                    'links' => $this->operator_links,
+                    'active' => 'Jobs'
+                );
+
+                return view('jobs.edit')->with($data);
+            }
+            return redirect('/jobs');
+        }
+        return redirect('login')->with('error', 'Please log in first.');
     }
 
     /**
@@ -209,7 +226,33 @@ class JobController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if ($this->hasAccess(1))
+        {            
+            $this->validate($request, [
+                'jobTitle' => 'required',
+                'department-select' => 'required'
+            ]);
+
+            $job = Job::where('title', '=', $request->input('jobTitle'))->where('id', '!=', $id)->get();
+            if (count($job) == 0)
+            {
+                $newJob = Job::find($id);
+                $newJob->title = $request->input('jobTitle');
+                $newJob->department_id = $request->input('department-select');
+                $newJob->access_level = '0';
+                $newJob->save();
+
+                return redirect('/jobs')->with('success', 'Job Updated');
+            }
+
+            $data = array(
+                'error'=>'Duplicate Job Name',
+                'search'=>$request->input('jobTitle')
+            );
+
+            return redirect('/jobs')->with($data);
+        }
+        return redirect('login')->with('error', 'Please log in first.');
     }
 
     /**
@@ -220,6 +263,15 @@ class JobController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if ($this->hasAccess(1))
+        {
+            $job = Job::find($id);
+            $job->delete();
+
+            $users = User::where('job_id', $id)->delete();
+
+            return redirect('/jobs')->with('success', 'Job Deleted');
+        }
+        return redirect('login')->with('error', 'Please log in first.');
     }
 }

@@ -2,14 +2,17 @@
 
 @section('content')
 <div class="">
-
         <div class="w3-container w3-white login w3-mobile" style='text-align:center'>
-            <h3>Problem Related Tasks</h3><hr />
+            <h3>New Call</h3><hr />
             <a class="blank" href="problems/create">
                 <div class="menu-item w3-card w3-button w3-row">
                     Log New Call
                 </div>
             </a><br />
+        </div>
+
+        <div class="w3-container w3-white login w3-mobile" style='text-align:center'>
+            <h3>Database Management Options</h3><hr />
             <a class="blank" href="problems/">
                 <div class="menu-item w3-card w3-button w3-row">
                     Problem Manager

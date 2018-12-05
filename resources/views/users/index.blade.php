@@ -15,11 +15,11 @@
 			<tr>
 				<td>{{sprintf('%04d',$user->employee_id)}}</td><td>{{$user->forename}} {{$user->surname}}</td><td>{{$user->name}}</td><td>{{$user->phone_number}}</td>
 				<td>
-					@if ($user->job_id == 1)
+					@if ($user->access_level == 1)
 						Operator
-					@elseif ($user->job_id == 2)
+					@elseif ($user->access_level == 2)
 						Specialist
-					@elseif ($user->job_id == 3)
+					@elseif ($user->access_level == 3)
 						Analyst
 					@else
 						Caller

@@ -16,11 +16,11 @@
 			<tr>
 				<td>{{sprintf('%04d',$user->employee_id)}}</td><td>{{$user->forename}} {{$user->surname}}</td><td>{{$user->phone_number}}</td>
 				<td>
-					@if ($user->job_id == 1)
+					@if ($user->access_level == 1)
 						Operator
-					@elseif ($user->job_id == 2)
+					@elseif ($user->access_level == 2)
 						Specialist
-					@elseif ($user->job_id == 3)
+					@elseif ($user->access_level == 3)
 						Analyst
 					@else
 						Caller
@@ -36,22 +36,19 @@
 	</table>
 
 	<div style="text-align: center;">
-        <a class="blank" href="/users/create/tech-support">
-            <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
-                Create User for Job
-            </div>
-        </a><br />
-        <a class="blank" href="/users/create/caller">
-            <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
-                Edit Job
-            </div>
-        </a><br />
-        {!!Form::open(['action' => ['JobController@destroy', $user->job_id], 'method' => 'POST', 'onsubmit'=>"return confirmDelete()", 'id'=>'deleteForm']) !!}
+        {!!Form::open(['id'=>'createForm']) !!}
+		{{Form::submit('Create User with Job Title', ['class'=> "menu-item w3-card 	w3-button w3-row", 'style'=> 'width: 400px;'])}}
+		{!!Form::close() !!}
+
+        {!!Form::open(['id'=>'editForm']) !!}
+		{{Form::submit('Edit Job Title', ['class'=> "menu-item w3-card 	w3-button w3-row", 'style'=> 'width: 400px;'])}}
+		{!!Form::close() !!}
+
+        {!!Form::open(['action' => ['JobController@destroy', $job->id], 'method' => 'POST', 'onsubmit'=>"return confirmDelete()", 'id'=>'deleteForm']) !!}
 
 		{{Form::hidden('_method', 'DELETE')}}
 
-		{{Form::submit('Delete Job', ['class'=> "menu-item w3-card 	w3-button w3-row w3-red", 'style'=> 'width: 400px;'])}}
-
+		{{Form::submit('Delete Job Title', ['class'=> "menu-item w3-card 	w3-button w3-row w3-red", 'style'=> 'width: 400px;'])}}
 		{!!Form::close() !!}
 	</div>
 </div>
@@ -82,7 +79,23 @@ $(document).ready( function ()
 
 	if (department.id == 1)
     {
+    	$('#createForm').submit(function () {
+    		window.location.href = '/users/create/tech-support?department='+department.id+'&job='+job.id;
+    		return false;
+    	});
+    	$('#editForm :input').prop('disabled', true);
     	$('#deleteForm :input').prop('disabled', true);
+    }
+    else
+    {
+    	$('#createForm').submit(function () {
+    		window.location.href = '/users/create/caller?department='+department.id+'&job='+job.id;
+    		return false;
+    	});
+    	$('#editForm').submit(function () {
+    		window.location.href = "/jobs/"+ job.id +"/edit";
+    		return false;
+    	});
     }
 });
 

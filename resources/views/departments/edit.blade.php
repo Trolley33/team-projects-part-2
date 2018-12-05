@@ -4,6 +4,7 @@
 <br />
         {!! Form::open(['action' => ['DepartmentController@update', $department->id], 'method' => 'POST']) !!}
             <div class="w3-container w3-white login w3-mobile">
+                <h2>{{$department->name}}</h2>
                 <span class="error"><?php if (isset($error)) echo $error; ?></span>
                 <span class="success"><?php if (isset($success)) echo $success; ?></span>
                 <br />

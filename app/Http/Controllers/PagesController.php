@@ -36,7 +36,7 @@ class PagesController extends Controller
         
         $result = DB::table('users')->select('users.id')->where('users.remember_token', '=', $cookie)->get();
 
-        if (!is_null($result))
+        if (!is_null($result) && count($result) == 1)
         {
             $id = $result->first()->id;
             $user = User::find($id);
@@ -126,7 +126,7 @@ class PagesController extends Controller
         $token = $_POST['tok'];
 
         $result = DB::table('users')->select('users.id')->where('users.username', '=', $name, 'AND', 'users.password', '=', $pass)->get();
-        if (!is_null($result))
+        if (!is_null($result) && count($result) == 1)
         {
             $id = $result->first()->id;
             $user = User::find($id);

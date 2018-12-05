@@ -84,3 +84,32 @@ Route::post  ('/jobs', 'JobController@store')->name('jobs.store');
 Route::get   ('/jobs','JobController@index')->name('jobs.index');
 Route::delete('/jobs/{id}', 'JobController@destroy')->name('jobs.destroy');
 
+// Equipment routes. =============================
+Route::get   ('/equipment/create','EquipmentController@create')->name('equipment.create');
+
+Route::get   ('/equipment/{id}/edit', 'EquipmentController@edit')->name('equipment.edit');
+Route::put   ('/equipment/{id}', 'EquipmentController@update')->name('equipment.update');
+Route::get   ('/equipment/{id}', 'EquipmentController@show')->name('equipment.show');
+Route::post  ('/equipment', 'EquipmentController@store')->name('equipment.store');
+Route::get   ('/equipment','EquipmentController@index')->name('equipment.index');
+Route::delete('/equipment/{id}', 'EquipmentController@destroy')->name('equipment.destroy');
+
+// Software routes. =============================
+Route::get   ('/software/create','SoftwareController@create')->name('Software.create');
+
+Route::get   ('/software/{id}/edit', 'SoftwareController@edit')->name('software.edit');
+Route::put   ('/software/{id}', 'SoftwareController@update')->name('software.update');
+Route::get   ('/software/{id}', 'SoftwareController@show')->name('software.show');
+Route::post  ('/software', 'SoftwareController@store')->name('software.store');
+Route::get   ('/software','SoftwareController@index')->name('software.index');
+Route::delete('/software/{id}', 'SoftwareController@destroy')->name('software.destroy');
+
+// Speciality routes. =============================
+Route::get   ('/specialities/create','SpecialityController@create')->name('specialities.create');
+
+Route::get   ('/specialities/{id}/edit', 'SpecialityController@edit')->name('specialities.edit');
+Route::put   ('/specialities/{id}', 'SpecialityController@update')->name('specialities.update');
+Route::get   ('/specialities/{id}', 'SpecialityController@show')->name('specialities.show');
+Route::post  ('/specialities', 'SpecialityController@store')->name('specialities.store');
+Route::get   ('/specialities','SpecialityController@index')->name('specialities.index');
+Route::delete('/specialities/{id}', 'SpecialityController@destroy')->name('specialities.destroy');

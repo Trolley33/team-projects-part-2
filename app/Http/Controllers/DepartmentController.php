@@ -173,15 +173,19 @@ class DepartmentController extends Controller
         if ($this->hasAccess(1))
         {
             $department = Department::find($id);
-            $data = array(
-                'title' => "Edit Existing Department",
-                'desc' => "For making a new department catagory.",
-                'department'=>$department,
-                'links' => $this->operator_links,
-                'active' => 'Departments'
-            );
+            if (!is_null($equip))
+            {
+                $data = array(
+                    'title' => "Edit Existing Department",
+                    'desc' => "For making a new department catagory.",
+                    'department'=>$department,
+                    'links' => $this->operator_links,
+                    'active' => 'Departments'
+                );
 
-            return view('departments.edit')->with($data);
+                return view('departments.edit')->with($data);
+            }
+            return redirect('/departments');
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
@@ -234,7 +238,7 @@ class DepartmentController extends Controller
             $department = Department::find($id);
             $department->delete();
 
-            $jobs = Job::where('department_id', $id)->delete();
+            $jobs = Job::join('users', 'users.job_id', '=', 'jobs.id')->where('jobs.department_id', $id)->delete();
 
             return redirect('/departments')->with('success', 'Department Deleted');
         }
