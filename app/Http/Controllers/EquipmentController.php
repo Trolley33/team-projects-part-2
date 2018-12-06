@@ -218,11 +218,11 @@ class EquipmentController extends Controller
             $equip = Equipment::where('serial_number', $request->input('serialNumber'))->where('id', '!=', $id)->get();
             if (count($equip) == 0)
             {
-                $newEquip = Equipment::find($id);
-                $newEquip->serial_number = $request->input('serialNumber');
-                $newEquip->description = $request->input('desc');
-                $newEquip->model = $request->input('model');
-                $newEquip->save();
+                $equipment = Equipment::find($id);
+                $equipment->serial_number = $request->input('serialNumber');
+                $equipment->description = $request->input('desc');
+                $equipment->model = $request->input('model');
+                $equipment->save();
 
                 return redirect('/equipment')->with('success', 'Equipment Updated');
             }

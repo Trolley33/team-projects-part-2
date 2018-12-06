@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use App\Problem;
 use App\User;
 use App\Job;
+use App\Equipment;
+use App\Software;
 
 class ProblemController extends Controller
 {
@@ -145,9 +147,13 @@ class ProblemController extends Controller
 
             $callers = DB::table('problems')->join('calls', 'problems.id', '=', 'calls.problem_id')->join('users', 'users.id', '=', 'calls.caller_id')->select('calls.id as cID', 'calls.notes', 'calls.created_at as cAT', 'users.*')->where('problems.id', '=', $id)->get();
 
-            $assigned = DB::table('problems')->join('users', 'problems.assigned_to', '=', 'users.id')->select('users.*')->where('problems.id', '=', $id)->get();
+            $assigned = DB::table('problems')->join('users', 'problems.assigned_to', '=', 'users.id')->select('users.*')->where('problems.id', '=', $id)->get()->first();
 
             $resolved = DB::table('problems')->join('resolved_problems', 'problems.id', '=', 'resolved_problems.problem_id')->select('resolved_problems.solution_notes')->where('problems.id', '=', $id)->get();
+
+            $hardware = Equipment::join('affected_hardware', 'affected_hardware.equipment_id', '=', 'equipment.id')->join('problems', 'problems.id', '=', 'affected_hardware.problem_id')->select('equipment.*')->get();
+
+            $software = Software::join('affected_software', 'affected_software.software_id', '=', 'software.id')->join('problems', 'problems.id', '=', 'affected_software.problem_id')->select('software.*')->get();
 
             if (!is_null($problem) && !is_null($callers))
             {
@@ -158,6 +164,8 @@ class ProblemController extends Controller
                     'callers' => $callers,
                     'specialist' => $assigned,
                     'resolved' => $resolved,
+                    'hardware' => $hardware,
+                    'software' => $software,
                     'links' => $this->operator_links,
                     'active' => 'Problems'
                 );

@@ -145,7 +145,31 @@ class CallsController extends Controller
      */
     public function show($id)
     {
-        //
+        if ($this->hasAccess(1))
+        {
+            $call = Call::find($id);
+
+            if (!is_null($call))
+            {
+                $user = User::find($call->caller_id);
+
+                $problem = Problem::find($call->problem_id);
+
+                $data = array(
+                    'title' => "Call Viewer.",
+                    'desc' => "View call information.",
+                    'user' => $user,
+                    'call' => $call,
+                    'problem' => $problem,
+                    'links' => $this->operator_links,
+                    'active' => 'Problems'
+                );
+
+                return view('calls.show')->with($data);
+            }
+            return redirect('/problems')->with('error', 'Call not found.');
+        }
+        return redirect('login')->with('error', 'Please log in first.');
     }
 
     /**
@@ -156,7 +180,31 @@ class CallsController extends Controller
      */
     public function edit($id)
     {
-        //
+        if ($this->hasAccess(1))
+        {
+            $call = Call::find($id);
+
+            if (!is_null($call))
+            {
+                $user = User::find($call->caller_id);
+
+                $problem = Problem::find($call->problem_id);
+
+                $data = array(
+                    'title' => "Call Editor.",
+                    'desc' => "Edit Call Info.",
+                    'user' => $user,
+                    'call' => $call,
+                    'problem' => $problem,
+                    'links' => $this->operator_links,
+                    'active' => 'Problems'
+                );
+
+                return view('calls.edit')->with($data);
+            }
+            return redirect('/problems')->with('error', 'Call not found.');
+        }
+        return redirect('login')->with('error', 'Please log in first.');
     }
 
     /**
@@ -168,7 +216,19 @@ class CallsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if ($this->hasAccess(1))
+        {            
+            $this->validate($request, [
+                'notes' => 'required'
+            ]);
+
+            $call = Call::find($id);
+            $call->notes = $request->input('notes');
+            $call->save();
+
+            return redirect('/problems/'.$call->problem_id)->with('success', 'Call Updated');
+        }
+        return redirect('login')->with('error', 'Please log in first.');
     }
 
     /**
@@ -179,6 +239,14 @@ class CallsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if ($this->hasAccess(1))
+        {
+            $call = Call::find($id);
+            $problem = Problem::find($call->problem_id);
+            $call->delete();
+
+            return redirect('/problems/'.$problem->id)->with('success', 'Call Deleted');
+        }
+        return redirect('login')->with('error', 'Please log in first.');
     }
 }
