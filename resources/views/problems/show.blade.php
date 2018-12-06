@@ -13,18 +13,23 @@
         margin-bottom: 100px;
     }
 
-    table{
+    #info-table{
         width: 90%;
         margin-left: 5%;
     }
 
-    td{
+    #info-table td{
         padding: 10px;
     }
 
-    th{
+    #info-table th{
         padding: 10px;
         background-color: lightgrey;
+    }
+    .callerButton:hover, .editbutton:hover
+    {
+        background-color: #BBBBBB !important;
+        cursor: pointer;
     }
 </style>
 
@@ -33,7 +38,7 @@
         <div>
             <div class="w3-padding-large w3-white">
                 <h2>Problem</h2>
-                <table>
+                <table id="info-table">
                     <tbody>
                         <tr id = "1" class="w3-hover-light-grey solve">
                             <th>Problem Number</th>
@@ -90,30 +95,41 @@
                 </table>
 
                 <br />
-
+                <!-- callers -->
                 <h2>Calls</h2>
-                <table class = "w3-center">
-                    <tbody>
-                        <tr w3-light-grey>
-                            <th> Caller Name </th>
-                            <th> Time </th>
-                            <th> Reason </th>
+                <table id='caller-table' class="display cell-border stripe hover" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>Full Name</th><th>Notes</th><th>Logged At</th><th>---</th>
                         </tr>
-
+                    </thead>
+                    <tbody>
                         @foreach ($callers as $caller)
                         <tr>
-                            <td>{{$caller->username}}</td>
-                            <td>{{$caller->created_at}}</td>
+                            <td class="callerButton" onclick="window.location.href = '/users/{{$caller->id}}';">{{$caller->forename}} {{$caller->surname}}</td>
                             <td>{{$caller->notes}}</td>
+                            <td>{{$caller->cAT}}</td>
+                            <td class="editbutton" onclick="window.location.href = '/calls/{{$caller->cID}}';" style="text-align: center;">
+                                View/Edit
+                            </td>
                         </tr>
                         @endforeach
+
                     </tbody>
                 </table>
+
+                <div style="text-align: center;">
+                <a class="blank" href="/problems/{{$problem->id}}/add_call">
+                    <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                        Add New Call
+                    </div>
+                </a><br />
+            </div>
 
                 <br />
                 <h2>Assigned Specialist</h2>
                     @foreach ($specialist as $s)
-                        {{$s->username}}
+                        {{$s->forename}} {{$s->surname}}
                     @endforeach
                 <br />
                 <br />
@@ -139,5 +155,13 @@
         if(v.length == 1) return "0" + ""+ v;
         else return v;
     }
+
+    $(document).ready(function () {
+
+        var table = $('#caller-table').dataTable({
+            order: [[2, 'asc']]
+        });
+
+    });
     </script>
 @endsection

@@ -39,13 +39,16 @@ Route::get('/specialist/', 'PagesController@specialist_homepage');
 Route::get('/analyst/', 'PagesController@analyst_homepage');
 
 // Problem pages.
-Route::get   ('/problems/create','ProblemController@create')->name('pages.problems.create');
-Route::get   ('/problems/{id}/edit', 'ProblemController@edit')->name('pages.problems.edit');
-Route::put   ('/problems/{id}', 'ProblemController@update')->name('pages.problems.update');
-Route::get   ('/problems/{id}', 'ProblemController@show')->name('pages.problems.show');
-Route::post  ('/problems', 'ProblemController@store')->name('pages.problems.store');
-Route::get   ('/problems','ProblemController@index')->name('pages.problems.index');
-Route::delete('/problems/{id}', 'ProblemController@destroy')->name('pages.problems.destroy');
+Route::get   ('/problems/create','ProblemController@create')->name('problems.create');
+Route::get   ('/problems/{id}/edit', 'ProblemController@edit')->name('problems.edit');
+Route::get   ('/problems/{id}/add_call/{caller_id}', 'ProblemController@add_call')->name('problems.add_call');
+
+Route::get   ('/problems/{id}/add_call', 'ProblemController@select_user_for_call')->name('problems.select_user_for_call');
+Route::put   ('/problems/{id}', 'ProblemController@update')->name('problems.update');
+Route::get   ('/problems/{id}', 'ProblemController@show')->name('problems.show');
+Route::post  ('/problems', 'ProblemController@store')->name('problems.store');
+Route::get   ('/problems','ProblemController@index')->name('problems.index');
+Route::delete('/problems/{id}', 'ProblemController@destroy')->name('problems.destroy');
 
 // Post routes. =================================
 Route::post('/verify', 'PagesController@verify');
@@ -113,3 +116,13 @@ Route::get   ('/specialities/{id}', 'SpecialityController@show')->name('speciali
 Route::post  ('/specialities', 'SpecialityController@store')->name('specialities.store');
 Route::get   ('/specialities','SpecialityController@index')->name('specialities.index');
 Route::delete('/specialities/{id}', 'SpecialityController@destroy')->name('specialities.destroy');
+
+// Calls routes. =============================
+Route::get   ('/calls/create','CallsController@create')->name('calls.create');
+
+Route::get   ('/calls/{id}/edit', 'CallsController@edit')->name('calls.edit');
+Route::put   ('/calls/{id}', 'CallsController@update')->name('calls.update');
+Route::get   ('/calls/{id}', 'CallsController@show')->name('calls.show');
+Route::post  ('/calls', 'CallsController@store')->name('calls.store');
+Route::get   ('/calls','CallsController@index')->name('calls.index');
+Route::delete('/calls/{id}', 'CallsController@destroy')->name('calls.destroy');
