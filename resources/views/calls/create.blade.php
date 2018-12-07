@@ -52,7 +52,7 @@
     </form>
 
     <div style="text-align: center;">
-        <a class="blank" href="problems/create">
+        <a class="blank" href="/problems/create">
             <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
                 Create New Problem
             </div>
