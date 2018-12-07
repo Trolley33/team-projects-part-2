@@ -17,6 +17,6 @@ Any changes made there should be reflected here (short of some log files).
 
 
 # Links
-[Website](http://35.197.214.108/).
+[Website](http://35.246.24.174/).
 
 [Trello](https://trello.com/team4helpdeskapp).
