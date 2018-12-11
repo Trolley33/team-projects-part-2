@@ -5,7 +5,7 @@
 	<table id='software-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
 			<tr>
-				<td>Software ID</td><td>Software Name</td><td>Software Description</td><th>---</th>
+				<th>Software ID</th><th>Software Name</th><th>Software Description</th><th>---</th>
 			</tr>
 		</thead>
 		<tbody>

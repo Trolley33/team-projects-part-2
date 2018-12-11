@@ -7,8 +7,8 @@
 	<table id='department-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
 			<tr>
-				<td>Department ID</td><td>Department Name</td>
-				<td>No. of Employees</td><th>---</th>
+				<th>Department ID</th><th>Department Name</th>
+				<th>No. of Employees</th><th>---</th>
 			</tr>
 		</thead>
 		<tbody>

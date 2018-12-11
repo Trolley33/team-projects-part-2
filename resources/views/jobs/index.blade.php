@@ -5,8 +5,8 @@
 	<table id='job-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
 			<tr>
-				<td>Job ID</td><td>Job Name</td><td>Department Name</td>
-				<td>No. of Employees</td><th>---</th>
+				<th>Job ID</th><th>Job Name</th><th>Department Name</th>
+				<th>No. of Employees</th><th>---</th>
 			</tr>
 		</thead>
 		<tbody>

@@ -42,8 +42,24 @@ Route::get('/analyst/', 'PagesController@analyst_homepage');
 Route::get   ('/problems/create','ProblemController@create')->name('problems.create');
 Route::get   ('/problems/{id}/edit', 'ProblemController@edit')->name('problems.edit');
 Route::get   ('/problems/{id}/add_call/{caller_id}', 'ProblemController@add_call')->name('problems.add_call');
-
+// Add calls to problem
 Route::get   ('/problems/{id}/add_call', 'ProblemController@select_user_for_call')->name('problems.select_user_for_call');
+
+// Equipment + problems
+Route::get   ('/problems/{id}/add_equipment', 'ProblemController@select_equipment_to_add')->name('problems.select_equipment_to_add');
+Route::post  ('/problems/{id}/equipment', 'ProblemController@append_equipment')->name('problems.append_equipment');
+
+Route::get   ('/problems/{id}/remove_equipment', 'ProblemController@select_equipment_to_remove')->name('problems.select_equipment_to_remove');
+Route::delete('/problems/{id}/equipment', 'ProblemController@delete_equipment')->name('problems.delete_equipment');
+
+// Software + problems
+Route::get   ('/problems/{id}/add_software', 'ProblemController@select_software_to_add')->name('problems.select_software_to_add');
+Route::post  ('/problems/{id}/software', 'ProblemController@append_software')->name('problems.append_software');
+
+Route::get   ('/problems/{id}/remove_software', 'ProblemController@select_software_to_remove')->name('problems.select_software_to_remove');
+Route::delete('/problems/{id}/software', 'ProblemController@delete_software')->name('problems.delete_software');
+
+// Normal
 Route::put   ('/problems/{id}', 'ProblemController@update')->name('problems.update');
 Route::get   ('/problems/{id}', 'ProblemController@show')->name('problems.show');
 Route::post  ('/problems', 'ProblemController@store')->name('problems.store');

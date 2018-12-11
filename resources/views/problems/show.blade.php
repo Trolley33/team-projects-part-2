@@ -91,6 +91,13 @@
                         @endif
                     </tbody>
                 </table>
+                <div style="text-align: center;">
+                    <a class="blank" href="/problems/{{$problem->id}}/edit">
+                        <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                            Edit Details
+                        </div>
+                    </a><br />
+                </div>
                 <hr />
                 <!-- callers -->
                 <h2 class="slideHeader">Calls</h2>
@@ -112,7 +119,6 @@
                                 </td>
                             </tr>
                             @endforeach
-
                         </tbody>
                     </table>
                     <div style="text-align: center;">
@@ -121,7 +127,7 @@
                             Add New Call
                         </div>
                     </a><br />
-                </div>
+                    </div>
                 </div>
                 <hr />
                 <!-- hardware -->
@@ -144,9 +150,20 @@
                                 </td>
                             </tr>
                             @endforeach
-
                         </tbody>
                     </table>
+                    <div style="text-align: center;">
+                    <a class="blank" href="/problems/{{$problem->id}}/add_equipment">
+                        <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                            Add New Affected Equipment
+                        </div>
+                    </a><br />
+                    </div>
+                    <a class="blank" href="/problems/{{$problem->id}}/remove_equipment">
+                        <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                            Remove Affected Equipment
+                        </div>
+                    </a><br />
                 </div>
                 <hr />
                 <!-- software -->
@@ -171,8 +188,21 @@
 
                         </tbody>
                     </table>
+                    <div style="text-align: center;">
+                    <a class="blank" href="/problems/{{$problem->id}}/add_software">
+                        <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                            Add New Affected Software
+                        </div>
+                    </a><br />
+                    <a class="blank" href="/problems/{{$problem->id}}/remove_software">
+                        <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                            Remove Affected Software
+                        </div>
+                    </a><br />
+                    </div>
                 </div>
                 <hr />
+
             </div>
         </div>
     </div>
@@ -195,7 +225,7 @@
         var table2 = $('#equipment-table').DataTable();
         var table3 = $('#software-table').DataTable();
 
-        $('.slideHeader').next('.slideable').slideUp(0, function () {console.log('test')});
+        $('.slideHeader').next('.slideable').slideUp(0);
         $('.slideHeader').click(function(){
             $(this).next('.slideable').slideToggle();
         });

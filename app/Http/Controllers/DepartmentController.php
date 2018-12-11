@@ -173,7 +173,7 @@ class DepartmentController extends Controller
         if ($this->hasAccess(1))
         {
             $department = Department::find($id);
-            if (!is_null($equip))
+            if (!is_null($department))
             {
                 $data = array(
                     'title' => "Edit Existing Department",

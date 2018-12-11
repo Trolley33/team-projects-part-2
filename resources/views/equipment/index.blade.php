@@ -5,7 +5,7 @@
 	<table id='equipment-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
 			<tr>
-				<td>Serial Number</td><td>Equipment Description</td><td>Equipment Model</td><th>---</th>
+				<th>Serial Number</th><th>Equipment Description</th><th>Equipment Model</th><th>---</th>
 			</tr>
 		</thead>
 		<tbody>

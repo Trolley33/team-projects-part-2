@@ -92,7 +92,7 @@
 
                 {{Form::hidden('_method', 'DELETE')}}
                 
-                {{Form::submit('Delete Account', ['class'=> "menu-item w3-card w3-button w3-row w3-red", 'style'=> 'width: 400px;'])}}
+                {{Form::submit('Delete Call', ['class'=> "menu-item w3-card w3-button w3-row w3-red", 'style'=> 'width: 400px;'])}}
                 
                 {!!Form::close() !!}
                 <br />

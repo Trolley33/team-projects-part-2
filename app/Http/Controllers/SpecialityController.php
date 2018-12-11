@@ -65,12 +65,12 @@ class SpecialityController extends Controller
     {
         if ($this->hasAccess(1))
         {
-            $pt = DB::table('problem_types as a')->leftJoin('problem_types as b', 'b.id', '=', 'a.parent')->select('a.id as id1', 'a.description as desc1', 'b.id as id2', 'b.description as desc2')->get();
+            $parents = ProblemType::where('parent', '=', '-1')->get();
 
             $data = array(
                 'title' => "Speciality Viewer",
                 'desc' => "View information on specialist's specialities.",
-                'pt' => $pt,
+                'parents' => $parents,
                 'links'=>$this->operator_links,
                 'active'=>'Specialities'
             );
@@ -109,8 +109,51 @@ class SpecialityController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
+    {   
+        if ($this->hasAccess(1))
+        {
+            $problem_type = ProblemType::find($id);
+            if (!is_null($problem_type))
+            {
+                $specialists = Speciality::join('users', 'users.id', '=', 'speciality.specialist_id')->join('problem_types', 'problem_types.id', '=', 'speciality.problem_type_id')->where('problem_types.id', '=', $id)->orWhere('problem_types.parent', '=', $id)->get();
+
+                if ($problem_type->parent == '-1')
+                {
+                    $types = ProblemType::where('parent', '=', $id)->get();
+
+                    $data = array(
+                        'title' => "Problem Type Viewer",
+                        'desc' => "View information on parent.",
+                        'parent'=>$problem_type,
+                        'types' => $types,
+                        'specialists'=>$specialists,
+                        'links'=>$this->operator_links,
+                        'active'=>'Specialities'
+                    );
+
+                    return view('specialities.show_parent')->with($data);
+                }
+                else
+                {
+                    $parent = ProblemType::find($problem_type->parent);
+
+                    $data = array(
+                        'title' => "Problem Type Viewer.",
+                        'desc' => "View information on problem types.",
+                        'problem_type' => $problem_type,
+                        'parent'=>$parent,
+                        'specialists'=>$specialists,
+                        'links' => $this->operator_links,
+                        'active' => 'Specialities'
+                    );
+
+                    return view('specialities.show_child')->with($data);
+                }
+            }
+            return "Something else";
+        }
+
+        return redirect('login')->with('error', 'Please log in first.');
     }
 
     /**
