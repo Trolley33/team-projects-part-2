@@ -15,45 +15,6 @@ use App\AffectedSoftware;
 class ProblemController extends Controller
 {
     
-    public $operator_links = [
-        ['href'=>'back','text'=>'back'],
-        ['href'=>'operator','text'=>'Home'],
-        ['href'=>'problems','text'=>'Problems'],
-        ['href'=>'users','text'=>'Users'],
-        ['href'=>'departments','text'=>'Departments'],
-        ['href'=>'jobs','text'=>'Jobs'],
-        ['href'=>'equipment','text'=>'Equipment'],
-        ['href'=>'software','text'=>'Software'],
-        ['href'=>'specialities','text'=>'Specialities']
-    ];
-
-    // Workaround function for authemtication.
-    public function hasAccess($level)
-    {
-        if (isset($_COOKIE['csrf']))
-        {
-            $cookie = $_COOKIE['csrf'];
-        }
-        else
-        {
-            return false;
-        }
-        
-        $result = DB::table('users')->select('users.id')->where('users.remember_token', '=', $cookie)->get();
-
-        if (!is_null($result) && count($result) != 0)
-        {
-            $id = $result->first()->id;
-            $user = User::find($id);
-            $job = Job::find($user->job_id);
-            if ($job->access_level == $level)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     /**
      * Display a listing of the resource.
@@ -62,7 +23,7 @@ class ProblemController extends Controller
      */
     public function index()
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             // Get intial caller for problem.
             $problems = DB::select(DB::raw(
@@ -88,7 +49,7 @@ class ProblemController extends Controller
                 'desc' => "Displays all problems.",
                 'problems' => $problems,
                 'resolved' => $resolved,
-                'links' => $this->operator_links,
+                'links' => PagesController::getOperatorLinks(),
                 'active' => 'Problems'
             );
 
@@ -104,7 +65,7 @@ class ProblemController extends Controller
      */
     public function create()
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $header_types = DB::table('problem_types')->select('problem_types.*')->where('problem_types.parent', '=', '-1')->get();
 
@@ -115,7 +76,7 @@ class ProblemController extends Controller
                 'desc' => "Create a New Problem",
                 'header_types' => $header_types,
                 'types' => $types,
-                'links' => $this->operator_links,
+                'links' => PagesController::getOperatorLinks(),
                 'active' => 'Problems'
             );
 
@@ -143,7 +104,7 @@ class ProblemController extends Controller
      */
     public function show($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $problem = Problem::find($id);
 
@@ -168,7 +129,7 @@ class ProblemController extends Controller
                     'resolved' => $resolved,
                     'hardware' => $hardware,
                     'software' => $software,
-                    'links' => $this->operator_links,
+                    'links' => PagesController::getOperatorLinks(),
                     'active' => 'Problems'
                 );
                 return view('problems.show')->with($data);
@@ -180,7 +141,7 @@ class ProblemController extends Controller
 
     public function select_user_for_call($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $problem = Problem::find($id);
             $users = User::join('jobs', 'users.job_id', '=', 'jobs.id')->join('departments', 'jobs.department_id', '=', 'departments.id')->select('users.*', 'jobs.title', 'departments.name')->get();
@@ -192,7 +153,7 @@ class ProblemController extends Controller
                     'desc' => "Select a user to create a call for.",
                     'problem' => $problem,
                     'users' => $users,
-                    'links' => $this->operator_links,
+                    'links' => PagesController::getOperatorLinks(),
                     'active' => 'Problems'
                 );
                 return view('problems.select_user_for_call')->with($data);
@@ -204,7 +165,7 @@ class ProblemController extends Controller
 
     public function add_call($id, $caller_id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $problem = Problem::find($id);
             $user = User::find($caller_id);
@@ -216,7 +177,7 @@ class ProblemController extends Controller
                     'desc' => "Add a call from a user to a problem.",
                     'problem' => $problem,
                     'user' => $user,
-                    'links' => $this->operator_links,
+                    'links' => PagesController::getOperatorLinks(),
                     'active' => 'Problems'
                 );
                 return view('problems.add_call')->with($data);
@@ -228,7 +189,7 @@ class ProblemController extends Controller
 
     public function select_equipment_to_add($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $problem = Problem::find($id);
 
@@ -243,7 +204,7 @@ class ProblemController extends Controller
                     'problem' => $problem,
                     'equipment' => $equipment,
                     'affected' => $affected_hardware,
-                    'links' => $this->operator_links,
+                    'links' => PagesController::getOperatorLinks(),
                     'active' => 'Problems'
                 );
                 return view('problems.select_equipment_to_add')->with($data);
@@ -255,7 +216,7 @@ class ProblemController extends Controller
 
     public function append_equipment(Request $request)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {            
             $this->validate($request, [
                 'problem-id' => 'required',
@@ -281,7 +242,7 @@ class ProblemController extends Controller
 
     public function select_equipment_to_remove($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $problem = Problem::find($id);
 
@@ -295,7 +256,7 @@ class ProblemController extends Controller
                     'desc' => "Select a user to create a call for.",
                     'problem' => $problem,
                     'equipment' => $equipment,
-                    'links' => $this->operator_links,
+                    'links' => PagesController::getOperatorLinks(),
                     'active' => 'Problems'
                 );
 
@@ -308,7 +269,7 @@ class ProblemController extends Controller
 
     public function delete_equipment(Request $request)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {            
             $this->validate($request, [
                 'problem-id' => 'required',
@@ -332,7 +293,7 @@ class ProblemController extends Controller
 
     public function select_software_to_add($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $problem = Problem::find($id);
 
@@ -347,7 +308,7 @@ class ProblemController extends Controller
                     'problem' => $problem,
                     'software' => $software,
                     'affected' => $affected_software,
-                    'links' => $this->operator_links,
+                    'links' => PagesController::getOperatorLinks(),
                     'active' => 'Problems'
                 );
                 return view('problems.select_software_to_add')->with($data);
@@ -359,7 +320,7 @@ class ProblemController extends Controller
 
     public function append_software(Request $request)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {            
             $this->validate($request, [
                 'problem-id' => 'required',
@@ -385,12 +346,11 @@ class ProblemController extends Controller
 
     public function select_software_to_remove($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $problem = Problem::find($id);
 
             $software = Software::join('affected_software', 'software.id', '=', 'affected_software.software_id')->where('affected_software.problem_id', '=', $id)->get();
-
 
             if (!is_null($problem))
             {
@@ -399,7 +359,7 @@ class ProblemController extends Controller
                     'desc' => "",
                     'problem' => $problem,
                     'software' => $software,
-                    'links' => $this->operator_links,
+                    'links' => PagesController::getOperatorLinks(),
                     'active' => 'Problems'
                 );
 
@@ -412,7 +372,7 @@ class ProblemController extends Controller
 
     public function delete_software(Request $request)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {            
             $this->validate($request, [
                 'problem-id' => 'required',
@@ -441,7 +401,7 @@ class ProblemController extends Controller
      */
     public function edit($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $problem = Problem::find($id);
             if (!is_null($problem))
@@ -456,7 +416,7 @@ class ProblemController extends Controller
                     'problem'=>$problem,
                     'specialist'=>$assigned,
                     'resolved'=>$resolved,
-                    'links' => $this->operator_links,
+                    'links' => PagesController::getOperatorLinks(),
                     'active' => 'Problems'
                 );
 

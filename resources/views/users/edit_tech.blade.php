@@ -1,76 +1,88 @@
+<style>
+    .call_menu
+    {
+        border-radius: 2px;
+        margin-top: 30px;
+        position: absolute;
+        left: 20%;
+        width: 60%;
+        min-width: 300px;
+        background-color: white;
+        margin-bottom: 100px;
+    }
+
+    table{
+        width: 90%;
+        margin-left: 5%;
+    }
+
+    td{
+        padding: 10px;
+    }
+
+    th{
+        padding: 10px;
+        background-color: lightgrey;
+    }
+
+    .editbutton:hover
+    {
+        background-color: #BBBBBB !important;
+        cursor: pointer;
+    }
+</style>
+
 @extends('layouts.app')
 
 @section('content')
 <br />
-        {!! Form::open(['action' => ['UserController@update', $user->id], 'method' => 'POST', 'id' => 'techForm']) !!}
-            <div class="w3-container w3-white login w3-mobile">
-                <h2>{{$user->forename}} {{$user->surname}}</h2>
-                <span class="error"><?php if (isset($error)) echo $error; ?></span>
-                <span class="success"><?php if (isset($success)) echo $success; ?></span>
-                <br />
-                {{Form::label('empID', 'Employee ID')}}
-                <br />
-                {{Form::number('empID', $user->employee_id, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Employee ID'])}}
-                <br />
-
-                {{Form::label('firstName', 'First Name')}}
-                <br />
-                {{Form::text('firstName', $user->forename, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'First Name'])}}
-                <br />
-
-                {{Form::label('lastName', 'Last Name')}}
-                <br />
-                {{Form::text('lastName', $user->surname, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Last Name'])}}
-                <br />
-
-                {{Form::label('job-select', 'Job Role')}}
-
-                <br />
-                <select id='job-select' name='job-select' class="w3-input" required style="width: 100% !important;">
-                    @foreach($jobs as $job)
-                        @if ($job->id == $user->job_id)
-                        <option value='{{$job->id}}' selected="true">
-                            {{$job->title}}
-                        </option>
-                        @else
-                        <option value='{{$job->id}}'>
-                            {{$job->title}}
-                        </option>
-                        @endif
-                    @endforeach
-                </select>
-                <br /><br />
-                {{Form::label('phone', 'Phone Number')}}
-                <br />
-                {{Form::number('phone', $user->phone_number, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Phone Number'])}}
-                <br />
-
-                {{Form::label('username', 'Username')}}
-                <br />
-                {{Form::text('username', $user->username, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Username'])}}
-                <br />
-
-                {{Form::label('pass', 'Password')}}
-                <br />
-                {{Form::password('pass', ['required', 'id'=>'password', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Password'])}}
-                <br />
-
-                {{Form::label('pass2', 'Confirm Password')}}
-                <br />
-                {{Form::password('pass2', ['required', 'id'=>'password2', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Confirm Password'])}}
-                <br />
-                {{Form::label('visible', 'Show Password')}}
-                {{Form::checkbox('visible', null, null, ['class'=>'w3-checkbox', 'id'=>'pass-visible'])}}
-                <br />
-
-                {{Form::hidden('isCaller', 'false')}}
-                {{Form::hidden('_method', 'PUT')}}
-
-                {{Form::submit('Submit', ['required', 'class'=>'w3-right w3-button w3-teal'])}}
-
-            </div>
-
-        {!! Form::close() !!}
+<div class="call_menu w3-center w3-padding w3-light-grey">
+    <div>
+        <div class="w3-padding-large w3-white">
+            <h2>{{$user->forename}} {{$user->surname}} - ID: {{sprintf('%04d',$user->employee_id)}}</h2>
+            <table>
+                <tbody>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Employee ID</th>
+                        <td>{{$user->employee_id}}</td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Username</th>
+                        <td>{{$user->username}}</td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Password</th>
+                        <td>{{$user->password}}</td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Full Name</th>
+                        <td>{{$user->forename}} {{$user->surname}}</td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Job Title</th>
+                        <td><select id='job-select' name='job-select' class="w3-input" required  style="width: 100% !important;">
+                        </select></td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Phone Number</th>
+                        <td>{{$user->phone_number}}</td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Account Creation Date</th>
+                        <td>{{$user->created_at}}</td>
+                    </tr>
+                    @if (!is_null($problem_type))
+                        <tr class="w3-hover-light-grey solve">
+                            <th>Problem Specialism</th>
+                            <td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';">{{$problem_type->description}}</td>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
+            <br />
+        </div>
+    </div>
+</div>
 
 <script>
     $(document).ready(function () {

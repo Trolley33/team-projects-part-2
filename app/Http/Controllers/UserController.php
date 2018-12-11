@@ -272,6 +272,7 @@ class UserController extends Controller
         {
             $user = User::find($id);
             $job = Job::find($user->job_id);
+
             if (!is_null($user))
             {
                 if ($job->access_level == 0)
@@ -287,6 +288,7 @@ class UserController extends Controller
                         'user'=>$user,
                         'departments' => $departments,
                         'jobs' => $jobs,
+                        'problem_type'=>null,
                         'links' => PagesController::getOperatorLinks(),
                         'active' => 'Users'
                     );
@@ -298,11 +300,14 @@ class UserController extends Controller
                 {
                     $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '!=', '0')->get();
 
+                    $problem_type = Speciality::join('problem_types', 'problem_types.id', '=', 'speciality.problem_type_id')->where('speciality.specialist_id', '=', $id)->get()->first();
+                    
                     $data = array(
                         'title' => "Edit System Account.",
                         'desc' => "For changing details about an account related to the system.",
                         'user'=>$user,
                         'jobs' => $jobs,
+                        'problem_type'=>$problem_type,
                         'links' => PagesController::getOperatorLinks(),
                         'active' => 'Users'
                     );
