@@ -13,7 +13,7 @@
 			@foreach ($parents as $problem_type)
 			<tr>
 				<td>{{$problem_type->id}}</td><td>{{$problem_type->description}}</td>
-				<td class="editbutton" onclick="window.location.href = '/specialities/{{$problem_type->id}}';" style="text-align: center;">
+				<td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';" style="text-align: center;">
 					View/Edit
 				</td>
 			</tr>

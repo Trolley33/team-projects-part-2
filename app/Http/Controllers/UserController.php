@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Cookie;
 use App\User;
 use App\Job;
 use App\Department;
+use App\Speciality;
+use App\ProblemType;
 
 class UserController extends Controller
 {
@@ -235,7 +237,9 @@ class UserController extends Controller
         {
             $user = User::find($id);
 
-            $info = DB::table('jobs')->join('users', 'jobs.id', '=', 'users.job_id')->join('departments' , 'jobs.department_id', '=', 'departments.id')->select( 'jobs.title', 'jobs.access_level', 'departments.name')->where('users.id', '=', $id)->get()->first();
+            $info = DB::table('jobs')->join('users', 'jobs.id', '=', 'users.job_id')->join('departments' , 'jobs.department_id', '=', 'departments.id')->select( 'jobs.id as jID', 'jobs.title', 'jobs.access_level', 'departments.id as dID', 'departments.name')->where('users.id', '=', $id)->get()->first();
+
+            $problem_type = Speciality::join('problem_types', 'problem_types.id', '=', 'speciality.problem_type_id')->where('speciality.specialist_id', '=', $id)->get()->first();
 
             if (!is_null($user) && !is_null($info))
             {
@@ -244,6 +248,7 @@ class UserController extends Controller
                     'desc' => "View user account information.",
                     'user' => $user,
                     'job_info' => $info,
+                    'problem_type'=>$problem_type,
                     'links' => PagesController::getOperatorLinks(),
                     'active' => 'Users'
                 );

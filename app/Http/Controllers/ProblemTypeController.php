@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\ProblemType;
+use App\Speciality;
+use App\User;
+
 
 class ProblemTypeController extends Controller
 { 
@@ -22,7 +25,7 @@ class ProblemTypeController extends Controller
 
             $data = array(
                 'title' => "Speciality Viewer",
-                'desc' => "View information on specialist's problem_types.",
+                'desc' => "View information on specialist's problem types.",
                 'parents' => $parents,
                 'links'=>PagesController::getOperatorLinks(),
                 'active'=>'Problem Types'
@@ -41,7 +44,31 @@ class ProblemTypeController extends Controller
      */
     public function create()
     {
-        //
+        if (PagesController::hasAccess(1))
+        {
+            $types = ProblemType::where('parent', '=', '-1')->get();
+            $selected = null;
+
+            // If specified, grab the specified parent problem type,
+            // for the dropdown box.
+            if (isset($_GET['type']) && !empty($_GET['type']))
+            {
+                $selected = ProblemType::find($_GET['type']);
+
+            }
+
+            $data = array(
+                'title' => "Create New Problem Type",
+                'desc' => "For making a new problem type.",
+                'selected'=>$selected,
+                'types'=>$types,
+                'links'=>PagesController::getOperatorLinks(),
+                'active'=>'Problem Types'
+            );
+
+            return view('problem_types.create')->with($data);
+        }
+        return redirect('login')->with('error', 'Please log in first.');
     }
 
     /**
@@ -52,7 +79,36 @@ class ProblemTypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (PagesController::hasAccess(1))
+        {
+            $this->validate($request, [
+                'parent-select' => 'required',
+                'desc' => 'required'
+            ]);
+
+            $result = ProblemType::where('description', $request->input('desc'))->get();
+
+            if (count($result) == 0)
+            {
+                $problem_type = new ProblemType();
+                $problem_type->parent = $request->input('parent-select');
+                $problem_type->description = $request->input('desc');
+                $problem_type->save();
+
+                if ($request->input('parent-select') == '-1')
+                {
+                    return redirect('/problem_types')->with('success', 'Problem Type Created');
+                }
+                return redirect('/problem_types/'.$request->input('parent-select'))->with('success', 'Problem Type Created');
+            }
+
+            $data = array(
+                'error'=>'Duplicate Problem Type Description'
+            );
+
+            return redirect('/problem_types')->with($data);
+        }
+        return redirect('login')->with('error', 'Please log in first.');
     }
 
     /**
@@ -117,7 +173,34 @@ class ProblemTypeController extends Controller
      */
     public function edit($id)
     {
-        //
+        if (PagesController::hasAccess(1))
+        {
+            $problem_type = ProblemType::find($id);
+            if (!is_null($problem_type))
+            {
+                $types = ProblemType::where('parent', '=', '-1')->get();
+                $data = array(
+                    'title' => "Edit Existing Problem Type",
+                    'desc' => "For editing problem types.",
+                    'problem_type'=>$problem_type,
+                    'types'=>$types,
+                    'links' => PagesController::getOperatorLinks(),
+                    'active' => 'Problem Types'
+                );
+
+                if ($problem_type->parent == -1)
+                {
+                    return view('problem_types.edit_parent')->with($data);
+                }
+                else 
+                {
+                    return view('problem_types.edit_child')->with($data);
+                }
+
+            }
+            return redirect('/problem_types');
+        }
+        return redirect('login')->with('error', 'Please log in first.');
     }
 
     /**
@@ -129,7 +212,46 @@ class ProblemTypeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if (PagesController::hasAccess(1))
+        {
+            $result = ProblemType::where('description', $request->input('desc'))->where('id', '!=', $id)->get();
+
+            if (count($result) == 0)
+            {
+                $this->validate($request, [
+                    'isParent' => 'required',
+                    'parent-select' => 'required',
+                    'desc' => 'required'
+                ]);
+
+                $problem_type = ProblemType::find($id);
+
+                // Caller account.
+                if ($request->input('isParent') == 'true')
+                {
+                    $problem_type->description = $request->input('desc');
+                    $problem_type->save();
+                }
+
+                // System account.
+                elseif ($request->input('isParent') == 'false')
+                {
+                    $problem_type->parent = $request->input('parent-select');
+                    $problem_type->description = $request->input('desc');
+                    $problem_type->save();
+                }
+
+                return redirect("/problem_types/$id")->with('success', 'Problem Type Info Updated');
+            }
+
+            $data = array(
+                'error'=>'Duplicate Problem Type Description'
+            );
+
+            return redirect('/problem_types')->with($data);
+
+        }
+        return redirect('login')->with('error', 'Please log in first.');
     }
 
     /**
@@ -140,6 +262,24 @@ class ProblemTypeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (PagesController::hasAccess(1))
+        {
+            $problem_type = ProblemType::find($id);
+            $problem_type->delete();
+            
+            if ($problem_type->parent == '-1')
+            {
+                $sub_problems = ProblemType::where('problem_types.parent', '=', $id)->delete();
+                return redirect('/problem_types')->with('success', 'Problem Type Deleted');
+            }
+            else
+            {
+                return redirect('/problem_types/'.$problem_type->parent)->with('success', 'Problem Type Deleted');
+            }
+
+
+            
+        }
+        return redirect('login')->with('error', 'Please log in first.');
     }
 }

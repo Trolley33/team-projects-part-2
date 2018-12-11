@@ -47,11 +47,11 @@
                     <tbody>
                         <tr class="w3-hover-light-grey solve">
                             <th>Parent Problem ID</th>
-                            <td class="editbutton" onclick="window.location.href = '/specialities/{{$parent->id}}';">#{{sprintf('%04d', $parent->id)}}</td>
+                            <td class="editbutton" onclick="window.location.href = '/problem_types/{{$parent->id}}';">#{{sprintf('%04d', $parent->id)}}</td>
                         </tr>
                         <tr class="w3-hover-light-grey solve">
                             <th>Parent Problem Description</th>
-                            <td class="editbutton" onclick="window.location.href = '/specialities/{{$parent->id}}';">{{$parent->description}}</td>
+                            <td class="editbutton" onclick="window.location.href = '/problem_types/{{$parent->id}}';">{{$parent->description}}</td>
                         </tr>
                         <tr class="w3-hover-light-grey solve">
                             <th>Problem Type ID</th>
@@ -78,8 +78,8 @@
                             @foreach ($specialists as $specialist)
                             <tr>
                                 <td>{{sprintf('%04d', $specialist->employee_id)}}</td>
-                                <td class="editbutton" onclick="window.location.href = '/users/{{$specialist->id}}';">{{$specialist->forename}} {{$specialist->surname}}</td>
-                                <td class="editbutton" style="text-align: center;">
+                                <td>{{$specialist->forename}} {{$specialist->surname}}</td>
+                                <td class="editbutton" onclick="window.location.href = '/users/{{$specialist->id}}';" style="text-align: center;">
                                     View/Edit
                                 </td>
                             </tr>
@@ -89,14 +89,14 @@
                 </div>
                 <hr />
                 <div style="text-align: center;">
-                    <a class="blank" href="/specialities/{{$problem_type->id}}/edit">
+                    <a class="blank" href="/problem_types/{{$problem_type->id}}/edit">
                         <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
                             Edit Problem Type
                         </div>
                     </a><br />
                 </div>
                     
-                {!!Form::open(['action' => ['SpecialityController@destroy', $problem_type->id], 'method' => 'POST', 'onsubmit'=>"return confirm('Delete Problem Type? This action cannot be undone.');"]) !!}
+                {!!Form::open(['action' => ['ProblemTypeController@destroy', $problem_type->id], 'method' => 'POST', 'onsubmit'=>"return confirm('Delete Problem Type? This action cannot be undone.');"]) !!}
 
                 {{Form::hidden('_method', 'DELETE')}}
                 

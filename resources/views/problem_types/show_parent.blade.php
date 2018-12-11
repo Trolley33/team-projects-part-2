@@ -13,15 +13,36 @@
 			@foreach ($types as $problem_type)
 			<tr>
 				<td>{{$problem_type->id}}</td><td>{{$problem_type->description}}</td>
-				<td class="editbutton" onclick="window.location.href = '/specialities/{{$problem_type->id}}';" style="text-align: center;">
+				<td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';" style="text-align: center;">
 					View/Edit
 				</td>
 			</tr>
-			@endforeach
+            @endforeach
 
-		</tbody>
-	</table>
-	<!-- specialists -->
+        </tbody>
+    </table>
+	<div style="text-align: center;">
+        <a class="blank" href="/problem_types/create?type={{$parent->id}}">
+            <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                Create New Problem Type
+            </div>
+        </a><br />
+        <a class="blank" href="/problem_types/{{$parent->id}}/edit">
+            <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                Edit Information
+            </div>
+        </a><br />
+
+        {!!Form::open(['action' => ['ProblemTypeController@destroy', $parent->id], 'method' => 'POST', 'onsubmit'=>"return confirm('Delete problem type? This action cannot be undone.');"]) !!}
+
+        {{Form::hidden('_method', 'DELETE')}}
+        
+        {{Form::submit('Delete Problem Type', ['class'=> "menu-item w3-card w3-button w3-row w3-red", 'style'=>'width: 400px;'])}}
+        
+        {!!Form::close() !!}
+        <br />
+	</div>
+    <!-- specialists -->
     <h2 class="slideHeader">{{$parent->description}} | Specialists</h2>
     <div class="slideable">
         <table id='specialist-table' class="display cell-border stripe hover slidable" style="width:100%;">
@@ -34,8 +55,8 @@
                 @foreach ($specialists as $specialist)
                 <tr>
                     <td>{{sprintf('%04d', $specialist->employee_id)}}</td>
-                    <td class="editbutton" onclick="window.location.href = '/users/{{$specialist->id}}';">{{$specialist->forename}} {{$specialist->surname}}</td>
-                    <td class="editbutton" style="text-align: center;">
+                    <td>{{$specialist->forename}} {{$specialist->surname}}</td>
+                    <td class="editbutton" onclick="window.location.href = '/users/{{$specialist->id}}';" style="text-align: center;">
                         View/Edit
                     </td>
                 </tr>
@@ -44,13 +65,6 @@
         </table>
     </div>
     <hr />
-	<div style="text-align: center;">
-        <a class="blank" href="/specialities/create">
-            <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
-                Create New Problem Type
-            </div>
-        </a><br />
-	</div>
 </div>
 
 <style>

@@ -68,7 +68,7 @@
                 {{Form::submit('Delete Equipment', ['class'=> "menu-item w3-card w3-button w3-row w3-red"])}}
                 
                 {!!Form::close() !!}
-                    <br />
+                <br />
             </div>
 
             <br />

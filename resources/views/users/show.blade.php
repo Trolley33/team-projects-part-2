@@ -27,6 +27,12 @@
         padding: 10px;
         background-color: lightgrey;
     }
+
+    .editbutton:hover
+    {
+        background-color: #BBBBBB !important;
+        cursor: pointer;
+    }
 </style>
 
 <div class="call_menu w3-center w3-padding w3-light-grey">
@@ -36,35 +42,41 @@
             <table>
                 <tbody>
                     @if ($job_info->access_level != 0)
-                        <tr id = "1" class="w3-hover-light-grey solve">
+                        <tr class="w3-hover-light-grey solve">
                             <th>Username</th>
                             <td>{{$user->username}}</td>
                         </tr>
-                        <tr id = "2" class="w3-hover-light-grey solve">
+                        <tr class="w3-hover-light-grey solve">
                             <th>Password</th>
                             <td>{{$user->password}}</td>
                         </tr>
                     @endif
-                    <tr id = "3" class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey solve">
                         <th>Full Name</th>
                         <td>{{$user->forename}} {{$user->surname}}</td>
                     </tr>
-                    <tr id = "4" class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey solve">
                         <th>Department Name</th>
-                        <td>{{$job_info->name}}</td>
+                        <td class="editbutton" onclick="window.location.href = '/departments/{{$job_info->dID}}';">{{$job_info->name}}</td>
                     </tr>
-                    <tr id = "5" class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey solve">
                         <th>Job Title</th>
-                        <td>{{$job_info->title}}</td>
+                        <td class="editbutton" onclick="window.location.href = '/jobs/{{$job_info->jID}}';">{{$job_info->title}}</td>
                     </tr>
-                    <tr id = "6" class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey solve">
                         <th>Phone Number</th>
                         <td>{{$user->phone_number}}</td>
                     </tr>
-                    <tr id = "7" class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey solve">
                         <th>Account Creation Date</th>
                         <td>{{$user->created_at}}</td>
                     </tr>
+                    @if (!is_null($problem_type))
+                        <tr class="w3-hover-light-grey solve">
+                            <th>Problem Specialism</th>
+                            <td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';">{{$problem_type->description}}</td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
 
