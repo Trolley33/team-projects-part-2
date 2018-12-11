@@ -23,7 +23,7 @@
 	</table>
 
 	<div style="text-align: center;">
-        <a class="blank" href="/specialities/create">
+        <a class="blank" href="/problem_types/create">
             <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
                 Create New Problem Type
             </div>

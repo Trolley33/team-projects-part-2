@@ -12,47 +12,6 @@ use App\Department;
 
 class JobController extends Controller
 {
-
-    public $operator_links = [
-        ['href'=>'back','text'=>'back'],
-        ['href'=>'operator','text'=>'Home'],
-        ['href'=>'problems','text'=>'Problems'],
-        ['href'=>'users','text'=>'Users'],
-        ['href'=>'departments','text'=>'Departments'],
-        ['href'=>'jobs','text'=>'Jobs'],
-        ['href'=>'equipment','text'=>'Equipment'],
-        ['href'=>'software','text'=>'Software'],
-        ['href'=>'specialities','text'=>'Specialities']
-    ];
-
-    // Workaround function for authemtication.
-    public function hasAccess($level)
-    {
-        if (isset($_COOKIE['csrf']))
-        {
-            $cookie = $_COOKIE['csrf'];
-        }
-        else
-        {
-            return false;
-        }
-        
-        $result = DB::table('users')->select('users.id')->where('users.remember_token', '=', $cookie)->get();
-
-        if (!is_null($result) && count($result) != 0)
-        {
-            $id = $result->first()->id;
-            $user = User::find($id);
-            $job = Job::find($user->job_id);
-            if ($job->access_level == $level)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -60,7 +19,7 @@ class JobController extends Controller
      */
     public function index()
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $jobs = Department::join('jobs', 'departments.id', '=', 'jobs.department_id')->leftJoin('users', 'jobs.id', '=', 'users.job_id')->selectRaw('jobs.id, jobs.title, departments.name, IFNULL(COUNT(users.id),0) as employees')->groupBy('jobs.id')->get();
 
@@ -68,7 +27,7 @@ class JobController extends Controller
                 'title' => "Job Information Viewer",
                 'desc' => "View information on jobs.",
                 'jobs' => $jobs,
-                'links'=>$this->operator_links,
+                'links'=>PagesController::getOperatorLinks(),
                 'active'=>'Jobs'
             );
 
@@ -85,7 +44,7 @@ class JobController extends Controller
      */
     public function create()
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $departments = Department::all();
 
@@ -107,7 +66,7 @@ class JobController extends Controller
                 'desc' => "For making a new job title.",
                 'dept'=>$dept,
                 'departments'=>$departments,
-                'links'=>$this->operator_links,
+                'links'=>PagesController::getOperatorLinks(),
                 'active'=>'Jobs'
             );
 
@@ -124,7 +83,7 @@ class JobController extends Controller
      */
     public function store(Request $request)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {            
             $this->validate($request, [
                 'department-select' => 'required',
@@ -162,7 +121,7 @@ class JobController extends Controller
      */
     public function show($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $job = Job::find($id);
             $department = Department::where('id', $job->department_id)->get()->first();
@@ -175,7 +134,7 @@ class JobController extends Controller
                 'users' => $users,
                 'job' => $job,
                 'department' => $department,
-                'links'=>$this->operator_links,
+                'links'=>PagesController::getOperatorLinks(),
                 'active'=>'Jobs'
             );
 
@@ -193,7 +152,7 @@ class JobController extends Controller
      */
     public function edit($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $job = Job::find($id);
             $dept = Department::find($job->department_id);
@@ -206,7 +165,7 @@ class JobController extends Controller
                     'job'=>$job,
                     'dept'=>$dept,
                     'departments'=>$departments,
-                    'links' => $this->operator_links,
+                    'links' => PagesController::getOperatorLinks(),
                     'active' => 'Jobs'
                 );
 
@@ -226,7 +185,7 @@ class JobController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {            
             $this->validate($request, [
                 'jobTitle' => 'required',
@@ -263,7 +222,7 @@ class JobController extends Controller
      */
     public function destroy($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $job = Job::find($id);
             $job->delete();

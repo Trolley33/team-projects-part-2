@@ -12,44 +12,6 @@ use App\Department;
 
 class UserController extends Controller
 {
-    public $operator_links = [
-        ['href'=>'back','text'=>'back'],
-        ['href'=>'operator','text'=>'Home'],
-        ['href'=>'problems','text'=>'Problems'],
-        ['href'=>'users','text'=>'Users'],
-        ['href'=>'departments','text'=>'Departments'],
-        ['href'=>'jobs','text'=>'Jobs'],
-        ['href'=>'equipment','text'=>'Equipment'],
-        ['href'=>'software','text'=>'Software'],
-        ['href'=>'specialities','text'=>'Specialities']
-    ];
-
-    public function hasAccess($level)
-    {
-        if (isset($_COOKIE['csrf']))
-        {
-            $cookie = $_COOKIE['csrf'];
-        }
-        else
-        {
-            return false;
-        }
-        
-        $result = DB::table('users')->select('users.id')->where('users.remember_token', '=', $cookie)->get();
-
-        if (!is_null($result) && count($result) != 0)
-        {
-            $id = $result->first()->id;
-            $user = User::find($id);
-            $job = Job::find($user->job_id);
-            if ($job->access_level == $level)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
     /**
      * Display a listing of the resource.
      *
@@ -57,7 +19,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $info = DB::table('users')->join('jobs', 'users.job_id', '=', 'jobs.id')->join('departments', 'jobs.department_id', '=', 'departments.id')->select('users.*', 'jobs.access_level', 'departments.name')->get();
 
@@ -65,7 +27,7 @@ class UserController extends Controller
                 'title' => "User information page.",
                 'desc' => "Displays information on user accounts.",
                 'info' => $info,
-                'links' => $this->operator_links,
+                'links' => PagesController::getOperatorLinks(),
                 'active' => 'Users'
             );
 
@@ -83,7 +45,7 @@ class UserController extends Controller
      */
     public function create_caller()
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
 
             $departments = DB::table('departments')->select('departments.*')->where('departments.id', '!=', '1')->get();
@@ -123,7 +85,7 @@ class UserController extends Controller
                 'jobs' => $jobs,
                 'dept'=>$dept,
                 'job'=>$job,
-                'links' => $this->operator_links,
+                'links' => PagesController::getOperatorLinks(),
                 'active' => 'Users'
             );
             return view('users.create_caller')->with($data);
@@ -138,7 +100,7 @@ class UserController extends Controller
      */
     public function create_tech_support()
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
 
 
@@ -162,7 +124,7 @@ class UserController extends Controller
                 'desc' => "For creating system related accounts.",
                 'jobs' => $jobs,
                 'job'=>$job,
-                'links' => $this->operator_links,
+                'links' => PagesController::getOperatorLinks(),
                 'active' => 'Users'
             );
             return view('users.create_tech_support')->with($data);
@@ -178,7 +140,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $this->validate($request, [
                 'isCaller' => 'required',
@@ -269,7 +231,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $user = User::find($id);
 
@@ -282,7 +244,7 @@ class UserController extends Controller
                     'desc' => "View user account information.",
                     'user' => $user,
                     'job_info' => $info,
-                    'links' => $this->operator_links,
+                    'links' => PagesController::getOperatorLinks(),
                     'active' => 'Users'
                 );
 
@@ -301,7 +263,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $user = User::find($id);
             $job = Job::find($user->job_id);
@@ -320,7 +282,7 @@ class UserController extends Controller
                         'user'=>$user,
                         'departments' => $departments,
                         'jobs' => $jobs,
-                        'links' => $this->operator_links,
+                        'links' => PagesController::getOperatorLinks(),
                         'active' => 'Users'
                     );
 
@@ -336,7 +298,7 @@ class UserController extends Controller
                         'desc' => "For changing details about an account related to the system.",
                         'user'=>$user,
                         'jobs' => $jobs,
-                        'links' => $this->operator_links,
+                        'links' => PagesController::getOperatorLinks(),
                         'active' => 'Users'
                     );
 
@@ -358,7 +320,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $this->validate($request, [
                 'isCaller' => 'required',
@@ -451,7 +413,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $user = User::find($id);
             $user->delete();

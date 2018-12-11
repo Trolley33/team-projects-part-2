@@ -14,46 +14,6 @@ use App\Software;
 class SoftwareController extends Controller
 {
 
-    public $operator_links = [
-        ['href'=>'back','text'=>'back'],
-        ['href'=>'operator','text'=>'Home'],
-        ['href'=>'problems','text'=>'Problems'],
-        ['href'=>'users','text'=>'Users'],
-        ['href'=>'departments','text'=>'Departments'],
-        ['href'=>'jobs','text'=>'Jobs'],
-        ['href'=>'equipment','text'=>'Equipment'],
-        ['href'=>'software','text'=>'Software'],
-        ['href'=>'specialities','text'=>'Specialities']
-    ];
-
-    // Workaround function for authemtication.
-    public function hasAccess($level)
-    {
-        if (isset($_COOKIE['csrf']))
-        {
-            $cookie = $_COOKIE['csrf'];
-        }
-        else
-        {
-            return false;
-        }
-        
-        $result = DB::table('users')->select('users.id')->where('users.remember_token', '=', $cookie)->get();
-
-        if (!is_null($result) && count($result) != 0)
-        {
-            $id = $result->first()->id;
-            $user = User::find($id);
-            $job = Job::find($user->job_id);
-            if ($job->access_level == $level)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -62,7 +22,7 @@ class SoftwareController extends Controller
     public function index()
     {
 
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $software = Software::all();
 
@@ -70,7 +30,7 @@ class SoftwareController extends Controller
                 'title' => "Software Information Viewer",
                 'desc' => "View information on software.",
                 'software' => $software,
-                'links'=>$this->operator_links,
+                'links'=>PagesController::getOperatorLinks(),
                 'active'=>'Software'
             );
 
@@ -87,12 +47,12 @@ class SoftwareController extends Controller
      */
     public function create()
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $data = array(
                 'title' => "Register New Software",
                 'desc' => "For registering new software.",
-                'links' => $this->operator_links,
+                'links' => PagesController::getOperatorLinks(),
                 'active' => 'Software'
             );
 
@@ -109,7 +69,7 @@ class SoftwareController extends Controller
      */
     public function store(Request $request)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {            
             $this->validate($request, [
                 'name' => 'required',
@@ -146,7 +106,7 @@ class SoftwareController extends Controller
      */
     public function show($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $result = Software::find($id);
 
@@ -156,7 +116,7 @@ class SoftwareController extends Controller
                     'title' => "Software Viewer.",
                     'desc' => "View Software information.",
                     'software' => $result,
-                    'links' => $this->operator_links,
+                    'links' => PagesController::getOperatorLinks(),
                     'active' => 'Software'
                 );
 
@@ -175,7 +135,7 @@ class SoftwareController extends Controller
      */
     public function edit($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $result = Software::find($id);
             if (!is_null($result))
@@ -184,7 +144,7 @@ class SoftwareController extends Controller
                     'title' => "Edit Existing Software",
                     'desc' => "For editing existing Software.",
                     'software'=>$result,
-                    'links' => $this->operator_links,
+                    'links' => PagesController::getOperatorLinks(),
                     'active' => 'Software'
                 );
 
@@ -205,7 +165,7 @@ class SoftwareController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {            
             $this->validate($request, [
                 'name' => 'required',
@@ -242,7 +202,7 @@ class SoftwareController extends Controller
      */
     public function destroy($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $software = Software::find($id);
             $software->delete();

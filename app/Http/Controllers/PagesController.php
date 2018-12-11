@@ -11,19 +11,22 @@ use App\Job;
 class PagesController extends Controller
 {
 
-    public $operator_links = [
-        ['href'=>'back','text'=>'back'],
-        ['href'=>'operator','text'=>'Home'],
-        ['href'=>'problems','text'=>'Problems'],
-        ['href'=>'users','text'=>'Users'],
-        ['href'=>'departments','text'=>'Departments'],
-        ['href'=>'jobs','text'=>'Jobs'],
-        ['href'=>'equipment','text'=>'Equipment'],
-        ['href'=>'software','text'=>'Software'],
-        ['href'=>'specialities','text'=>'Specialities']
-    ];
+    public static function getOperatorLinks ()
+    {
+        return [
+            ['href'=>'back','text'=>'back'],
+            ['href'=>'operator','text'=>'Home'],
+            ['href'=>'problems','text'=>'Problems'],
+            ['href'=>'users','text'=>'Users'],
+            ['href'=>'departments','text'=>'Departments'],
+            ['href'=>'jobs','text'=>'Jobs'],
+            ['href'=>'equipment','text'=>'Equipment'],
+            ['href'=>'software','text'=>'Software'],
+            ['href'=>'problem_types','text'=>'Problem Types']
+        ];
+    }
 
-    public function hasAccess($level)
+    public static function hasAccess($level)
     {
         if (isset($_COOKIE['csrf']))
         {
@@ -53,15 +56,15 @@ class PagesController extends Controller
     public function index()
     {
 
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             return redirect('/operator');
         }
-        if ($this->hasAccess(2))
+        if (PagesController::hasAccess(2))
         {
             return redirect('/specialist');
         }
-        if ($this->hasAccess(3))
+        if (PagesController::hasAccess(3))
         {
             return redirect('/analyst');
         }
@@ -75,15 +78,15 @@ class PagesController extends Controller
 
     public function login()
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             return redirect('/operator');
         }
-        if ($this->hasAccess(2))
+        if (PagesController::hasAccess(2))
         {
             return redirect('/specialist');
         }
-        if ($this->hasAccess(3))
+        if (PagesController::hasAccess(3))
         {
             return redirect('/analyst');
         }
@@ -158,12 +161,12 @@ class PagesController extends Controller
     // ==== Operator pages. ====
     public function operator_homepage()
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $data = array(
                 'title' => "Operator Homepage",
                 'desc' => "Please select a task.",
-                'links'=>$this->operator_links,
+                'links'=>PagesController::getOperatorLinks(),
                 'active'=>'Home'
             );
             return view('pages.operator.homepage')->with($data);
@@ -175,7 +178,7 @@ class PagesController extends Controller
     // ==== Specialist pages. ====
     public function specialist_homepage()
     {
-        if ($this->hasAccess(2))
+        if (PagesController::hasAccess(2))
         {
             $data = array(
                 'title' => "Specialist Homepage",
@@ -190,7 +193,7 @@ class PagesController extends Controller
     // ==== Analyst pages. ====
     public function analyst_homepage()
     {
-        if ($this->hasAccess(3))
+        if (PagesController::hasAccess(3))
         {
             $data = array(
                 'title' => "Analyst Homepage",

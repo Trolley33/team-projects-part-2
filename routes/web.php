@@ -133,6 +133,16 @@ Route::post  ('/specialities', 'SpecialityController@store')->name('specialities
 Route::get   ('/specialities','SpecialityController@index')->name('specialities.index');
 Route::delete('/specialities/{id}', 'SpecialityController@destroy')->name('specialities.destroy');
 
+// Problem type routes. =============================
+Route::get   ('/problem_types/create','ProblemTypeController@create')->name('problem_types.create');
+
+Route::get   ('/problem_types/{id}/edit', 'ProblemTypeController@edit')->name('problem_types.edit');
+Route::put   ('/problem_types/{id}', 'ProblemTypeController@update')->name('problem_types.update');
+Route::get   ('/problem_types/{id}', 'ProblemTypeController@show')->name('problem_types.show');
+Route::post  ('/problem_types', 'ProblemTypeController@store')->name('problem_types.store');
+Route::get   ('/problem_types','ProblemTypeController@index')->name('problem_types.index');
+Route::delete('/problem_types/{id}', 'ProblemTypeController@destroy')->name('problem_types.destroy');
+
 // Calls routes. =============================
 Route::get   ('/calls/create','CallsController@create')->name('calls.create');
 

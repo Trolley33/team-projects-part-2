@@ -16,46 +16,6 @@ use App\Call;
 class CallsController extends Controller
 {
 
-    public $operator_links = [
-        ['href'=>'back','text'=>'back'],
-        ['href'=>'operator','text'=>'Home'],
-        ['href'=>'problems','text'=>'Problems'],
-        ['href'=>'users','text'=>'Users'],
-        ['href'=>'departments','text'=>'Departments'],
-        ['href'=>'jobs','text'=>'Jobs'],
-        ['href'=>'equipment','text'=>'Equipment'],
-        ['href'=>'software','text'=>'Software'],
-        ['href'=>'specialities','text'=>'Specialities']
-    ];
-
-    // Workaround function for authemtication.
-    public function hasAccess($level)
-    {
-        if (isset($_COOKIE['csrf']))
-        {
-            $cookie = $_COOKIE['csrf'];
-        }
-        else
-        {
-            return false;
-        }
-        
-        $result = DB::table('users')->select('users.id')->where('users.remember_token', '=', $cookie)->get();
-
-        if (!is_null($result) && count($result) != 0)
-        {
-            $id = $result->first()->id;
-            $user = User::find($id);
-            $job = Job::find($user->job_id);
-            if ($job->access_level == $level)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -73,7 +33,7 @@ class CallsController extends Controller
      */
     public function create()
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             // Get intial caller for problem.
             $problems = DB::select(DB::raw(
@@ -99,7 +59,7 @@ class CallsController extends Controller
                 'desc' => "Please select a problem to add to, or create a new problem.",
                 'problems'=>$problems,
                 'resolved'=>$resolved,
-                'links' => $this->operator_links,
+                'links' => PagesController::getOperatorLinks(),
                 'active' => 'Log New Call'
             );
 
@@ -117,7 +77,7 @@ class CallsController extends Controller
      */
     public function store(Request $request)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {            
             $this->validate($request, [
                 'problem-id' => 'required',
@@ -145,7 +105,7 @@ class CallsController extends Controller
      */
     public function show($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $call = Call::find($id);
 
@@ -161,7 +121,7 @@ class CallsController extends Controller
                     'user' => $user,
                     'call' => $call,
                     'problem' => $problem,
-                    'links' => $this->operator_links,
+                    'links' => PagesController::getOperatorLinks(),
                     'active' => 'Problems'
                 );
 
@@ -180,7 +140,7 @@ class CallsController extends Controller
      */
     public function edit($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $call = Call::find($id);
 
@@ -196,7 +156,7 @@ class CallsController extends Controller
                     'user' => $user,
                     'call' => $call,
                     'problem' => $problem,
-                    'links' => $this->operator_links,
+                    'links' => PagesController::getOperatorLinks(),
                     'active' => 'Problems'
                 );
 
@@ -216,7 +176,7 @@ class CallsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {            
             $this->validate($request, [
                 'notes' => 'required'
@@ -239,7 +199,7 @@ class CallsController extends Controller
      */
     public function destroy($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $call = Call::find($id);
             $problem = Problem::find($call->problem_id);

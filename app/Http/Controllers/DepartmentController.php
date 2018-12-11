@@ -13,46 +13,6 @@ use App\Department;
 class DepartmentController extends Controller
 {
 
-    public $operator_links = [
-        ['href'=>'back','text'=>'back'],
-        ['href'=>'operator','text'=>'Home'],
-        ['href'=>'problems','text'=>'Problems'],
-        ['href'=>'users','text'=>'Users'],
-        ['href'=>'departments','text'=>'Departments'],
-        ['href'=>'jobs','text'=>'Jobs'],
-        ['href'=>'equipment','text'=>'Equipment'],
-        ['href'=>'software','text'=>'Software'],
-        ['href'=>'specialities','text'=>'Specialities']
-    ];
-
-    // Workaround function for authemtication.
-    public function hasAccess($level)
-    {
-        if (isset($_COOKIE['csrf']))
-        {
-            $cookie = $_COOKIE['csrf'];
-        }
-        else
-        {
-            return false;
-        }
-        
-        $result = DB::table('users')->select('users.id')->where('users.remember_token', '=', $cookie)->get();
-
-        if (!is_null($result) && count($result) != 0)
-        {
-            $id = $result->first()->id;
-            $user = User::find($id);
-            $job = Job::find($user->job_id);
-            if ($job->access_level == $level)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -60,7 +20,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $info = Department::leftJoin('jobs', 'departments.id', '=', 'jobs.department_id')->leftJoin('users', 'jobs.id', '=', 'users.job_id')->selectRaw('departments.id, departments.name, IFNULL(COUNT(users.id),0) as employees')->groupBy('departments.id')->get();
 
@@ -68,7 +28,7 @@ class DepartmentController extends Controller
                 'title' => "Department Info Page.",
                 'desc' => "Displays information on departments.",
                 'info' => $info,
-                'links' => $this->operator_links,
+                'links' => PagesController::getOperatorLinks(),
                 'active' => 'Departments'
             );
 
@@ -85,12 +45,12 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $data = array(
                 'title' => "Create New Department",
                 'desc' => "For making a new department catagory.",
-                'links' => $this->operator_links,
+                'links' => PagesController::getOperatorLinks(),
                 'active' => 'Departments'
             );
 
@@ -107,7 +67,7 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {            
             $this->validate($request, [
                 'deptName' => 'required'
@@ -141,7 +101,7 @@ class DepartmentController extends Controller
      */
     public function show($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $department = Department::find($id);
 
@@ -152,7 +112,7 @@ class DepartmentController extends Controller
                 'desc' => "View information on a department.",
                 'department' => $department,
                 'jobs' => $jobs,
-                'links' => $this->operator_links,
+                'links' => PagesController::getOperatorLinks(),
                 'active' => 'Departments'
             );
 
@@ -170,7 +130,7 @@ class DepartmentController extends Controller
      */
     public function edit($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $department = Department::find($id);
             if (!is_null($department))
@@ -179,7 +139,7 @@ class DepartmentController extends Controller
                     'title' => "Edit Existing Department",
                     'desc' => "For making a new department catagory.",
                     'department'=>$department,
-                    'links' => $this->operator_links,
+                    'links' => PagesController::getOperatorLinks(),
                     'active' => 'Departments'
                 );
 
@@ -199,7 +159,7 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {            
             $this->validate($request, [
                 'deptName' => 'required'
@@ -233,7 +193,7 @@ class DepartmentController extends Controller
      */
     public function destroy($id)
     {
-        if ($this->hasAccess(1))
+        if (PagesController::hasAccess(1))
         {
             $department = Department::find($id);
             $department->delete();

@@ -42,16 +42,16 @@
 <div class="call_menu w3-center w3-padding w3-light-grey">
         <div>
             <div class="w3-padding-large w3-white">
-                <h2>Problem Viewer</h2>
+                <h2>Problem Type Viewer</h2>
                 <table id="info-table">
                     <tbody>
                         <tr class="w3-hover-light-grey solve">
                             <th>Parent Problem ID</th>
-                            <td class="editbutton">#{{sprintf('%04d', $parent->id)}}</td>
+                            <td class="editbutton" onclick="window.location.href = '/specialities/{{$parent->id}}';">#{{sprintf('%04d', $parent->id)}}</td>
                         </tr>
                         <tr class="w3-hover-light-grey solve">
                             <th>Parent Problem Description</th>
-                            <td class="editbutton">{{$parent->description}}</td>
+                            <td class="editbutton" onclick="window.location.href = '/specialities/{{$parent->id}}';">{{$parent->description}}</td>
                         </tr>
                         <tr class="w3-hover-light-grey solve">
                             <th>Problem Type ID</th>
