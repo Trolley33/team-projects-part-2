@@ -70,22 +70,20 @@
                         </tr>
                         <tr class="w3-hover-light-grey solve">
                             <th>Status</th>
-                            @if (count($resolved) === 1)
+                            @if (!is_null($resolved))
 
-                                <td class="w3-green" > Solved 
+                                <td class="w3-green"> Solved 
                                 </td>
                             @else
-                                <td class="w3-red" > Unsolved </td>
+                                <td class="w3-red"> Unsolved </td>
                             @endif
                         </tr>
-                        @if (count($resolved) === 1)
+                        @if (!is_null($resolved))
 
                             <tr id = "8" class="w3-hover-light-grey solve">
                                 <th>Solution Notes</th>
                                 <td>
-                                @foreach ($resolved as $r)
-                                    {{$r->solution_notes}}
-                                @endforeach
+                                    {{$resolved->solution_notes}}
                                 </td>
                             </tr>
                         @endif

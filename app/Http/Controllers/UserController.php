@@ -252,6 +252,24 @@ class UserController extends Controller
         return redirect('login')->with('error', 'Please log in first.');
     }
 
+    public function add_specialism ($user_id, $pt_id)
+    {
+        if (PagesController::hasAccess(1))
+        {
+            $specialism = Speciality::where('specialist_id', '=', $user_id)->get()->first();
+            if (is_null($specialism))
+            {
+                $specialism = new Speciality();
+            }
+            $specialism->specialist_id = $user_id;
+            $specialism->problem_type_id = $pt_id;
+            $specialism->save();
+
+            return redirect('/users/'.$user_id)->with('Success', 'Speciality Added');
+        }
+        return redirect('login')->with('error', 'Please log in first.');
+    }
+
     /**
      * Display the specified resource.
      *
@@ -453,6 +471,9 @@ class UserController extends Controller
         {
             $user = User::find($id);
             $user->delete();
+
+            $speciality = Speciality::where('specialist_id', '=', $id)->delete();
+            
             return redirect('/users')->with('success', 'Account Deleted');
         }
         return redirect('login')->with('error', 'Please log in first.');

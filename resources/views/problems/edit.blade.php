@@ -53,9 +53,8 @@
                         </tr>
                         <tr class="w3-hover-light-grey solve">
                             <th>Problem Type</th>
-                            <td>
+                            <td title="Edit" class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}/edit_problem_type';">
                                 {{$problem->problem_type}}
-                                <!-- do problem type selection -->
                             </td>
                         </tr>
                         <tr class="w3-hover-light-grey solve">
@@ -66,32 +65,33 @@
                             <th>Notes</th>
                             <td>{{Form::textarea('notes', $problem->notes, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Notes'])}}</td>
                         </tr>
-                        <!-- specialist choosing
                         <tr class="w3-hover-light-grey solve">
                             <th>Assigned Helper</th>
-                            <td class="editbutton" onclick="window.location.href = '/users/{{$specialist->id}}';">{{$specialist->forename}} {{$specialist->surname}}</td>
+                            <td title="Edit" class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}/edit_specialist';">{{$specialist->forename}} {{$specialist->surname}}</td>
                         </tr>
-                        -->
                         <tr class="w3-hover-light-grey solve">
                             <th>Status</th>
-                            @if (count($resolved) === 1)
-
-                                <td class="w3-green" > Solved 
+                            <?php $sol_notes = ''; ?>
+                            @if (!is_null($resolved))
+                                <?php $sol_notes = $resolved->solution_notes; ?>
+                                <td title="Mark as Unsolved" id='toggleButton' class="editbutton w3-hover-light-green w3-green">
+                                    Solved
                                 </td>
+                                {{Form::hidden('solved', 'true', ['id'=>'solved'])}}
                             @else
-                                <td class="w3-red" > Unsolved </td>
+                                <td title="Mark as Solved" id='toggleButton' class="editbutton w3-hover-deep-orange w3-red">
+                                    Unsolved
+                                </td>
+                                {{Form::hidden('solved', 'false', ['id'=>'solved'])}}
                             @endif
                         </tr>
-                        @if (count($resolved) === 1)
-                            <tr class="w3-hover-light-grey solve">
-                                <th>Solution Notes</th>
-                                <td>
-                                @foreach ($resolved as $r)
-                                    {{Form::text('solution_notes', $r->solution_notes, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Solution Notes'])}}
-                                @endforeach
-                                </td>
-                            </tr>
-                        @endif
+                        <tr id='solutionNotes' class="w3-hover-light-grey solve">
+                            <th>Solution Notes</th>
+                            <td>
+                                
+                            {{Form::text('solution_notes', $sol_notes, ['class'=>'w3-input w3-border w3-round', 'placeholder'=>'Solution Notes'])}}
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 {{Form::hidden('_method', 'PUT')}}
@@ -103,6 +103,39 @@
 
     <script>
     $(document).ready(function () {
+
+        if ($('#solved').val() == 'false')
+        {
+            $('#solutionNotes').hide();
+        }
+        else if ($('#solved').val() == 'true')
+        {
+            $('#solutionNotes').show();
+        }
+
+
+        $('#toggleButton').click(function () {
+            // Mark as unsolved.
+            if ($('#solved').val() == 'true')
+            {
+                $('#solved').val('false');
+                $('#toggleButton').removeClass('w3-green w3-hover-light-green');
+                $('#toggleButton').addClass('w3-hover-deep-orange w3-red');
+                $('#toggleButton').html('Unsolved');
+                $('#solutionNotes').hide();
+
+
+            }
+            // Mark as solved
+            else if ($('#solved').val() == 'false')
+            {
+                $('#solved').val('true');
+                $('#toggleButton').removeClass('w3-hover-deep-orange w3-red');
+                $('#toggleButton').addClass('w3-green w3-hover-light-green');
+                $('#toggleButton').html('Solved');
+                $('#solutionNotes').show();
+            }
+        });
     });
     </script>
 @endsection

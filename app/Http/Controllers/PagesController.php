@@ -53,6 +53,19 @@ class PagesController extends Controller
         return false;
     }
 
+    public static function getCurrentUser()
+    {
+        if (PagesController::hasAccess(1) || PagesController::hasAccess(2) || PagesController::hasAccess(3))
+        {
+            $cookie = $_COOKIE['csrf'];
+            $user = User::where('remember_token', '=', $cookie)->get()->first();
+
+            return $user;
+        }
+
+        return null;
+    }
+
     public function index()
     {
 

@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
-	<h2>Set Problem Specialism For: {{$user->forename}} {{$user->surname}}</h2>
-	<form id="addSpecialismForm">
+	<h2>Select Problem Type For Problem #{{sprintf('%04d', $problem->id)}}</h2>
+	<form id="addProblemTypeForm">
 	<table id='problem-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
 			<tr>
@@ -24,7 +24,7 @@
 		</tbody>
 	</table>
 	<div style="text-align: center;">
-        <input id="addSpecialism" class="menu-item w3-card w3-button w3-row" type="submit" value="Add Specialism to Specialist" style="width: 400px;" disabled/>
+        <input id="addProblemType" class="menu-item w3-card w3-button w3-row" type="submit" value="Choose Problem Type" style="width: 400px;" disabled/>
     </div>
     </form>
 </div>
@@ -75,7 +75,7 @@ var modal;
 $(document).ready( function () 
 {
     var table = $('#problem-table').DataTable();
-    var user = <?php echo json_encode($user); ?>;
+    var problem = <?php echo json_encode($problem); ?>;
 
     // If we provide some sort of search term through the redirect, search it here.
     var search = "<?php if (session('search')) echo session('search'); ?>";
@@ -84,7 +84,7 @@ $(document).ready( function ()
     $('.selectBox').click(function ()
     {
     	$(this).children('.selectRadio').prop('checked', true);
-    	$('#addSpecialism').prop('disabled', false);
+    	$('#addProblemType').prop('disabled', false);
     });
 
 
@@ -118,15 +118,25 @@ $(document).ready( function ()
 
 	$('input:radio[name="ptype"]').change(
     	function(){
-        $('#addSpecialism').prop('disabled', false);
+        $('#addProblemType').prop('disabled', false);
     });
 
-    $('#addSpecialismForm').submit(function ()
+    $('input:radio[name="ptype"]').each(function (i, r)
     {
-        window.location.href = '/users/' + user.id + '/add_specialism/' + $("input[name='ptype']:checked").val();
+    	var radio = $(r);
+    	if (radio.val() == problem.problem_type)
+    	{
+    		radio.prop('checked', true);
+    		$('#addProblemType').prop('disabled', false);
+    	}
+    });
+
+    $('#addProblemTypeForm').submit(function ()
+    {
+        window.location.href = '/problems/' + problem.id + '/add_problem_type/' + $("input[name='ptype']:checked").val();
 
         return false;
-    })
+    });
 });
 
 function closeModal ()

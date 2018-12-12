@@ -42,6 +42,12 @@ Route::get('/analyst/', 'PagesController@analyst_homepage');
 Route::get   ('/problems/create','ProblemController@create')->name('problems.create');
 Route::get   ('/problems/{id}/edit', 'ProblemController@edit')->name('problems.edit');
 Route::get   ('/problems/{id}/add_call/{caller_id}', 'ProblemController@add_call')->name('problems.add_call');
+
+Route::get   ('/problems/{id}/edit_problem_type', 'ProblemController@edit_problem_type')->name('problems.edit_problem_type');
+Route::get   ('/problems/{problem_id}/add_problem_type/{type_id}', 'ProblemController@add_problem_type')->name('problems.add_problem_type');
+
+Route::get   ('/problems/{id}/edit_specialist', 'ProblemController@edit_specialist')->name('problems.edit_specialist');
+
 // Add calls to problem
 Route::get   ('/problems/{id}/add_call', 'ProblemController@select_user_for_call')->name('problems.select_user_for_call');
 
@@ -78,6 +84,7 @@ Route::get   ('/users/create/tech-support','UserController@create_tech_support')
 
 Route::get   ('/users/{id}/edit', 'UserController@edit')->name('users.edit');
 Route::get ('/users/{id}/edit_specialism', 'UserController@edit_specialism')->name('users.edit_specialism');
+Route::get ('/users/{user_id}/add_specialism/{pt_id}', 'UserController@add_specialism')->name('users.add_specialism');
 Route::get('/problem_types/{id}/compact', 'ProblemTypeController@show_compact')->name('problem_types.show.compact');
 
 Route::put   ('/users/{id}', 'UserController@update')->name('users.update');
