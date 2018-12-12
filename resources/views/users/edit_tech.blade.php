@@ -40,23 +40,20 @@
     <div>
         <div class="w3-padding-large w3-white">
             <h2>{{$user->forename}} {{$user->surname}} - ID: {{sprintf('%04d',$user->employee_id)}}</h2>
+            {!! Form::open(['action' => ['UserController@update', $user->id], 'method' => 'POST']) !!}
             <table>
                 <tbody>
                     <tr class="w3-hover-light-grey solve">
                         <th>Employee ID</th>
-                        <td>{{$user->employee_id}}</td>
+                        <td>{{Form::number('empID', sprintf('%04d', $user->employee_id), ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->employee_id])}}</td>
                     </tr>
                     <tr class="w3-hover-light-grey solve">
-                        <th>Username</th>
-                        <td>{{$user->username}}</td>
+                        <th>Forename</th>
+                        <td>{{Form::text('firstName', $user->forename, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->forename])}}</td>
                     </tr>
                     <tr class="w3-hover-light-grey solve">
-                        <th>Password</th>
-                        <td>{{$user->password}}</td>
-                    </tr>
-                    <tr class="w3-hover-light-grey solve">
-                        <th>Full Name</th>
-                        <td>{{$user->forename}} {{$user->surname}}</td>
+                        <th>Surname</th>
+                        <td>{{Form::text('lastName', $user->surname, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->surname])}}</td>
                     </tr>
                     <tr class="w3-hover-light-grey solve">
                         <th>Job Title</th>
@@ -65,20 +62,38 @@
                     </tr>
                     <tr class="w3-hover-light-grey solve">
                         <th>Phone Number</th>
-                        <td>{{$user->phone_number}}</td>
+                        <td>{{Form::number('phone', $user->phone_number, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->phone_number])}}</td>
                     </tr>
                     <tr class="w3-hover-light-grey solve">
-                        <th>Account Creation Date</th>
-                        <td>{{$user->created_at}}</td>
+                        <th>Username</th>
+                        <td>{{Form::text('username', $user->username, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->username])}}</td>
                     </tr>
-                    @if (!is_null($problem_type))
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Password</th>
+                        <td>{{Form::text('password', $user->password, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->password, 'id'=>'password'])}}</td>
+                    </tr>
                         <tr class="w3-hover-light-grey solve">
                             <th>Problem Specialism</th>
-                            <td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';">{{$problem_type->description}}</td>
+                            @if (!is_null($problem_type))
+                            <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}/edit_specialism';" title="Edit">
+                                {{$problem_type->description}}
+                            </td>
+                            @else
+                            <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}/edit_specialism';" title="Edit">
+                                Not Set
+                            </td>
+                            @endif
                         </tr>
-                    @endif
                 </tbody>
             </table>
+            {{Form::hidden('isCaller', 'false')}}
+            {{Form::hidden('_method', 'PUT')}}
+            {{Form::submit('Submit Changes', ['class'=> "menu-item w3-card w3-button w3-row w3-teal"])}}
+            <br />
+            {{Form::label('visible', 'Show Password')}}
+            {{Form::checkbox('visible', null, null, ['class'=>'w3-checkbox', 'id'=>'pass-visible'])}}
+
+            {!! Form::close() !!}
             <br />
         </div>
     </div>
@@ -88,36 +103,28 @@
     $(document).ready(function () {
         $('#job-select').select2();
 
-        var pass = '<?php echo $user->password ?>';
-        $('#password').val(pass);
-        $('#password2').val(pass);
+        var jobs = <?php echo json_encode($jobs); ?>;
+        var currentJobID = <?php echo json_encode($user->job_id); ?>;
+
+        jobs.forEach(function (job)
+        {
+            if (job.department_id == '1')
+            {
+                var o = new Option(job.title, job.id, false, job.id == currentJobID);
+                $("#job-select").append(o);
+            }
+        });
+        $('#password').attr('type', 'password');
         $('#pass-visible').change(function()
         {
             if (!this.checked)
             {
                 $('#password').attr('type', 'password');
-                $('#password2').attr('type', 'password');
             }
             else
             {
                 $('#password').attr('type', 'text');
-                $('#password2').attr('type', 'text'); 
             }
-        });
-
-        
-        $('#techForm').submit(function ()
-        {
-            // Verify form content.
-            var flag = true;
-            $('#messages').html("");
-            if ($('#password').val() != $('#password2').val())
-            {
-                $('#messages').append("<div class='w3-red' style='width: 100%;'>Passwords do not match.</div>");
-                flag = false;
-            }
-
-            return flag;
         });
     });
 </script>

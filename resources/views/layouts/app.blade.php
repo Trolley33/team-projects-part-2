@@ -77,8 +77,6 @@
                 <li class="navbar-item" style="float: right !important; background-color: #515151;"><a href="/logout">Logout</a></li>
             @endif
         </ul>
-
-    <span id="cutoff"></span>
     @include('messages')
 
     @yield('content')

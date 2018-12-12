@@ -71,12 +71,16 @@
                         <th>Account Creation Date</th>
                         <td>{{$user->created_at}}</td>
                     </tr>
-                    @if (!is_null($problem_type))
                         <tr class="w3-hover-light-grey solve">
                             <th>Problem Specialism</th>
+                            @if (!is_null($problem_type))
                             <td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';">{{$problem_type->description}}</td>
+                            @else
+                            <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}/edit_specialism';" title="Edit">
+                                Not Set
+                            </td>
+                            @endif
                         </tr>
-                    @endif
                 </tbody>
             </table>
 

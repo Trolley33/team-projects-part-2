@@ -1,53 +1,83 @@
+<style>
+    .call_menu
+    {
+        border-radius: 2px;
+        margin-top: 30px;
+        position: absolute;
+        left: 20%;
+        width: 60%;
+        min-width: 300px;
+        background-color: white;
+        margin-bottom: 100px;
+    }
+
+    table{
+        width: 90%;
+        margin-left: 5%;
+    }
+
+    td{
+        padding: 10px;
+    }
+
+    th{
+        padding: 10px;
+        background-color: lightgrey;
+    }
+
+    .editbutton:hover
+    {
+        background-color: #BBBBBB !important;
+        cursor: pointer;
+    }
+</style>
+
 @extends('layouts.app')
 
 @section('content')
 <br />
-        {!! Form::open(['action' => 'UserController@store', 'method' => 'POST']) !!}
-            <div class="w3-container w3-white login w3-mobile">
-                <span class="error"><?php if (isset($error)) echo $error; ?></span>
-                <span class="success"><?php if (isset($success)) echo $success; ?></span>
-                <br />
-                {{Form::label('empID', 'Employee ID')}}
-                <br />
-                {{Form::number('empID', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Employee ID'])}}
-                <br />
-
-                {{Form::label('firstName', 'First Name')}}
-                <br />
-                {{Form::text('firstName', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'First Name'])}}
-                <br />
-
-                {{Form::label('lastName', 'Last Name')}}
-                <br />
-                {{Form::text('lastName', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Last Name'])}}
-                <br />
-
-                {{Form::label('department-select', 'Department')}}
-                <br />
-
-                <select id='department-select' name='department-select' class="w3-input" required  style="width: 100% !important;">
-                </select>
-                <br /><br />
-
-                {{Form::label('job-select', 'Job Title')}}
-                <br />
-
-                <select id='job-select' name='job-select' class="w3-input" required  style="width: 100% !important;">
-                </select>
-
-                <br /><br />
-
-                {{Form::label('phone', 'Phone Number')}}
-                <br />
-                {{Form::number('phone', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Phone Number'])}}
-                <br />
-
-                {{Form::hidden('isCaller', 'true')}}
-
-                {{Form::submit('Submit', ['class'=>'w3-right w3-button w3-teal'])}}
-            </div>
-
-        {!! Form::close() !!}
+<div class="call_menu w3-center w3-padding w3-light-grey">
+    <div>
+        <div class="w3-padding-large w3-white">
+            <h2>Create New Caller Account</h2>
+            {!! Form::open(['action' => 'UserController@store', 'method' => 'POST']) !!}
+            <table>
+                <tbody>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Employee ID</th>
+                        <td>{{Form::number('empID', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Employee ID'])}}</td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Forename</th>
+                        <td>{{Form::text('firstName', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'First name'])}}</td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Surname</th>
+                        <td>{{Form::text('lastName', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Last Name'])}}</td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Department</th>
+                        <td><select id='department-select' name='department-select' class="w3-input" required  style="width: 100% !important;">
+                        </select></td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Job Title</th>
+                        <td><select id='job-select' name='job-select' class="w3-input" required  style="width: 100% !important;">
+                        </select></td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Phone Number</th>
+                        <td>{{Form::number('phone', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Phone Number'])}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            {{Form::hidden('isCaller', 'true')}}
+            {{Form::submit('Submit', ['class'=> "menu-item w3-card w3-button w3-row w3-teal"])}}
+            {!! Form::close() !!}
+            <br />
+        </div>
+    </div>
+</div>
 
 <script>
     $(document).ready(function () {
@@ -57,13 +87,12 @@
         var departments = <?php echo json_encode($departments) ;?>;
         var jobs = <?php echo json_encode($jobs); ?>;
 
-        var currentDept = <?php echo json_encode($dept);?>;
-
-        var currentJob = <?php echo json_encode($job);?>;
+        var selectedDept = <?php echo json_encode($dept); ?>;
+        var selectedJob = <?php echo json_encode($job); ?>;
 
         departments.forEach(function (department)
         {
-            var o = new Option(department.name, department.id, false, currentDept.id == department.id);
+            var o = new Option(department.name, department.id, false, selectedDept.id == department.id);
             $("#department-select").append(o);
         });
 
@@ -71,7 +100,7 @@
         {
             if (job.department_id == $('#department-select :selected').val())
             {
-                var o = new Option(job.title, job.id, false, currentJob.id == job.id);
+                var o = new Option(job.title, job.id, false, selectedJob.id == job.id);
                 $("#job-select").append(o);
             }
         });

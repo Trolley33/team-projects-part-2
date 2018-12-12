@@ -1,55 +1,84 @@
+<style>
+    .call_menu
+    {
+        border-radius: 2px;
+        margin-top: 30px;
+        position: absolute;
+        left: 20%;
+        width: 60%;
+        min-width: 300px;
+        background-color: white;
+        margin-bottom: 100px;
+    }
+
+    table{
+        width: 90%;
+        margin-left: 5%;
+    }
+
+    td{
+        padding: 10px;
+    }
+
+    th{
+        padding: 10px;
+        background-color: lightgrey;
+    }
+
+    .editbutton:hover
+    {
+        background-color: #BBBBBB !important;
+        cursor: pointer;
+    }
+</style>
+
 @extends('layouts.app')
 
 @section('content')
 <br />
-        {!! Form::open(['action' => ['UserController@update', $user->id], 'method' => 'POST']) !!}
-            <div class="w3-container w3-white login w3-mobile">
-                <h2>{{$user->forename}} {{$user->surname}}</h2>
-                <span class="error"><?php if (isset($error)) echo $error; ?></span>
-                <span class="success"><?php if (isset($success)) echo $success; ?></span>
-                <br />
-                {{Form::label('empID', 'Employee ID')}}
-                <br />
-                {{Form::number('empID', $user->employee_id, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Employee ID'])}}
-                <br />
-
-                {{Form::label('firstName', 'First Name')}}
-                <br />
-                {{Form::text('firstName', $user->forename, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'First Name'])}}
-                <br />
-
-                {{Form::label('lastName', 'Last Name')}}
-                <br />
-                {{Form::text('lastName', $user->surname, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Last Name'])}}
-                <br />
-
-                {{Form::label('department-select', 'Department')}}
-                <br />
-
-                <select id='department-select' name='department-select' class="w3-input" required  style="width: 100% !important;">
-                </select>
-                <br /><br />
-
-                {{Form::label('job-select', 'Job Title')}}
-                <br />
-
-                <select id='job-select' name='job-select' class="w3-input" required  style="width: 100% !important;">
-                </select>
-
-                <br /><br />
-
-                {{Form::label('phone', 'Phone Number')}}
-                <br />
-                {{Form::number('phone', $user->phone_number, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Phone Number'])}}
-                <br />
-
-                {{Form::hidden('isCaller', 'true')}}
-                {{Form::hidden('_method', 'PUT')}}
-
-                {{Form::submit('Submit', ['class'=>'w3-right w3-button w3-teal'])}}
-            </div>
-
-        {!! Form::close() !!}
+<div class="call_menu w3-center w3-padding w3-light-grey">
+    <div>
+        <div class="w3-padding-large w3-white">
+            <h2>{{$user->forename}} {{$user->surname}} - ID: {{sprintf('%04d',$user->employee_id)}}</h2>
+            {!! Form::open(['action' => ['UserController@update', $user->id], 'method' => 'POST']) !!}
+            <table>
+                <tbody>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Employee ID</th>
+                        <td>{{Form::number('empID', sprintf('%04d', $user->employee_id), ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->employee_id])}}</td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Forename</th>
+                        <td>{{Form::text('firstName', $user->forename, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->forename])}}</td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Surname</th>
+                        <td>{{Form::text('lastName', $user->surname, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->surname])}}</td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Department</th>
+                        <td><select id='department-select' name='department-select' class="w3-input" required  style="width: 100% !important;">
+                        </select></td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Job Title</th>
+                        <td><select id='job-select' name='job-select' class="w3-input" required  style="width: 100% !important;">
+                        </select></td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>Phone Number</th>
+                        <td>{{Form::number('phone', $user->phone_number, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->phone_number])}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            {{Form::hidden('isCaller', 'true')}}
+            {{Form::hidden('_method', 'PUT')}}
+            {{Form::submit('Submit Changes', ['class'=> "menu-item w3-card w3-button w3-row w3-teal"])}}
+            {!! Form::close() !!}
+            <br />
+        </div>
+    </div>
+</div>
 
 <script>
     $(document).ready(function () {

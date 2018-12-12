@@ -191,8 +191,7 @@ class UserController extends Controller
             {
                 $this->validate($request, [
                     'username' => 'required',
-                    'pass' => 'required',
-                    'pass2' => 'required'
+                    'password' => 'required'
                 ]);
 
 
@@ -203,14 +202,21 @@ class UserController extends Controller
                     $user = new User;
                     $user->employee_id = $request->input('empID');
                     $user->username = $request->input('username');
-                    $user->password = $request->input('pass');
+                    $user->password = $request->input('password');
                     $user->forename = $request->input('firstName');
                     $user->surname = $request->input('lastName');
                     $user->job_id = $request->input('job-select');
                     $user->phone_number = $request->input('phone');
                     $user->save();
 
-                    return redirect('/users')->with('success', 'System Account Added');
+                    $level = Job::find($user->job_id)->access_level;
+
+                    if ($level != 2)
+                    {
+                        return redirect('/users')->with('success', 'System Account Added');
+                    }
+
+                    return redirect('/users/'.$user->id.'/edit_specialism');
                 }
 
                 $data = array(
@@ -221,6 +227,27 @@ class UserController extends Controller
                 return redirect('/users')->with($data);
             }
 
+        }
+        return redirect('login')->with('error', 'Please log in first.');
+    }
+
+    public function edit_specialism ($id)
+    {
+        if (PagesController::hasAccess(1))
+        {
+            $problem_types = ProblemType::all();
+            $user = User::find($id);
+
+            $data = array(
+                'title' => "Change User Specialism",
+                'desc' => " ",
+                'problem_types' => $problem_types,
+                'user'=>$user,
+                'links' => PagesController::getOperatorLinks(),
+                'active' => 'Users'
+            );
+
+            return view('users.edit_specialism')->with($data);
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
@@ -380,8 +407,7 @@ class UserController extends Controller
             {
                 $this->validate($request, [
                     'username' => 'required',
-                    'pass' => 'required',
-                    'pass2' => 'required'
+                    'password' => 'required'
                 ]);
 
 
@@ -393,7 +419,7 @@ class UserController extends Controller
                         $user = User::find($id);
                         $user->employee_id = $request->input('empID');
                         $user->username = $request->input('username');
-                        $user->password = $request->input('pass');
+                        $user->password = $request->input('password');
                         $user->forename = $request->input('firstName');
                         $user->surname = $request->input('lastName');
                         $user->job_id = $request->input('job-select');

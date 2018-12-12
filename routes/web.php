@@ -77,6 +77,9 @@ Route::get   ('/users/create/caller','UserController@create_caller')->name('user
 Route::get   ('/users/create/tech-support','UserController@create_tech_support')->name('users.create_tech_support');
 
 Route::get   ('/users/{id}/edit', 'UserController@edit')->name('users.edit');
+Route::get ('/users/{id}/edit_specialism', 'UserController@edit_specialism')->name('users.edit_specialism');
+Route::get('/problem_types/{id}/compact', 'ProblemTypeController@show_compact')->name('problem_types.show.compact');
+
 Route::put   ('/users/{id}', 'UserController@update')->name('users.update');
 Route::get   ('/users/{id}', 'UserController@show')->name('users.show');
 Route::post  ('/users', 'UserController@store')->name('users.store');

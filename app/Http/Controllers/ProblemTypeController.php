@@ -165,6 +165,35 @@ class ProblemTypeController extends Controller
         return redirect('login')->with('error', 'Please log in first.');
     }
 
+    public function show_compact($id)
+    {
+        if (PagesController::hasAccess(1))
+        {
+            $type = ProblemType::find($id);
+            if (!is_null($type))
+            {
+                $specialists = Speciality::join('users', 'users.id', '=', 'speciality.specialist_id')->join('problem_types', 'problem_types.id', '=', 'speciality.problem_type_id')->where('problem_types.id', '=', $id)->orWhere('problem_types.parent', '=', $id)->get();
+
+                $parent = ProblemType::find($type->parent);
+
+                $data = array(
+                    'title' => "Problem Type Viewer",
+                    'desc' => "View information on parent.",
+                    'parent'=>$parent,
+                    'type' => $type,
+                    'specialists'=>$specialists,
+                    'links'=>PagesController::getOperatorLinks(),
+                    'active'=>'Problem Types'
+                );
+
+                return view('problem_types.show_compact')->with($data);
+            }
+            return "Something else";
+        }
+
+        return redirect('login')->with('error', 'Please log in first.');
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
