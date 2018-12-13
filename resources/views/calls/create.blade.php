@@ -21,7 +21,7 @@
         <tbody>
             @foreach ($problems as $problem)
             <tr>
-                <td>{{$problem->created_at}}</td><td>{{$problem->pID}}</td><td>{{$problem->problem_type}}</td><td>{{$problem->description}}</td><td>{{$problem->forename}} {{$problem->surname}}</td>
+                <td>{{$problem->created_at}}</td><td>{{$problem->pID}}</td><td>{{$problem->problemType}}</td><td>{{$problem->description}}</td><td>{{$problem->forename}} {{$problem->surname}}</td>
                 <?php $flag = true; ?>
                     @foreach($resolved as $res)
                         @if ($res->problem_id == $problem->pID)

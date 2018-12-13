@@ -16,7 +16,6 @@ use App\AffectedSoftware;
 
 class ProblemController extends Controller
 {
-    
 
     /**
      * Display a listing of the resource.
@@ -29,7 +28,7 @@ class ProblemController extends Controller
         {
             // Get intial caller for problem.
             $problems = DB::select(DB::raw(
-                'SELECT problems.id as pID, problems.created_at, problems.problem_type, problems.description, users.forename, users.surname, calls.id as cID
+                'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problems.description, users.forename, users.surname, calls.id as cID
                 FROM problems
                 JOIN calls
                 ON (
@@ -41,7 +40,9 @@ class ProblemController extends Controller
                     )
                 )
                 JOIN users
-                ON users.id = calls.caller_id'
+                ON users.id = calls.caller_id
+                JOIN problem_types
+                ON problem_types.id = problems.problem_type'
             ));
                 
             $resolved = Problem::join('resolved_problems', 'problems.id', '=', 'resolved_problems.problem_id')->select('resolved_problems.problem_id')->get();
@@ -109,6 +110,7 @@ class ProblemController extends Controller
         if (PagesController::hasAccess(1))
         {
             $problem = Problem::find($id);
+            $type = ProblemType::find($problem->problem_type);
 
             $callers = DB::table('problems')->join('calls', 'problems.id', '=', 'calls.problem_id')->join('users', 'users.id', '=', 'calls.caller_id')->select('calls.id as cID', 'calls.notes', 'calls.created_at as cAT', 'users.*')->where('problems.id', '=', $id)->get();
 
@@ -126,6 +128,7 @@ class ProblemController extends Controller
                     'title' => "Problem Viewer.",
                     'desc' => "Shows information on a problem.",
                     'problem' => $problem,
+                    'problem_type' => $type,
                     'callers' => $callers,
                     'specialist' => $assigned,
                     'resolved' => $resolved,
@@ -406,6 +409,7 @@ class ProblemController extends Controller
         if (PagesController::hasAccess(1))
         {
             $problem = Problem::find($id);
+            $type = ProblemType::find($problem->problem_type);
             if (!is_null($problem))
             {
                 $assigned = DB::table('problems')->join('users', 'problems.assigned_to', '=', 'users.id')->select('users.*')->where('problems.id', '=', $id)->get()->first();
@@ -416,6 +420,7 @@ class ProblemController extends Controller
                     'title' => "Edit Existing Problem",
                     'desc' => "For editing a problem.",
                     'problem'=>$problem,
+                    'problem_type' => $type,
                     'specialist'=>$assigned,
                     'resolved'=>$resolved,
                     'links' => PagesController::getOperatorLinks(),
@@ -456,7 +461,16 @@ class ProblemController extends Controller
 
     public function add_problem_type ($problem_id, $type_id)
     {
-        return 'test';
+        if (PagesController::hasAccess(1))
+        {
+            $problem = Problem::find($problem_id);
+            $problem->problem_type = $type_id;
+            $problem->save();
+
+            return redirect('/problems/'.$problem_id.'/edit')->with('success', 'Problem Type Changed');
+        }
+
+        return redirect('/login')->with('error', 'Please log in first.');
     }
 
     public function edit_specialist ($id)
@@ -464,14 +478,24 @@ class ProblemController extends Controller
        if (PagesController::hasAccess(1))
         {
             $problem = Problem::find($id);
+            $problem_type = ProblemType::find($problem->problem_type);
+            $parent = ProblemType::find($problem_type->parent);
             if (!is_null($problem))
             {
-                
+                $specialists = User::join('speciality', 'users.id', '=', 'speciality.specialist_id')->join('problem_types', 'speciality.problem_type_id', '=', 'problem_types.id')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, users.*')->get();
+
+                if (is_null($parent))
+                {
+                    $parent = $problem_type;
+                }
 
                 $data = array(
                     'title' => "Edit Assigned Specialist",
                     'desc' => "",
                     'problem'=>$problem,
+                    'parent'=>$parent,
+                    'type'=>$problem_type,
+                    'specialists'=>$specialists,
                     'links' => PagesController::getOperatorLinks(),
                     'active' => 'Problems'
                 );
@@ -481,6 +505,16 @@ class ProblemController extends Controller
             return redirect('/problems');
         }
         return redirect('login')->with('error', 'Please log in first.'); 
+    }
+
+    public function add_specialist($id, $specialist_id)
+    {
+        return "add specialist";
+    }
+
+    public function add_operator($id)
+    {
+        return "add this operator";
     }
 
     /**

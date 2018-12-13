@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.compact')
 
-@section('content')
+
 <style>
     .call_menu
     {
@@ -35,6 +35,7 @@
     }
 </style>
 
+@section('content')
 <div class="call_menu w3-center w3-padding w3-light-grey">
     <div>
         <div class="w3-padding-large w3-white">
@@ -43,7 +44,7 @@
                 <tbody>
                     <tr class="w3-hover-light-grey solve">
                         <th>Full Name</th>
-                        <td>{{$user->forename}} {{$user->surname}}</td>
+                        <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}';">{{$user->forename}} {{$user->surname}}</td>
                     </tr>
                     <tr class="w3-hover-light-grey solve">
                         <th>Department Name</th>
@@ -83,35 +84,13 @@
                         </tr>
                 </tbody>
             </table>
-
-            <div style="text-align: center;">
-                <a class="blank" href="/users/{{$user->id}}/edit">
-                    <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
-                        Edit Information
-                    </div>
-                </a><br />
-            </div>
-            
-            {!!Form::open(['action' => ['UserController@destroy', $user->id], 'method' => 'POST', 'onsubmit'=>"return confirm('Delete User? This action cannot be undone, and may lead to unintended consequences.');"]) !!}
-
-            {{Form::hidden('_method', 'DELETE')}}
-            
-            {{Form::submit('Delete Account', ['class'=> "menu-item w3-card w3-button w3-row w3-red", 'style'=> 'width: 400px;'])}}
-            
-            {!!Form::close() !!}
-
-            <br />
         </div>
     </div>
 </div>
 
 <script>
-$(document).ready(function() 
-{
-    $('#back-btn').click(function()
-    {
-        // window.location.replace('/users/');
-    })
+
+$(document).ready(function () {
 });
 </script>
 @endsection

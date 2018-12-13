@@ -26,17 +26,6 @@
         padding: 10px;
         background-color: lightgrey;
     }
-    .editbutton:hover
-    {
-        background-color: #BBBBBB !important;
-        cursor: pointer;
-    }
-
-    .slideHeader:hover
-    {
-        background-color: #BBBBBB !important;
-        cursor: pointer;
-    }
 </style>
 
 @section('content')
@@ -49,12 +38,13 @@
                     <tbody>
                         <tr class="w3-hover-light-grey solve">
                             <th>Problem Number</th>
-                            <td> #{{$problem->id}}</td>
+                            <td> #{{sprintf('%04d', $problem->id)}}</td>
                         </tr>
                         <tr class="w3-hover-light-grey solve">
                             <th>Problem Type</th>
                             <td title="Edit" class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}/edit_problem_type';">
-                                {{$problem->problem_type}}
+                                {{$problem_type->description}}
+                                <span class="icon">Edit</span>
                             </td>
                         </tr>
                         <tr class="w3-hover-light-grey solve">
@@ -67,7 +57,8 @@
                         </tr>
                         <tr class="w3-hover-light-grey solve">
                             <th>Assigned Helper</th>
-                            <td title="Edit" class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}/edit_specialist';">{{$specialist->forename}} {{$specialist->surname}}</td>
+                            <td title="Edit" class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}/edit_specialist';">{{$specialist->forename}} {{$specialist->surname}}
+                            <span class="icon">Edit</span></td>
                         </tr>
                         <tr class="w3-hover-light-grey solve">
                             <th>Status</th>

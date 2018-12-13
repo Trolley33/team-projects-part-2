@@ -305,6 +305,35 @@ class UserController extends Controller
         return redirect('login')->with('error', 'Please log in first.');
     }
 
+    public function show_compact($id)
+    {
+        if (PagesController::hasAccess(1))
+        {
+            $user = User::find($id);
+
+            $info = DB::table('jobs')->join('users', 'jobs.id', '=', 'users.job_id')->join('departments' , 'jobs.department_id', '=', 'departments.id')->select( 'jobs.id as jID', 'jobs.title', 'jobs.access_level', 'departments.id as dID', 'departments.name')->where('users.id', '=', $id)->get()->first();
+
+            $problem_type = Speciality::join('problem_types', 'problem_types.id', '=', 'speciality.problem_type_id')->where('speciality.specialist_id', '=', $id)->get()->first();
+
+            if (!is_null($user) && !is_null($info))
+            {
+                $data = array(
+                    'title' => "User Viewer.",
+                    'desc' => "View user account information.",
+                    'user' => $user,
+                    'job_info' => $info,
+                    'problem_type'=>$problem_type,
+                    'links' => PagesController::getOperatorLinks(),
+                    'active' => 'Users'
+                );
+
+                return view('users.show_compact')->with($data);
+            }
+            return "Error completing that request.";
+        }
+        return redirect('login')->with('error', 'Please log in first.');
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

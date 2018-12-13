@@ -107,8 +107,6 @@ $(document).ready( function ()
 
 		if (!target.hasClass('modalOpener'))
 		{	
-			console.log(target);
-			console.log(target.closest('.modal'));
 			if (target.closest('.modal div').length == 0)
 			{
 				closeModal();

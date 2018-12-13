@@ -55,6 +55,26 @@
     background-color: #FFF;
     color: black;
 }
+
+.editbutton:hover
+{
+    background-color: #BBBBBB !important;
+    cursor: pointer;
+}
+
+.slideHeader:hover
+{
+    background-color: #BBBBBB !important;
+    cursor: pointer;
+}
+.editbutton:hover .icon
+{
+    display: block;
+}
+.icon {
+    float: right;
+    display: none;
+}
 </style>
     <div class="header w3-container w3-dark-grey">
         <div class="w3-center">

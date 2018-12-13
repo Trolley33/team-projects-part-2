@@ -40,6 +40,10 @@ Route::get('/analyst/', 'PagesController@analyst_homepage');
 
 // Problem pages.
 Route::get   ('/problems/create','ProblemController@create')->name('problems.create');
+
+Route::get   ('/problems/{id}/add_specialist/{specialist_id}', 'ProblemController@add_specialist')->name('problems.add_specialist');
+Route::get   ('/problems/{id}/add_operator', 'ProblemController@add_operator')->name('problems.add_operator');
+
 Route::get   ('/problems/{id}/edit', 'ProblemController@edit')->name('problems.edit');
 Route::get   ('/problems/{id}/add_call/{caller_id}', 'ProblemController@add_call')->name('problems.add_call');
 
@@ -85,7 +89,7 @@ Route::get   ('/users/create/tech-support','UserController@create_tech_support')
 Route::get   ('/users/{id}/edit', 'UserController@edit')->name('users.edit');
 Route::get ('/users/{id}/edit_specialism', 'UserController@edit_specialism')->name('users.edit_specialism');
 Route::get ('/users/{user_id}/add_specialism/{pt_id}', 'UserController@add_specialism')->name('users.add_specialism');
-Route::get('/problem_types/{id}/compact', 'ProblemTypeController@show_compact')->name('problem_types.show.compact');
+Route::get('/users/{id}/compact', 'UserController@show_compact')->name('users.show.compact');
 
 Route::put   ('/users/{id}', 'UserController@update')->name('users.update');
 Route::get   ('/users/{id}', 'UserController@show')->name('users.show');
@@ -145,13 +149,14 @@ Route::delete('/specialities/{id}', 'SpecialityController@destroy')->name('speci
 
 // Problem type routes. =============================
 Route::get   ('/problem_types/create','ProblemTypeController@create')->name('problem_types.create');
-
+Route::get('/problem_types/{id}/compact', 'ProblemTypeController@show_compact')->name('problem_types.show.compact');
 Route::get   ('/problem_types/{id}/edit', 'ProblemTypeController@edit')->name('problem_types.edit');
 Route::put   ('/problem_types/{id}', 'ProblemTypeController@update')->name('problem_types.update');
 Route::get   ('/problem_types/{id}', 'ProblemTypeController@show')->name('problem_types.show');
 Route::post  ('/problem_types', 'ProblemTypeController@store')->name('problem_types.store');
 Route::get   ('/problem_types','ProblemTypeController@index')->name('problem_types.index');
 Route::delete('/problem_types/{id}', 'ProblemTypeController@destroy')->name('problem_types.destroy');
+
 
 // Calls routes. =============================
 Route::get   ('/calls/create','CallsController@create')->name('calls.create');

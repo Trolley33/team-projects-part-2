@@ -11,6 +11,7 @@ use App\User;
 use App\Job;
 use App\Department;
 use App\Problem;
+use App\ProblemType;
 use App\Call;
 
 class CallsController extends Controller
@@ -37,7 +38,7 @@ class CallsController extends Controller
         {
             // Get intial caller for problem.
             $problems = DB::select(DB::raw(
-                'SELECT problems.id as pID, problems.created_at, problems.problem_type, problems.description, users.forename, users.surname, calls.id as cID
+                'SELECT problems.id as pID, problems.created_at, problem_types.description as problemType, problems.description, users.forename, users.surname, calls.id as cID
                 FROM problems
                 JOIN calls
                 ON (
@@ -49,7 +50,9 @@ class CallsController extends Controller
                     )
                 )
                 JOIN users
-                ON users.id = calls.caller_id'
+                ON users.id = calls.caller_id
+                JOIN problem_types
+                ON problem_types.id = problems.problem_type'
             ));
             
             $resolved = Problem::join('resolved_problems', 'problems.id', '=', 'resolved_problems.problem_id')->select('resolved_problems.problem_id')->get();
@@ -114,13 +117,18 @@ class CallsController extends Controller
                 $user = User::find($call->caller_id);
 
                 $problem = Problem::find($call->problem_id);
+                $type = ProblemType::find($problem->problem_type);
+
+                $first_call = Call::orderBy('created_at')->first();
 
                 $data = array(
                     'title' => "Call Viewer.",
                     'desc' => "View call information.",
                     'user' => $user,
                     'call' => $call,
+                    'first_call' => $first_call,
                     'problem' => $problem,
+                    'problem_type' => $type,
                     'links' => PagesController::getOperatorLinks(),
                     'active' => 'Problems'
                 );

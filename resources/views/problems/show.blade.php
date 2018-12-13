@@ -26,17 +26,6 @@
         padding: 10px;
         background-color: lightgrey;
     }
-    .editbutton:hover
-    {
-        background-color: #BBBBBB !important;
-        cursor: pointer;
-    }
-
-    .slideHeader:hover
-    {
-        background-color: #BBBBBB !important;
-        cursor: pointer;
-    }
 </style>
 
 @section('content')
@@ -48,12 +37,13 @@
                     <tbody>
                         <tr class="w3-hover-light-grey solve">
                             <th>Problem Number</th>
-                            <td> #{{$problem->id}}</td>
+                            <td> #{{sprintf('%04d', $problem->id)}}</td>
                         </tr>
                         <tr class="w3-hover-light-grey solve">
                             <th>Problem Type</th>
-                            <td>
-                                {{$problem->problem_type}}  
+                            <td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';">
+                                {{$problem_type->description}}
+                                <span class="icon">View</span>  
                             </td>
                         </tr>
                         <tr class="w3-hover-light-grey solve">
@@ -66,7 +56,8 @@
                         </tr>
                         <tr class="w3-hover-light-grey solve">
                             <th>Assigned Helper</th>
-                            <td class="editbutton" onclick="window.location.href = '/users/{{$specialist->id}}';">{{$specialist->forename}} {{$specialist->surname}}</td>
+                            <td class="editbutton" onclick="window.location.href = '/users/{{$specialist->id}}';">{{$specialist->forename}} {{$specialist->surname}}
+                                <span class="icon">View</span></td>
                         </tr>
                         <tr class="w3-hover-light-grey solve">
                             <th>Status</th>
@@ -222,8 +213,7 @@
 
         var table2 = $('#equipment-table').DataTable();
         var table3 = $('#software-table').DataTable();
-
-        $('.slideHeader').next('.slideable').slideUp(0);
+        
         $('.slideHeader').click(function(){
             $(this).next('.slideable').slideToggle();
         });
