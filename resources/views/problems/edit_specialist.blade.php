@@ -8,7 +8,7 @@
 	<table id='problem-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
 			<tr>
-				<th>Emlpoyee ID</th><th>Specialist Name</th><th>Problem Specialism</th><th>Select</th>
+				<th>Employee ID</th><th>Specialist Name</th><th>Problem Specialism</th><th>Select</th>
 			</tr>
 		</thead>
 		<tbody>

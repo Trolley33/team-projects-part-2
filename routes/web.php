@@ -42,6 +42,9 @@ Route::get('/analyst/', 'PagesController@analyst_homepage');
 Route::get   ('/problems/create','ProblemController@create')->name('problems.create');
 Route::get   ('/problems/create/{user_id}','ProblemController@select_problem_type')->name('problems.select_problem_type');
 Route::get   ('/problems/create/{user_id}/{problem_type_id}','ProblemController@add_problem_details')->name('problems.add_problem_details');
+Route::post('/problems/create/{user_id}/{problem_type_id}', 'ProblemController@select_specialist_for_problem')->name('problems.select_specialist_for_problem');
+
+Route::post('/problems/store', 'ProblemController@store')->name('problems.store');
 
 Route::get   ('/problems/{id}/add_specialist/{specialist_id}', 'ProblemController@add_specialist')->name('problems.add_specialist');
 Route::get   ('/problems/{id}/add_operator', 'ProblemController@add_operator')->name('problems.add_operator');

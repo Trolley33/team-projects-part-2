@@ -3,6 +3,7 @@
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
 	<h2>Select Problem Type For New Problem</h2>
+	<h3>Creating problem for: {{$user->forename}} {{$user->surname}}</h3>
 	<form id="addProblemTypeForm">
 	<table id='problem-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
@@ -13,7 +14,7 @@
 		<tbody>
 			@foreach ($problem_types as $pt)
 			<tr>
-				<td title="View" class="editbutton">{{$pt->id}}</td>
+				<td title="View" class="editbutton">{{sprintf('%04d', $pt->id)}}</td>
 				<td title="View" class="editbutton modalOpener" value='{{$pt->id}}'>
           @if ($pt->parent_description != '0')
             ({{$pt->parent_description}})
@@ -123,19 +124,9 @@ $(document).ready( function ()
         $('#addProblemType').prop('disabled', false);
     });
 
-    $('input:radio[name="ptype"]').each(function (i, r)
-    {
-    	var radio = $(r);
-    	if (radio.val() == problem.problem_type)
-    	{
-    		radio.prop('checked', true);
-    		$('#addProblemType').prop('disabled', false);
-    	}
-    });
-
     $('#addProblemTypeForm').submit(function ()
     {
-        window.location.href = '/problems/' + problem.id + '/add_problem_type/' + $("input[name='ptype']:checked").val();
+        window.location.href = '/problems/create/{{$user->id}}/' + $("input[name='ptype']:checked").val();
 
         return false;
     });

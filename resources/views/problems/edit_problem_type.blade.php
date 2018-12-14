@@ -13,7 +13,7 @@
 		<tbody>
 			@foreach ($problem_types as $pt)
 			<tr>
-				<td title="View" class="editbutton">{{$pt->id}}</td>
+				<td title="View" class="editbutton">{{sprintf('%04d', $pt->id)}}</td>
 				<td title="View" class="editbutton modalOpener" value='{{$pt->id}}'>
           @if ($pt->parent_description != '0')
             ({{$pt->parent_description}})

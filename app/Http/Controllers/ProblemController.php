@@ -94,9 +94,12 @@ class ProblemController extends Controller
         {
             $problem_types = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('problem_types.*, IFNULL(parents.description,0) as parent_description')->get();
             
+            $user = User::find($user_id);
+
             $data = array(
                 'title' => "Create Problem",
                 'desc' => " ",
+                'user'=>$user,
                 'problem_types'=>$problem_types,
                 'links' => PagesController::getOperatorLinks(),
                 'active' => 'Problems'
@@ -109,9 +112,60 @@ class ProblemController extends Controller
 
     public function add_problem_details($user_id, $problem_type_id)
     {
-        $pt = ProblemType::find($problem_type_id);
-        $user = User::find($user_id);
-        return $pt . ' ' . $user;
+        if (PagesController::hasAccess(1))
+        {
+            $pt = ProblemType::find($problem_type_id);
+            $user = User::find($user_id);
+
+            $data = array(
+                'title' => "Create Problem",
+                'desc' => " ",
+                'user'=>$user,
+                'problem_type'=>$pt,
+                'links' => PagesController::getOperatorLinks(),
+                'active' => 'Problems'
+            );
+
+            return view('problems.add_problem_details')->with($data);
+        }
+        return redirect('login')->with('error', 'Please log in first.'); 
+    }
+
+    public function select_specialist_for_problem(Request $request, $user_id, $problem_type_id)
+    {
+        if (PagesController::hasAccess(1))
+        {
+            $this->validate($request, [
+                'desc' => 'required',
+                'notes' => 'required'
+            ]);
+
+            $user = User::find($user_id);
+            $problem_type = ProblemType::find($problem_type_id);
+            $parent = ProblemType::find($problem_type->parent);
+            $specialists = User::join('speciality', 'users.id', '=', 'speciality.specialist_id')->join('problem_types', 'speciality.problem_type_id', '=', 'problem_types.id')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, users.*')->get();
+
+            if (is_null($parent))
+            {
+                $parent = $problem_type;
+            }
+
+            $data = array(
+                'title' => "Edit Assigned Specialist",
+                'desc' => "",
+                'problem_description'=>$request->input('desc'),
+                'problem_notes'=>$request->input('notes'),
+                'user'=>$user,
+                'parent'=>$parent,
+                'problem_type'=>$problem_type,
+                'specialists'=>$specialists,
+                'links' => PagesController::getOperatorLinks(),
+                'active' => 'Problems'
+            );
+
+            return view('problems.select_specialist_for_problem')->with($data);
+        }
+        return redirect('login')->with('error', 'Please log in first.'); 
     }
 
     /**
@@ -122,7 +176,19 @@ class ProblemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (PagesController::hasAccess(1))
+        {
+            $this->validate($request, [
+                'desc' => 'required',
+                'notes' => 'required',
+                'user_id' => 'required',
+                'problem_type_id' => 'required',
+                'submit' =>'required'
+            ]);
+
+
+            return $request->input('submit');
+        }
     }
 
     /**
