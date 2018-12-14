@@ -73,45 +73,22 @@ class ProblemController extends Controller
     {
         if (PagesController::hasAccess(1))
         {
-            $users = User::join('jobs', 'users.job_id', '=', 'jobs.id')->join('departments', 'jobs.department_id', '=', 'departments.id')->select('users.*', 'jobs.title', 'departments.name')->get();
+            $header_types = DB::table('problem_types')->select('problem_types.*')->where('problem_types.parent', '=', '-1')->get();
+
+            $types = DB::table('problem_types')->select('problem_types.*')->where('problem_types.parent', '!=', '-1')->get();
 
             $data = array(
                 'title' => "Problem Creator",
                 'desc' => "Create a New Problem",
-                'users' => $users,
+                'header_types' => $header_types,
+                'types' => $types,
                 'links' => PagesController::getOperatorLinks(),
                 'active' => 'Problems'
             );
 
-            return view('problems.select_user_for_problem')->with($data);
+            return view('problems.create')->with($data);
         }
         return redirect('login')->with('error', 'Please log in first.');
-    }
-
-    public function select_problem_type($user_id)
-    {
-        if (PagesController::hasAccess(1))
-        {
-            $problem_types = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('problem_types.*, IFNULL(parents.description,0) as parent_description')->get();
-            
-            $data = array(
-                'title' => "Create Problem",
-                'desc' => " ",
-                'problem_types'=>$problem_types,
-                'links' => PagesController::getOperatorLinks(),
-                'active' => 'Problems'
-            );
-
-            return view('problems.select_problem_type_for_problem')->with($data);
-        }
-        return redirect('login')->with('error', 'Please log in first.'); 
-    }
-
-    public function add_problem_details($user_id, $problem_type_id)
-    {
-        $pt = ProblemType::find($problem_type_id);
-        $user = User::find($user_id);
-        return $pt . ' ' . $user;
     }
 
     /**

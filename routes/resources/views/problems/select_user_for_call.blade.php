@@ -24,8 +24,8 @@
             <tr>
                 <td>{{sprintf('%04d',$user->employee_id)}}</td>
                 <td>{{$user->forename}} {{$user->surname}}</td><td>{{$user->name}}</td><td>{{$user->title}}</td><td>{{$user->phone_number}}</td>
-                <td class="selectBox editbutton" style="text-align: center;">
-                    <input class="selectRadio" type="radio" name='existing' value="{{$user->id}}" />
+                <td style="text-align: center;">
+                    <input type="radio" name='existing' value="{{$user->id}}" />
                 </td>
             </tr>
             @endforeach
@@ -50,12 +50,6 @@ $(document).ready( function ()
     $('input:radio[name="existing"]').change(
     function(){
         $('#addUser').prop('disabled', false);
-    });
-
-    $('.selectBox').click(function ()
-    {
-      $(this).children('.selectRadio').prop('checked', true);
-      $('#addUser').prop('disabled', false);
     });
 
     $('#addUserForm').submit(function ()

@@ -10,10 +10,9 @@
 
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
-    <h2>Problem ID: {{$problem->id}}</h2>
+    <h2>Select User to Create Problem For</h2>
     <form id="addUserForm">
     <table id='user-table' class="display cell-border stripe hover">
-
         <thead>
             <tr>
                 <th>Employee ID</th><th>Name</th><th>Department</th><th>Job Title</th><th>Phone Number</th><th>Select</th>
@@ -44,7 +43,6 @@
 var problem;
 $(document).ready( function () 
 {
-    problem = <?php echo json_encode($problem) ?>;
     var table = $('#user-table').DataTable();
 
     $('input:radio[name="existing"]').change(
@@ -60,7 +58,7 @@ $(document).ready( function ()
 
     $('#addUserForm').submit(function ()
     {
-        window.location.href = '/problems/' + problem.id + '/add_call/' + $("input[name='existing']:checked").val();
+        window.location.href = '/problems/create/' + $("input[name='existing']:checked").val();
 
         return false;
     })
