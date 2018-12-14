@@ -98,9 +98,13 @@
     <script>
     $(document).ready(function () {
         var first_call = <?php echo json_encode($first_call); ?>;
+
         var this_call = <?php echo json_encode($call); ?>
 
-        if (first_call.id = this_call.id)
+        console.log(first_call);
+        console.log(this_call);
+        
+        if (first_call.id == this_call.id)
         {
             $('.but').prop('disabled', true);
         }

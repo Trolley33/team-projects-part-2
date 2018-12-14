@@ -63,7 +63,7 @@ class CallsController extends Controller
                 'problems'=>$problems,
                 'resolved'=>$resolved,
                 'links' => PagesController::getOperatorLinks(),
-                'active' => 'Log New Call'
+                'active' => 'Problems'
             );
 
             return view('calls.create')->with($data);
@@ -119,7 +119,7 @@ class CallsController extends Controller
                 $problem = Problem::find($call->problem_id);
                 $type = ProblemType::find($problem->problem_type);
 
-                $first_call = Call::orderBy('created_at')->first();
+                $first_call = Call::where('problem_id', '=', $problem->id)->orderBy('created_at')->first();
 
                 $data = array(
                     'title' => "Call Viewer.",

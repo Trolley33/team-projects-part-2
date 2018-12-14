@@ -56,14 +56,21 @@
                         </tr>
                         <tr class="w3-hover-light-grey solve">
                             <th>Assigned Helper</th>
-                            <td class="editbutton" onclick="window.location.href = '/users/{{$specialist->id}}';">{{$specialist->forename}} {{$specialist->surname}}
+                            @if (!is_null($specialist))
+                            <td class="editbutton" onclick="window.location.href = '/users/{{$specialist->id}}';">
+                                    {{$specialist->forename}} {{$specialist->surname}}
                                 <span class="icon">View</span></td>
-                        </tr>
+                            </tr>
+                            @else
+                                <td>
+                                    None
+                                </td>
+                            @endif
                         <tr class="w3-hover-light-grey solve">
                             <th>Status</th>
                             @if (!is_null($resolved))
 
-                                <td class="w3-green"> Solved 
+                                <td class="w3-green"> Solved ({{$resolved->created_at}})
                                 </td>
                             @else
                                 <td class="w3-red"> Unsolved </td>
@@ -86,6 +93,13 @@
                             Edit Details
                         </div>
                     </a><br />
+                    {!!Form::open(['action' => ['ProblemController@destroy', $problem->id], 'method' => 'POST', 'onsubmit'=>"return confirm('Delete Problem? This action cannot be undone, and may lead to unintended consequences.');"]) !!}
+
+                    {{Form::hidden('_method', 'DELETE')}}
+                    
+                    {{Form::submit('Delete Problem', ['class'=> "menu-item w3-card w3-button w3-row w3-red", 'style'=> 'width: 400px;'])}}
+                    
+                    {!!Form::close() !!}
                 </div>
                 <hr />
                 <!-- callers -->

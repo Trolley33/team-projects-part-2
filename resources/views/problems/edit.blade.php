@@ -57,7 +57,12 @@
                         </tr>
                         <tr class="w3-hover-light-grey solve">
                             <th>Assigned Helper</th>
-                            <td title="Edit" class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}/edit_specialist';">{{$specialist->forename}} {{$specialist->surname}}
+                            <td title="Edit" class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}/edit_specialist';">
+                                @if (!is_null($specialist))
+                                    {{$specialist->forename}} {{$specialist->surname}}
+                                @else
+                                    None
+                                @endif
                             <span class="icon">Edit</span></td>
                         </tr>
                         <tr class="w3-hover-light-grey solve">
@@ -66,7 +71,7 @@
                             @if (!is_null($resolved))
                                 <?php $sol_notes = $resolved->solution_notes; ?>
                                 <td title="Mark as Unsolved" id='toggleButton' class="editbutton w3-hover-light-green w3-green">
-                                    Solved
+                                    Solved ({{$resolved->created_at}})
                                 </td>
                                 {{Form::hidden('solved', 'true', ['id'=>'solved'])}}
                             @else

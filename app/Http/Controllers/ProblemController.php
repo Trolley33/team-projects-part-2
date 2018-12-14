@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Problem;
 use App\ProblemType;
 use App\ResolvedProblem;
+use App\Call;
 use App\User;
 use App\Job;
 use App\Equipment;
@@ -28,7 +29,7 @@ class ProblemController extends Controller
         {
             // Get intial caller for problem.
             $problems = DB::select(DB::raw(
-                'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problems.description, users.forename, users.surname, calls.id as cID
+                'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problems.description, users.forename, users.surname, calls.id as cID, IFNULL(specialists.forename,0) as sForename, IFNULL(specialists.surname,0) as sSurname, IFNULL(specialists.id,0) as sID
                 FROM problems
                 JOIN calls
                 ON (
@@ -42,7 +43,9 @@ class ProblemController extends Controller
                 JOIN users
                 ON users.id = calls.caller_id
                 JOIN problem_types
-                ON problem_types.id = problems.problem_type'
+                ON problem_types.id = problems.problem_type
+                LEFT JOIN users specialists
+                ON specialists.id = problems.assigned_to'
             ));
                 
             $resolved = Problem::join('resolved_problems', 'problems.id', '=', 'resolved_problems.problem_id')->select('resolved_problems.problem_id')->get();
@@ -116,11 +119,11 @@ class ProblemController extends Controller
 
             $assigned = DB::table('problems')->join('users', 'problems.assigned_to', '=', 'users.id')->select('users.*')->where('problems.id', '=', $id)->get()->first();
 
-            $resolved = Problem::join('resolved_problems', 'resolved_problems.problem_id', '=', 'problems.id')->select('resolved_problems.solution_notes')->where('problems.id', '=', $id)->get()->first();
+            $resolved = Problem::join('resolved_problems', 'resolved_problems.problem_id', '=', 'problems.id')->select('resolved_problems.solution_notes', 'resolved_problems.created_at')->where('problems.id', '=', $id)->get()->first();
 
-            $hardware = Equipment::join('affected_hardware', 'affected_hardware.equipment_id', '=', 'equipment.id')->join('problems', 'problems.id', '=', 'affected_hardware.problem_id')->select('equipment.*')->get();
+            $hardware = Equipment::join('affected_hardware', 'affected_hardware.equipment_id', '=', 'equipment.id')->join('problems', 'problems.id', '=', 'affected_hardware.problem_id')->where('problems.id', '=', $id)->select('equipment.*')->get();
 
-            $software = Software::join('affected_software', 'affected_software.software_id', '=', 'software.id')->join('problems', 'problems.id', '=', 'affected_software.problem_id')->select('software.*')->get();
+            $software = Software::join('affected_software', 'affected_software.software_id', '=', 'software.id')->join('problems', 'problems.id', '=', 'affected_software.problem_id')->where('problems.id', '=', $id)->select('software.*')->get();
 
             if (!is_null($problem) && !is_null($callers))
             {
@@ -414,7 +417,7 @@ class ProblemController extends Controller
             {
                 $assigned = DB::table('problems')->join('users', 'problems.assigned_to', '=', 'users.id')->select('users.*')->where('problems.id', '=', $id)->get()->first();
 
-                $resolved = DB::table('problems')->join('resolved_problems', 'problems.id', '=', 'resolved_problems.problem_id')->select('resolved_problems.solution_notes')->where('problems.id', '=', $id)->get()->first();
+                $resolved = DB::table('problems')->join('resolved_problems', 'problems.id', '=', 'resolved_problems.problem_id')->select('resolved_problems.solution_notes', 'resolved_problems.created_at')->where('problems.id', '=', $id)->get()->first();
 
                 $data = array(
                     'title' => "Edit Existing Problem",
@@ -441,8 +444,8 @@ class ProblemController extends Controller
             $problem = Problem::find($id);
             if (!is_null($problem))
             {
-                $problem_types = ProblemType::all();
-
+                $problem_types = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('problem_types.*, IFNULL(parents.description,0) as parent_description')->get();
+                
                 $data = array(
                     'title' => "Edit Problem Type",
                     'desc' => " ",
@@ -509,12 +512,32 @@ class ProblemController extends Controller
 
     public function add_specialist($id, $specialist_id)
     {
-        return "add specialist";
+        if (PagesController::hasAccess(1))
+        {
+            $problem = Problem::find($id);
+            $user = User::find($specialist_id);
+            $problem->assigned_to = $user->id;
+            $problem->save();
+
+            return redirect('/problems/'.$id.'/edit')->with('success', 'Problem Assigned to '.$user->forename.' '.$user->surname.'.');
+        }
+
+        return redirect('/login')->with('error', 'Please log in first.');
     }
 
     public function add_operator($id)
     {
-        return "add this operator";
+        if (PagesController::hasAccess(1))
+        {
+            $problem = Problem::find($id);
+            $user = PagesController::getCurrentUser();
+            $problem->assigned_to = $user->id;
+            $problem->save();
+
+            return redirect('/problems/'.$id.'/edit')->with('success', 'Problem Assigned to You');
+        }
+
+        return redirect('/login')->with('error', 'Please log in first.');
     }
 
     /**
@@ -551,13 +574,17 @@ class ProblemController extends Controller
                 $this->validate($request, [
                     'solution_notes'=>'required'
                 ]);
+                $resolved = ResolvedProblem::where('problem_id', '=', $id)->get()->first();
 
                 if (!is_null($user))
                 {
-                    $resolved = new ResolvedProblem();
-                    $resolved->problem_id = $id;
-                    $resolved->solved_by=$user->id;
+                    if (is_null($resolved))
+                    {
+                        $resolved = new ResolvedProblem();
+                        $resolved->problem_id = $id;
+                    }
                     $resolved->solution_notes=$request->input('solution_notes');
+                    $resolved->solved_by=$user->id;
                     $resolved->save();
                 }
             }
@@ -575,6 +602,21 @@ class ProblemController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $problem = Problem::find($id);
+        $problem->delete();
+
+        $affected_hardware = AffectedHardware::where('problem_id', '=', $id);
+        $affected_hardware->delete();
+
+        $affected_software = AffectedSoftware::where('problem_id', '=', $id);
+        $affected_software->delete();
+
+        $calls = Call::where('problem_id', '=', $id);
+        $calls->delete();
+
+        $resolved = ResolvedProblem::where('problem_id', '=', $id);
+        $resolved->delete();
+
+        return redirect('/problems/')->with('success', 'Problem Permantly Deleted');
     }
 }

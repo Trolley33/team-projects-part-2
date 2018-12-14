@@ -105,8 +105,8 @@ $(document).ready( function ()
 
     $('.selectBox').click(function ()
     {
-    	$(this).children('.selectRadio').prop('checked', true);
-    	$('#addSpecialist').prop('disabled', false);
+      $(this).children('.selectRadio').prop('checked', true);
+      $('#addSpecialist').prop('disabled', false);
     });
 
 

@@ -27,8 +27,8 @@
                 <tr>
                     <td>{{$s->id}}</td>
                     <td>{{$s->name}}</td><td>{{$s->description}}</td>
-                    <td style="text-align: center;">
-                        <input type="checkbox" name='software[]' value="{{$s->id}}" />
+                    <td class="selectBox editbutton" style="text-align: center;">
+                        <input class="selectChecked" type="checkbox" name='software[]' value="{{$s->id}}" />
                     </td>
                 </tr>
             @endforeach
@@ -62,6 +62,20 @@ $(document).ready( function ()
         }
     });
 
+    $('.selectBox').click(function ()
+    {
+        var child = $(this).children('.selectChecked');
+        child.prop('checked', !child.prop('checked'));
+
+        if ($('input:checkbox[name="software[]"]:checked').length > 0)
+        {
+            $('#removeSoftware').prop('disabled', false);
+        }
+        else
+        {
+            $('#removeSoftware').prop('disabled', true);
+        }
+    });
 });
 </script>
 

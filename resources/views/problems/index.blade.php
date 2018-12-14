@@ -13,13 +13,18 @@
     <table id='problem-table' class="display cell-border stripe hover">
         <thead>
             <tr>
-                <th>Time Logged</th><th>Problem ID</th><th>Problem Type</th><th>Description</th><th>Initial Caller</th><th>Status</th><th>Select</th>
+                <th>Time Logged</th><th>Assigned Helper</th><th>Problem Type</th><th>Description</th><th>Initial Caller</th><th>Status</th><th>Select</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($problems as $problem)
             <tr>
-                <td>{{$problem->created_at}}</td><td>{{sprintf('%04d', $problem->pID)}}</td><td>{{$problem->ptDesc}}</td><td>{{$problem->description}}</td><td>{{$problem->forename}} {{$problem->surname}}</td>
+                <td>{{$problem->created_at}}</td><td>@if ($problem->sID != 0)
+                    {{$problem->sForename}} {{$problem->sSurname}}
+                @else
+                    None
+                @endif
+                </td><td>{{$problem->ptDesc}}</td><td>{{$problem->description}}</td><td>{{$problem->forename}} {{$problem->surname}}</td>
                 <?php $flag = true; ?>
                     @foreach($resolved as $res)
                         @if ($res->problem_id == $problem->pID)

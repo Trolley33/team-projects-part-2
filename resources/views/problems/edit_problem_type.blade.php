@@ -14,7 +14,12 @@
 			@foreach ($problem_types as $pt)
 			<tr>
 				<td title="View" class="editbutton">{{$pt->id}}</td>
-				<td title="View" class="editbutton modalOpener" value='{{$pt->id}}'>{{$pt->description}}</td>
+				<td title="View" class="editbutton modalOpener" value='{{$pt->id}}'>
+          @if ($pt->parent_description != '0')
+            ({{$pt->parent_description}})
+          @endif
+          {{$pt->description}}
+        </td>
 				<td title="Select" class="selectBox editbutton" style="text-align: center;">
 					<input class="selectRadio" type="radio" name='ptype' value="{{$pt->id}}" />
 				</td>
