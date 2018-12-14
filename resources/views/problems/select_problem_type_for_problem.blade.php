@@ -80,11 +80,6 @@ var modal;
 
 $(document).ready( function () 
 {
-    var table = $('#problem-table').DataTable();
-
-    // If we provide some sort of search term through the redirect, search it here.
-    var search = "<?php if (session('search')) echo session('search'); ?>";
-    table.search(search).draw();
 
     $('.selectBox').click(function ()
     {
@@ -130,6 +125,11 @@ $(document).ready( function ()
 
         return false;
     });
+    var table = $('#problem-table').DataTable();
+
+    // If we provide some sort of search term through the redirect, search it here.
+    var search = "<?php if (session('search')) echo session('search'); ?>";
+    table.search(search).draw();
 });
 
 function closeModal ()

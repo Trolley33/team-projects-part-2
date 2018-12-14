@@ -44,7 +44,6 @@
 var problem;
 $(document).ready( function () 
 {
-    var table = $('#user-table').DataTable();
 
     $('input:radio[name="existing"]').change(
     function(){
@@ -64,6 +63,7 @@ $(document).ready( function ()
         return false;
     })
 
+    var table = $('#user-table').DataTable();
 });
 </script>
 

@@ -29,7 +29,7 @@ class ProblemController extends Controller
         {
             // Get intial caller for problem.
             $problems = DB::select(DB::raw(
-                'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problems.description, users.forename, users.surname, calls.id as cID, IFNULL(specialists.forename,0) as sForename, IFNULL(specialists.surname,0) as sSurname, IFNULL(specialists.id,0) as sID
+                'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problems.description, IFNULL(parents.description,0) as pDesc, users.forename, users.surname, calls.id as cID, IFNULL(specialists.forename,0) as sForename, IFNULL(specialists.surname,0) as sSurname, IFNULL(specialists.id,0) as sID
                 FROM problems
                 JOIN calls
                 ON (
@@ -45,7 +45,9 @@ class ProblemController extends Controller
                 JOIN problem_types
                 ON problem_types.id = problems.problem_type
                 LEFT JOIN users specialists
-                ON specialists.id = problems.assigned_to'
+                ON specialists.id = problems.assigned_to
+                LEFT JOIN problem_types parents
+                ON problem_types.parent = parents.id'
             ));
                 
             $resolved = Problem::join('resolved_problems', 'problems.id', '=', 'resolved_problems.problem_id')->select('resolved_problems.problem_id')->get();
@@ -186,8 +188,38 @@ class ProblemController extends Controller
                 'submit' =>'required'
             ]);
 
+            $operator = PagesController::getCurrentUser();
 
-            return $request->input('submit');
+
+            $problem = new Problem();
+            $problem->description = $request->input('desc');
+            $problem->notes = $request->input('notes');
+            $problem->problem_type = $request->input('problem_type_id');
+            $problem->logged_by = $operator->id;
+            // Assign Problem to Current Operator.
+            if ($request->input('submit') == "Assign Problem to You")
+            {
+                $problem->assigned_to = $operator->id;
+            }
+
+            // Assign Problem to Selected Specialist.
+            else if ($request->input('submit') == "Assign Problem to You")
+            {
+                $this->validate($request, [
+                    'specialist' => 'required'
+                ]);
+                $problem->assigned_to = $request->input('specialist');
+            }
+
+            $problem->save();
+
+            $call = new Call();
+            $call->problem_id = $problem->id;
+            $call->caller_id = $request->input('user_id');
+            $call->notes = "Initial call.";
+            $call->save();
+
+            return redirect('/problems/'.$problem->id)->with('success', 'Problem Created');
         }
     }
 
@@ -203,6 +235,7 @@ class ProblemController extends Controller
         {
             $problem = Problem::find($id);
             $type = ProblemType::find($problem->problem_type);
+            $parent = ProblemType::find($type->parent);
 
             $callers = DB::table('problems')->join('calls', 'problems.id', '=', 'calls.problem_id')->join('users', 'users.id', '=', 'calls.caller_id')->select('calls.id as cID', 'calls.notes', 'calls.created_at as cAT', 'users.*')->where('problems.id', '=', $id)->get();
 
@@ -221,6 +254,7 @@ class ProblemController extends Controller
                     'desc' => "Shows information on a problem.",
                     'problem' => $problem,
                     'problem_type' => $type,
+                    'parent' => $parent,
                     'callers' => $callers,
                     'specialist' => $assigned,
                     'resolved' => $resolved,

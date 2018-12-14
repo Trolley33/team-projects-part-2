@@ -4,7 +4,7 @@
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
   <h2>Select Specialist For New Problem</h2>
   <h3>Creating New Problem for: {{$user->forename}} {{$user->surname}}</h3>
-  <h3>Problem Type: {{$problem_type->description}}</h3>
+  <h3>Problem Type: @if ($parent->description != '0') ({{$parent->description}}) @endif{{$problem_type->description}}</h3>
   {!! Form::open(['action' => 'ProblemController@store', 'method' => 'POST']) !!}
   <table id='specialist-table' class="display cell-border stripe hover" style="width:100%;">
     <thead>
@@ -90,15 +90,10 @@ var modal;
 
 $(document).ready( function () 
 {
-    var table = $('#specialist-table').DataTable({
-        order: [['2', 'asc']]
-    });
 
     var problem_type = <?php echo json_encode($problem_type); ?>;
     var parent = <?php echo json_encode($parent); ?>;
 
-    // If we provide some sort of search term through the redirect, search it here.
-    var search = "<?php if (session('search')) echo session('search');?>";
 
     $('.selectBox').click(function ()
     {
@@ -106,6 +101,7 @@ $(document).ready( function ()
       $('#addSpecialist').prop('disabled', false);
     });
     
+  modal = $('#myModal');
   $(".modalOpener").click(function() {
     $.get(
         $(this).attr('value'),
@@ -145,6 +141,12 @@ $(document).ready( function ()
       }
     });
     
+    var table = $('#specialist-table').DataTable({
+        order: [['2', 'asc']]
+    });
+    // If we provide some sort of search term through the redirect, search it here.
+    var search = "<?php if (session('search')) echo session('search');?>";
+    
     if (search == '')
     {
         search = parent.description;
@@ -152,16 +154,15 @@ $(document).ready( function ()
     table.search(search).draw();
 
 
-  modal = $('#myModal');
 
 });
-/*
+
 function closeModal ()
 {
   modal.html('');
   modal.hide();
 }
-*/
+
 
 </script>
 

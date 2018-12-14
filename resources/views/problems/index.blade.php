@@ -24,7 +24,7 @@
                 @else
                     None
                 @endif
-                </td><td>{{$problem->ptDesc}}</td><td>{{$problem->description}}</td><td>{{$problem->forename}} {{$problem->surname}}</td>
+                </td><td>@if ($problem->pDesc != '0') ({{$problem->pDesc}}) @endif {{$problem->ptDesc}}</td><td>{{$problem->description}}</td><td>{{$problem->forename}} {{$problem->surname}}</td>
                 <?php $flag = true; ?>
                     @foreach($resolved as $res)
                         @if ($res->problem_id == $problem->pID)

@@ -88,20 +88,9 @@ var modal;
 
 $(document).ready( function () 
 {
-    var table = $('#problem-table').DataTable({
-        order: [['2', 'asc']]
-    });
     var problem = <?php echo json_encode($problem); ?>;
     var parent = <?php echo json_encode($parent); ?>;
 
-    // If we provide some sort of search term through the redirect, search it here.
-    var search = "<?php if (session('search')) echo session('search');?>";
-
-    if (search == '')
-    {
-        search = parent.description;
-    }
-    table.search(search).draw();
 
     $('.selectBox').click(function ()
     {
@@ -110,45 +99,45 @@ $(document).ready( function ()
     });
 
 
-	modal = $('#myModal');
+  modal = $('#myModal');
 
-	$(".modalOpener").click(function() {
-		$.get(
-		    $(this).attr('value'),
-		    function (data) {
-		        modal.html(data);
-		        $('#myModal div').first().prepend('<span onclick="closeModal()" class="close">&times;</span>')
-		    }
-		);
+  $(".modalOpener").click(function() {
+    $.get(
+        $(this).attr('value'),
+        function (data) {
+            modal.html(data);
+            $('#myModal div').first().prepend('<span onclick="closeModal()" class="close">&times;</span>')
+        }
+    );
 
-  		modal.show();
-	});
+      modal.show();
+  });
 
-	$(window).click(function(event) {
-		var target = $(event.target);
+  $(window).click(function(event) {
+    var target = $(event.target);
 
-		if (!target.hasClass('modalOpener'))
-		{
-	        if (target.closest('.modal div').length == 0)
-			{
-				closeModal();
-			}
-		}
-	});
+    if (!target.hasClass('modalOpener'))
+    {
+          if (target.closest('.modal div').length == 0)
+      {
+        closeModal();
+      }
+    }
+  });
 
-	$('input:radio[name="specialist"]').change(
-    	function(){
+  $('input:radio[name="specialist"]').change(
+      function(){
         $('#addSpecialist').prop('disabled', false);
     });
 
     $('input:radio[name="specialist"]').each(function (i, r)
     {
-    	var radio = $(r);
-    	if (radio.val() == problem.problem_type)
-    	{
-    		radio.prop('checked', true);
-    		$('#addSpecialist').prop('disabled', false);
-    	}
+      var radio = $(r);
+      if (radio.val() == problem.problem_type)
+      {
+        radio.prop('checked', true);
+        $('#addSpecialist').prop('disabled', false);
+      }
     });
 
     $('#addSpecialistForm').submit(function ()
@@ -157,6 +146,17 @@ $(document).ready( function ()
 
         return false;
     });
+    var table = $('#problem-table').DataTable({
+        order: [['2', 'asc']]
+    });
+    // If we provide some sort of search term through the redirect, search it here.
+    var search = "<?php if (session('search')) echo session('search');?>";
+
+    if (search == '')
+    {
+        search = parent.description;
+    }
+    table.search(search).draw();
 });
 
 function closeModal ()
