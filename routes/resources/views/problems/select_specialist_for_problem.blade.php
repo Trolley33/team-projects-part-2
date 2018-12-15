@@ -2,44 +2,46 @@
 
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
-	<h2>Select Specialist For Problem #{{sprintf('%04d', $problem->id)}}</h2>
-  <h3>Problem Type: {{$type->description}}</h3>
-	<form id="addSpecialistForm">
-	<table id='problem-table' class="display cell-border stripe hover" style="width:100%;">
-		<thead>
-			<tr>
-				<th>Employee ID</th><th>Specialist Name</th><th>Problem Specialism</th><th>Select</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach ($specialists as $s)
-			<tr>
-				<td title="View" class="editbutton">{{sprintf('%04d', $s->employee_id)}}</td>
-				<td title="View" class="editbutton modalOpener" value='/users/{{$s->id}}/compact'>{{$s->forename}} {{$s->surname}}</td>
+  <h2>Select Specialist For New Problem</h2>
+  <h3>Creating New Problem for: {{$user->forename}} {{$user->surname}}</h3>
+  <h3>Problem Type: @if ($parent->description != '0') ({{$parent->description}}) @endif{{$problem_type->description}}</h3>
+  {!! Form::open(['action' => 'ProblemController@store', 'method' => 'POST']) !!}
+  <table id='specialist-table' class="display cell-border stripe hover" style="width:100%;">
+    <thead>
+      <tr>
+        <th>Employee ID</th><th>Specialist Name</th><th>Problem Specialism</th><th>Select</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach ($specialists as $s)
+      <tr>
+        <td title="View" class="editbutton">{{sprintf('%04d', $s->employee_id)}}</td>
+        <td title="View" class="editbutton modalOpener" value='/users/{{$s->id}}/compact'>{{$s->forename}} {{$s->surname}}</td>
                 <td title="View" class="editbutton modalOpener" value='/problem_types/{{$s->pID}}/compact'>
                     @if ($s->parent_description != '0')
                         ({{$s->parent_description}})
                     @endif
                     {{$s->description}}</td>
-				<td title="Select" class="selectBox editbutton" style="text-align: center;">
-					<input class="selectRadio" type="radio" name='specialist' value="{{$s->id}}" />
-				</td>
-			</tr>
-			@endforeach
+        <td title="Select" class="selectBox editbutton" style="text-align: center;">
+          <input class="selectRadio" type="radio" name='specialist' value="{{$s->id}}" />
+        </td>
+      </tr>
+      @endforeach
 
-		</tbody>
-	</table>
-    <div style="text-align: center;">
-        <a class="blank" href="/problems/{{$problem->id}}/add_operator">
-            <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
-                Assign Problem to You
-            </div>
-        </a><br />
-    </div>
-    <div style="text-align: center;">
-        <input id="addSpecialist" class="menu-item w3-card w3-button w3-row" type="submit" value="Choose Specialist" style="width: 400px;" disabled/>
-    </div>
+    </tbody>
+  </table>
+  <div style="text-align: center;"> 
+    {{Form::hidden('desc', $problem_description)}}
+    {{Form::hidden('notes', $problem_notes)}}
+    {{Form::hidden('user_id', $user->id)}}
+    {{Form::hidden('problem_type_id', $problem_type->id)}}
 
+    {{Form::submit('Assign Problem to You', ['class'=> "menu-item w3-card w3-button w3-row", 'name'=>'submit', 'style'=>'width: 400px;'])}}
+    <br />
+    {{Form::submit('Assign Specialist', ['class'=> "menu-item w3-card w3-button w3-row", 'id'=>'addSpecialist', 'name'=>'submit', 'style'=>'width: 400px;', 'disabled'])}}
+
+    {!! Form::close() !!}
+  </div>
     </form>
 </div>
 
@@ -49,8 +51,8 @@
 <style>
 .editbutton:hover
 {
-	background-color: #BBBBBB !important;
-	cursor: pointer;
+  background-color: #BBBBBB !important;
+  cursor: pointer;
 }
 .modal {
   display: none; /* Hidden by default */
@@ -88,7 +90,8 @@ var modal;
 
 $(document).ready( function () 
 {
-    var problem = <?php echo json_encode($problem); ?>;
+
+    var problem_type = <?php echo json_encode($problem_type); ?>;
     var parent = <?php echo json_encode($parent); ?>;
 
 
@@ -97,10 +100,8 @@ $(document).ready( function ()
       $(this).children('.selectRadio').prop('checked', true);
       $('#addSpecialist').prop('disabled', false);
     });
-
-
+    
   modal = $('#myModal');
-
   $(".modalOpener").click(function() {
     $.get(
         $(this).attr('value'),
@@ -133,37 +134,36 @@ $(document).ready( function ()
     $('input:radio[name="specialist"]').each(function (i, r)
     {
       var radio = $(r);
-      if (radio.val() == problem.problem_type)
+      if (radio.val() == problem_type.id)
       {
         radio.prop('checked', true);
         $('#addSpecialist').prop('disabled', false);
       }
     });
-
-    $('#addSpecialistForm').submit(function ()
-    {
-        window.location.href = '/problems/' + problem.id + '/add_specialist/' + $("input[name='specialist']:checked").val();
-
-        return false;
-    });
-    var table = $('#problem-table').DataTable({
+    
+    var table = $('#specialist-table').DataTable({
         order: [['2', 'asc']]
     });
     // If we provide some sort of search term through the redirect, search it here.
     var search = "<?php if (session('search')) echo session('search');?>";
-
+    
     if (search == '')
     {
         search = parent.description;
     }
     table.search(search).draw();
+
+
+
 });
 
 function closeModal ()
 {
-	modal.html('');
-	modal.hide();
+  modal.html('');
+  modal.hide();
 }
+
+
 </script>
 
 @endsection

@@ -2,7 +2,8 @@
 
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
-	<h2>Select Problem Type For Problem #{{sprintf('%04d', $problem->id)}}</h2>
+	<h2>Select Problem Type For New Problem</h2>
+	<h3>Creating problem for: {{$user->forename}} {{$user->surname}}</h3>
 	<form id="addProblemTypeForm">
 	<table id='problem-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
@@ -79,65 +80,53 @@ var modal;
 
 $(document).ready( function () 
 {
-    var problem = <?php echo json_encode($problem); ?>;
-
 
     $('.selectBox').click(function ()
     {
-      $(this).children('.selectRadio').prop('checked', true);
-      $('#addProblemType').prop('disabled', false);
+    	$(this).children('.selectRadio').prop('checked', true);
+    	$('#addProblemType').prop('disabled', false);
     });
 
 
-  modal = $('#myModal');
+	modal = $('#myModal');
 
-  $(".modalOpener").click(function() {
-    $.get(
-        "/problem_types/"+$(this).attr('value')+'/compact',
-        function (data) {
-            modal.html(data);
-            $('#myModal div').first().prepend('<span onclick="closeModal()" class="close">&times;</span>')
-        }
-    );
+	$(".modalOpener").click(function() {
+		$.get(
+		    "/problem_types/"+$(this).attr('value')+'/compact',
+		    function (data) {
+		        modal.html(data);
+		        $('#myModal div').first().prepend('<span onclick="closeModal()" class="close">&times;</span>')
+		    }
+		);
 
-      modal.show();
-  });
+  		modal.show();
+	});
 
-  $(window).click(function(event) {
-    var target = $(event.target);
+	$(window).click(function(event) {
+		var target = $(event.target);
 
-    if (!target.hasClass('modalOpener'))
-    { 
-      if (target.closest('.modal div').length == 0)
-      {
-        closeModal();
-      }
-    }
-  });
+		if (!target.hasClass('modalOpener'))
+		{	
+			if (target.closest('.modal div').length == 0)
+			{
+				closeModal();
+			}
+		}
+	});
 
-  $('input:radio[name="ptype"]').change(
-      function(){
+	$('input:radio[name="ptype"]').change(
+    	function(){
         $('#addProblemType').prop('disabled', false);
-    });
-
-    $('input:radio[name="ptype"]').each(function (i, r)
-    {
-      var radio = $(r);
-      if (radio.val() == problem.problem_type)
-      {
-        radio.prop('checked', true);
-        $('#addProblemType').prop('disabled', false);
-      }
     });
 
     $('#addProblemTypeForm').submit(function ()
     {
-        window.location.href = '/problems/' + problem.id + '/add_problem_type/' + $("input[name='ptype']:checked").val();
+        window.location.href = '/problems/create/{{$user->id}}/' + $("input[name='ptype']:checked").val();
 
         return false;
     });
-    
     var table = $('#problem-table').DataTable();
+
     // If we provide some sort of search term through the redirect, search it here.
     var search = "<?php if (session('search')) echo session('search'); ?>";
     table.search(search).draw();

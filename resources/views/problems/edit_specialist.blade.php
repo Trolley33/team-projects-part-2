@@ -8,7 +8,7 @@
 	<table id='problem-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
 			<tr>
-				<th>Employee ID</th><th>Specialist Name</th><th>Problem Specialism</th><th>Select</th>
+				<th>Employee ID</th><th>Specialist Name</th><th>Problem Specialism</th><th>No. of Active Jobs</th><th>Select</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -16,11 +16,12 @@
 			<tr>
 				<td title="View" class="editbutton">{{sprintf('%04d', $s->employee_id)}}</td>
 				<td title="View" class="editbutton modalOpener" value='/users/{{$s->id}}/compact'>{{$s->forename}} {{$s->surname}}</td>
-                <td title="View" class="editbutton modalOpener" value='/problem_types/{{$s->pID}}/compact'>
-                    @if ($s->parent_description != '0')
-                        ({{$s->parent_description}})
-                    @endif
-                    {{$s->description}}</td>
+        <td title="View" class="editbutton modalOpener" value='/problem_types/{{$s->pID}}/compact'>
+            @if ($s->parent_description != '0')
+                ({{$s->parent_description}})
+            @endif
+            {{$s->description}}</td>
+        <td>{{$s->jobs}}</td>
 				<td title="Select" class="selectBox editbutton" style="text-align: center;">
 					<input class="selectRadio" type="radio" name='specialist' value="{{$s->id}}" />
 				</td>
@@ -147,7 +148,10 @@ $(document).ready( function ()
         return false;
     });
     var table = $('#problem-table').DataTable({
-        order: [['2', 'asc']]
+        order: [
+          ['3', 'asc'],
+          ['2', 'asc']
+        ]
     });
     // If we provide some sort of search term through the redirect, search it here.
     var search = "<?php if (session('search')) echo session('search');?>";

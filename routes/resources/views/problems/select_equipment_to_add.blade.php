@@ -58,7 +58,6 @@ var problem;
 $(document).ready( function () 
 {
     problem = <?php echo json_encode($problem) ?>;
-    var table = $('#equipment-table').DataTable();
 
     $('input:checkbox[name="equipment[]"]').change(
     function(){
@@ -86,6 +85,7 @@ $(document).ready( function ()
             $('#addEquipment').prop('disabled', true);
         }
     });
+    var table = $('#equipment-table').DataTable();
 
 });
 </script>

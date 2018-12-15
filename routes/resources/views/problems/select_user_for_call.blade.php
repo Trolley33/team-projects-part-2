@@ -24,8 +24,8 @@
             <tr>
                 <td>{{sprintf('%04d',$user->employee_id)}}</td>
                 <td>{{$user->forename}} {{$user->surname}}</td><td>{{$user->name}}</td><td>{{$user->title}}</td><td>{{$user->phone_number}}</td>
-                <td style="text-align: center;">
-                    <input type="radio" name='existing' value="{{$user->id}}" />
+                <td class="selectBox editbutton" style="text-align: center;">
+                    <input class="selectRadio" type="radio" name='existing' value="{{$user->id}}" />
                 </td>
             </tr>
             @endforeach
@@ -45,11 +45,16 @@ var problem;
 $(document).ready( function () 
 {
     problem = <?php echo json_encode($problem) ?>;
-    var table = $('#user-table').DataTable();
 
     $('input:radio[name="existing"]').change(
     function(){
         $('#addUser').prop('disabled', false);
+    });
+
+    $('.selectBox').click(function ()
+    {
+      $(this).children('.selectRadio').prop('checked', true);
+      $('#addUser').prop('disabled', false);
     });
 
     $('#addUserForm').submit(function ()
@@ -58,6 +63,7 @@ $(document).ready( function ()
 
         return false;
     })
+    var table = $('#user-table').DataTable();
 
 });
 </script>

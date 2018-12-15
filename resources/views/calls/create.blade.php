@@ -7,7 +7,14 @@
     cursor: pointer;
 }
 </style>
-
+<?php
+    $importance = array(
+        array('Low', 'w3-green'),
+        array('Medium', 'w3-deep-orange'),
+        array('High', 'w3-red'),
+        array('Urgent', 'w3-purple')
+    );
+?>
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <form id="addCallForm">
@@ -15,30 +22,16 @@
 
         <thead>
             <tr>
-                <th>Time Logged</th><th>Problem ID</th><th>Problem Type</th><th>Description</th><th>Initial Caller</th><th>Status</th><th>Select</th>
+                <th>Time Logged</th><th>Problem ID</th><th>Problem Type</th><th>Description</th><th>Initial Caller</th><th>Importance</th><th>Hidden Column</th><th>Select</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($problems as $problem)
+            @foreach ($ongoing as $problem)
             <tr>
-                <td>{{$problem->created_at}}</td><td>{{$problem->pID}}</td><td>{{$problem->problemType}}</td><td>{{$problem->description}}</td><td>{{$problem->forename}} {{$problem->surname}}</td>
-                <?php $flag = true; ?>
-                    @foreach($resolved as $res)
-                        @if ($res->problem_id == $problem->pID)
-                            <td class="w3-green">
-                                Resolved
-                                <?php $flag = false; ?>
-                            </td>
-                            @break
-                        @endif
-                    @endforeach
-                    @if ($flag)
-                        <td class="w3-red">
-                            Ongoing
-                        </td>
-                    @endif
-                <td style="text-align: center;">
-                    <input type="radio" name='existing' value="{{$problem->pID}}" />
+                <td>{{$problem->created_at}}</td><td>{{sprintf('%04d',$problem->pID)}}</td><td>@if ($problem->pDesc != '0') ({{$problem->pDesc}})@endif{{$problem->problemType}}</td><td>{{$problem->description}}</td><td>{{$problem->forename}} {{$problem->surname}}</td>
+                <td class="{{$importance[$problem->importance][1]}}">{{$importance[$problem->importance][0]}}</td><td>{{$problem->importance}}</td>
+                <td class="selectBox editbutton" style="text-align: center;">
+                    <input class="selectRadio" type="radio" name='existing' value="{{$problem->pID}}" />
                 </td>
             </tr>
             @endforeach
@@ -65,7 +58,25 @@
 $(document).ready( function () 
 {
     var table = $('#problem-table').dataTable({
-        order: [[5, 'asc'], [0, 'desc']]
+        order: [
+          ['5', 'desc']
+        ],
+        "aoColumnDefs": [
+            {
+                "iDataSort": 6,
+                "aTargets": [5] 
+            },
+            {
+                "targets": [6],
+                "visible": false,
+                "searchable": false
+            },
+        ]
+      });
+    $('.selectBox').click(function ()
+    {
+      $(this).children('.selectRadio').prop('checked', true);
+      $('#addProblemType').prop('disabled', false);
     });
 
     $('input:radio[name="existing"]').change(

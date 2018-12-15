@@ -43,12 +43,12 @@
                     Software Manager
                 </div>
             </a><br />
-          </div>
-          <a class="blank" href="/problem_types/">
+            <a class="blank" href="/problem_types/">
                 <div class="menu-item w3-card w3-button w3-row">
                     Problem Type Manager
                 </div>
             </a><br />
+          </div>
         <br />
     </div>
 

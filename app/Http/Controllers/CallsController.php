@@ -37,8 +37,8 @@ class CallsController extends Controller
         if (PagesController::hasAccess(1))
         {
             // Get intial caller for problem.
-            $problems = DB::select(DB::raw(
-                'SELECT problems.id as pID, problems.created_at, problem_types.description as problemType, problems.description, users.forename, users.surname, calls.id as cID
+            $ongoing = DB::select(DB::raw(
+                'SELECT problems.id as pID, problems.created_at, problem_types.description as problemType, problems.description, IFNULL(parents.description,0) as pDesc, problems.importance, users.forename, users.surname, calls.id as cID
                 FROM problems
                 JOIN calls
                 ON (
@@ -52,16 +52,18 @@ class CallsController extends Controller
                 JOIN users
                 ON users.id = calls.caller_id
                 JOIN problem_types
-                ON problem_types.id = problems.problem_type'
+                ON problem_types.id = problems.problem_type
+                LEFT JOIN problem_types parents
+                ON problem_types.parent = parents.id
+                LEFT JOIN resolved_problems rp ON rp.problem_id = problems.id
+                WHERE rp.problem_id IS NULL'
             ));
             
-            $resolved = Problem::join('resolved_problems', 'problems.id', '=', 'resolved_problems.problem_id')->select('resolved_problems.problem_id')->get();
 
             $data = array(
                 'title' => "Log New Call",
                 'desc' => "Please select a problem to add to, or create a new problem.",
-                'problems'=>$problems,
-                'resolved'=>$resolved,
+                'ongoing'=>$ongoing,
                 'links' => PagesController::getOperatorLinks(),
                 'active' => 'Problems'
             );

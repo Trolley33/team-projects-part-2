@@ -31,14 +31,6 @@
 	</div>
 </div>
 
-<style>
-.editbutton:hover
-{
-	background-color: #BBBBBB !important;
-	cursor: pointer;
-}
-</style>
-
 <script>
 $(document).ready( function () 
 {

@@ -28,8 +28,8 @@ class ProblemController extends Controller
         if (PagesController::hasAccess(1))
         {
             // Get intial caller for problem.
-            $problems = DB::select(DB::raw(
-                'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problems.description, IFNULL(parents.description,0) as pDesc, users.forename, users.surname, calls.id as cID, IFNULL(specialists.forename,0) as sForename, IFNULL(specialists.surname,0) as sSurname, IFNULL(specialists.id,0) as sID
+            $ongoing = DB::select(DB::raw(
+                'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problems.description, IFNULL(parents.description,0) as pDesc, problems.importance, users.forename, users.surname, calls.id as cID, IFNULL(specialists.forename,0) as sForename, IFNULL(specialists.surname,0) as sSurname, IFNULL(specialists.id,0) as sID
                 FROM problems
                 JOIN calls
                 ON (
@@ -47,15 +47,38 @@ class ProblemController extends Controller
                 LEFT JOIN users specialists
                 ON specialists.id = problems.assigned_to
                 LEFT JOIN problem_types parents
-                ON problem_types.parent = parents.id'
+                ON problem_types.parent = parents.id
+                LEFT JOIN resolved_problems rp ON rp.problem_id = problems.id
+                WHERE rp.problem_id IS NULL'
             ));
                 
-            $resolved = Problem::join('resolved_problems', 'problems.id', '=', 'resolved_problems.problem_id')->select('resolved_problems.problem_id')->get();
+            $resolved = DB::select(DB::raw(
+                'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problems.description, IFNULL(parents.description,0) as pDesc, problems.importance, users.forename, users.surname, calls.id as cID, IFNULL(specialists.forename,0) as sForename, IFNULL(specialists.surname,0) as sSurname, IFNULL(specialists.id,0) as sID
+                FROM problems
+                JOIN calls
+                ON (
+                    problems.id = calls.problem_id
+                    AND calls.created_at = (
+                        SELECT MIN(created_at)
+                        FROM calls
+                        WHERE problem_id = problems.id
+                    )
+                )
+                JOIN users
+                ON users.id = calls.caller_id
+                JOIN problem_types
+                ON problem_types.id = problems.problem_type
+                LEFT JOIN users specialists
+                ON specialists.id = problems.assigned_to
+                LEFT JOIN problem_types parents
+                ON problem_types.parent = parents.id
+                JOIN resolved_problems rp ON rp.problem_id = problems.id'
+            ));
 
             $data = array(
                 'title' => "Problem Viewer",
                 'desc' => "Displays all problems.",
-                'problems' => $problems,
+                'ongoing' => $ongoing,
                 'resolved' => $resolved,
                 'links' => PagesController::getOperatorLinks(),
                 'active' => 'Problems'
@@ -196,6 +219,7 @@ class ProblemController extends Controller
             $problem->notes = $request->input('notes');
             $problem->problem_type = $request->input('problem_type_id');
             $problem->logged_by = $operator->id;
+            $problem->importance = 0;
             // Assign Problem to Current Operator.
             if ($request->input('submit') == "Assign Problem to You")
             {
@@ -203,7 +227,7 @@ class ProblemController extends Controller
             }
 
             // Assign Problem to Selected Specialist.
-            else if ($request->input('submit') == "Assign Problem to You")
+            else if ($request->input('submit') == "Assign Specialist")
             {
                 $this->validate($request, [
                     'specialist' => 'required'
@@ -536,6 +560,7 @@ class ProblemController extends Controller
         {
             $problem = Problem::find($id);
             $type = ProblemType::find($problem->problem_type);
+            $parent = ProblemType::find($type->parent);
             if (!is_null($problem))
             {
                 $assigned = DB::table('problems')->join('users', 'problems.assigned_to', '=', 'users.id')->select('users.*')->where('problems.id', '=', $id)->get()->first();
@@ -547,6 +572,7 @@ class ProblemController extends Controller
                     'desc' => "For editing a problem.",
                     'problem'=>$problem,
                     'problem_type' => $type,
+                    'parent' => $parent,
                     'specialist'=>$assigned,
                     'resolved'=>$resolved,
                     'links' => PagesController::getOperatorLinks(),
@@ -608,7 +634,7 @@ class ProblemController extends Controller
             $parent = ProblemType::find($problem_type->parent);
             if (!is_null($problem))
             {
-                $specialists = User::join('speciality', 'users.id', '=', 'speciality.specialist_id')->join('problem_types', 'speciality.problem_type_id', '=', 'problem_types.id')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, users.*')->get();
+                $specialists = User::join('speciality', 'users.id', '=', 'speciality.specialist_id')->join('problem_types', 'speciality.problem_type_id', '=', 'problem_types.id')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->leftJoin('problems', 'problems.assigned_to', '=', 'users.id')->selectRaw('speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id), 0) as jobs, users.*')->groupBy('users.id', 'speciality.id')->get();
 
                 if (is_null($parent))
                 {

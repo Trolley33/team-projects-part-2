@@ -204,7 +204,7 @@ class PagesController extends Controller
             $specialist = PagesController::getCurrentUser();
 
             $problems = DB::select(DB::raw(
-                "SELECT problems.id as id, problems.created_at, problem_types.description as ptDesc, problems.description, problems.assigned_to, IFNULL(parents.description,0) as pDesc, users.forename, users.surname, calls.id as cID
+                "SELECT problems.id as id, problems.created_at, problem_types.description as ptDesc, problems.description, problems.assigned_to, problems.importance, IFNULL(parents.description,0) as pDesc, users.forename, users.surname, calls.id as cID
                 FROM problems
                 JOIN calls
                 ON (

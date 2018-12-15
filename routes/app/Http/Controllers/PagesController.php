@@ -26,6 +26,14 @@ class PagesController extends Controller
         ];
     }
 
+    public static function getSpecialistLinks ()
+    {
+        return [
+            ['href'=>'back','text'=>'back'],
+            ['href'=>'specialist','text'=>'Home']
+        ];
+    }
+
     public static function hasAccess($level)
     {
         if (isset($_COOKIE['csrf']))
@@ -193,9 +201,36 @@ class PagesController extends Controller
     {
         if (PagesController::hasAccess(2))
         {
+            $specialist = PagesController::getCurrentUser();
+
+            $problems = DB::select(DB::raw(
+                "SELECT problems.id as id, problems.created_at, problem_types.description as ptDesc, problems.description, problems.assigned_to, problems.importance, IFNULL(parents.description,0) as pDesc, users.forename, users.surname, calls.id as cID
+                FROM problems
+                JOIN calls
+                ON (
+                    problems.id = calls.problem_id
+                    AND calls.created_at = (
+                        SELECT MIN(created_at)
+                        FROM calls
+                        WHERE problem_id = problems.id
+                    )
+                )
+                JOIN users
+                ON users.id = calls.caller_id
+                JOIN problem_types
+                ON problem_types.id = problems.problem_type
+                LEFT JOIN problem_types parents
+                ON problem_types.parent = parents.id
+                WHERE problems.assigned_to = ".$specialist->id.";"
+            ));
+
             $data = array(
                 'title' => "Specialist Homepage",
-                'desc' => "Please select a task."
+                'desc' => "Please select a task.",
+                'user' => $specialist,
+                'problems' => $problems,
+                'links' => PagesController::getSpecialistLinks(),
+                'active' => 'Home'
             );
             return view('pages.specialist.homepage')->with($data);
         }
