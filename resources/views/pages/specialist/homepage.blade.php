@@ -19,7 +19,7 @@
         <tbody>
             @foreach ($problems as $problem)
             <tr>
-                <td>{{$problem->created_at}}</td><td>@if ($problem->pDesc != '0') ({{$problem->pDesc}}) @endif {{$problem->ptDesc}}</td><td>{{$problem->description}}</td><td class="{{$importance[$problem->importance][1]}}">{{$importance[$problem->importance][0]}}</td><td>{{$problem->importance}}</td><td>{{$problem->forename}} {{$problem->surname}}</td>
+                <td>{{$problem->created_at}}</td><td>@if ($problem->pDesc != '0') ({{$problem->pDesc}}) @endif {{$problem->ptDesc}}</td><td>{{$problem->description}}</td><td class="{{$problem->class}}">{{$problem->text}}</td><td>{{$problem->level}}</td><td>{{$problem->forename}} {{$problem->surname}}</td>
                 <td class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}';" style="text-align: center;">
                     View/Edit
                 </td>

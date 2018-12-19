@@ -38,7 +38,7 @@ class CallsController extends Controller
         {
             // Get intial caller for problem.
             $ongoing = DB::select(DB::raw(
-                'SELECT problems.id as pID, problems.created_at, problem_types.description as problemType, problems.description, IFNULL(parents.description,0) as pDesc, problems.importance, users.forename, users.surname, calls.id as cID
+                'SELECT problems.id as pID, problems.created_at, problem_types.description as problemType, problems.description, IFNULL(parents.description,0) as pDesc, problems.importance, users.forename, users.surname, calls.id as cID, importance.text, importance.class, importance.level
                 FROM problems
                 JOIN calls
                 ON (
@@ -53,6 +53,8 @@ class CallsController extends Controller
                 ON users.id = calls.caller_id
                 JOIN problem_types
                 ON problem_types.id = problems.problem_type
+                JOIN importance
+                ON importance.id = problems.importance
                 LEFT JOIN problem_types parents
                 ON problem_types.parent = parents.id
                 LEFT JOIN resolved_problems rp ON rp.problem_id = problems.id

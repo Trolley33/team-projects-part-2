@@ -7,14 +7,6 @@
     cursor: pointer;
 }
 </style>
-<?php
-    $importance = array(
-        array('Low', 'w3-green'),
-        array('Medium', 'w3-deep-orange'),
-        array('High', 'w3-red'),
-        array('Urgent', 'w3-purple')
-    );
-?>
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <form id="addCallForm">
@@ -29,7 +21,7 @@
             @foreach ($ongoing as $problem)
             <tr>
                 <td>{{$problem->created_at}}</td><td>{{sprintf('%04d',$problem->pID)}}</td><td>@if ($problem->pDesc != '0') ({{$problem->pDesc}})@endif{{$problem->problemType}}</td><td>{{$problem->description}}</td><td>{{$problem->forename}} {{$problem->surname}}</td>
-                <td class="{{$importance[$problem->importance][1]}}">{{$importance[$problem->importance][0]}}</td><td>{{$problem->importance}}</td>
+                <td class="{{$problem->class}}">{{$problem->text}}</td><td>{{$problem->level}}</td>
                 <td class="selectBox editbutton" style="text-align: center;">
                     <input class="selectRadio" type="radio" name='existing' value="{{$problem->pID}}" />
                 </td>

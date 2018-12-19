@@ -58,6 +58,13 @@
                             <th>Notes</th>
                             <td>{{Form::textarea('notes', $problem->notes, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Notes'])}}</td>
                         </tr>
+                        <tr>
+                            <th>Importance</th>
+                            <td>
+                                <select id="importance-select" name="importance" style="width: 100%;">
+                                </select>
+                            </td>
+                        </tr>
                         <tr class="w3-hover-light-grey solve">
                             <th>Assigned Helper</th>
                             <td title="Edit" class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}/edit_specialist';">
@@ -102,6 +109,16 @@
 
     <script>
     $(document).ready(function () {
+
+        $('#importance-select').select2();
+
+        var importance = <?php echo json_encode($importance) ?>;
+        var currentImportanceID = <?php echo json_encode($problem->importance); ?>;
+
+        importance.forEach(function (i) {
+            var o = new Option(i.text, i.id, false, currentImportanceID == i.id);
+            $("#importance-select").append(o);
+        });
 
         if ($('#solved').val() == 'false')
         {

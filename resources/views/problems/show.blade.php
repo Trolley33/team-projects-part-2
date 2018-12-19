@@ -27,16 +27,6 @@
         background-color: lightgrey;
     }
 </style>
-
-<?php
-    $importance = array(
-        array('Low', 'w3-green'),
-        array('Medium', 'w3-deep-orange'),
-        array('High', 'w3-red'),
-        array('Urgent', 'w3-purple')
-    );
-?>
-
 @section('content')
 <div class="call_menu w3-center w3-padding w3-light-grey">
         <div>
@@ -81,7 +71,7 @@
                         @if (is_null($resolved))
                         <tr class="w3-hover-light-grey solve">
                             <th>Importance</th>
-                            <td class="{{$importance[$problem->importance][1]}}">{{$importance[$problem->importance][0]}}</td>
+                            <td class="{{$importance->class}}">{{$importance->text}}</td>
                         </tr>
                         @endif
                         <tr class="w3-hover-light-grey solve">

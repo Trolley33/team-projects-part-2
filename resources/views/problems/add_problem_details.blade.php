@@ -52,6 +52,16 @@
                             <th>Notes</th>
                             <td>{{Form::textarea('notes', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Notes'])}}</td>
                         </tr>
+                        <tr class="w3-hover-light-grey">
+                            <th>Importance</th>
+                            <td>
+                                <select id="importance-select" name="importance" style="width: 100%;">
+                                    @foreach ($importance as $i)
+                                        <option value="{{$i->id}}">{{$i->text}}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 {{Form::submit('Assign Specialist', ['class'=> "menu-item w3-card w3-button w3-row w3-teal"])}}
@@ -63,6 +73,7 @@
 
     <script>
     $(document).ready(function () {
+        $('#importance-select').select2();
     });
     </script>
 @endsection

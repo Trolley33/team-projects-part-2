@@ -12,6 +12,7 @@ use App\User;
 use App\Job;
 use App\Equipment;
 use App\Software;
+use App\Importance;
 use App\AffectedHardware;
 use App\AffectedSoftware;
 
@@ -29,7 +30,7 @@ class ProblemController extends Controller
         {
             // Get intial caller for problem.
             $ongoing = DB::select(DB::raw(
-                'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problems.description, IFNULL(parents.description,0) as pDesc, problems.importance, users.forename, users.surname, calls.id as cID, IFNULL(specialists.forename,0) as sForename, IFNULL(specialists.surname,0) as sSurname, IFNULL(specialists.id,0) as sID
+                'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problems.description, IFNULL(parents.description,0) as pDesc, problems.importance, users.forename, users.surname, calls.id as cID, IFNULL(specialists.forename,0) as sForename, IFNULL(specialists.surname,0) as sSurname, IFNULL(specialists.id,0) as sID, importance.text, importance.class, importance.level
                 FROM problems
                 JOIN calls
                 ON (
@@ -44,6 +45,8 @@ class ProblemController extends Controller
                 ON users.id = calls.caller_id
                 JOIN problem_types
                 ON problem_types.id = problems.problem_type
+                JOIN importance
+                ON importance.id = problems.importance
                 LEFT JOIN users specialists
                 ON specialists.id = problems.assigned_to
                 LEFT JOIN problem_types parents
@@ -141,11 +144,13 @@ class ProblemController extends Controller
         {
             $pt = ProblemType::find($problem_type_id);
             $user = User::find($user_id);
+            $importance = Importance::orderBy('level')->get();
 
             $data = array(
                 'title' => "Create Problem",
                 'desc' => " ",
                 'user'=>$user,
+                'importance'=>$importance,
                 'problem_type'=>$pt,
                 'links' => PagesController::getOperatorLinks(),
                 'active' => 'Problems'
@@ -162,7 +167,8 @@ class ProblemController extends Controller
         {
             $this->validate($request, [
                 'desc' => 'required',
-                'notes' => 'required'
+                'notes' => 'required',
+                'importance' => 'required',
             ]);
 
             $user = User::find($user_id);
@@ -180,6 +186,7 @@ class ProblemController extends Controller
                 'desc' => "",
                 'problem_description'=>$request->input('desc'),
                 'problem_notes'=>$request->input('notes'),
+                'problem_importance'=>$request->input('importance'),
                 'user'=>$user,
                 'parent'=>$parent,
                 'problem_type'=>$problem_type,
@@ -206,6 +213,7 @@ class ProblemController extends Controller
             $this->validate($request, [
                 'desc' => 'required',
                 'notes' => 'required',
+                'importance' => 'required',
                 'user_id' => 'required',
                 'problem_type_id' => 'required',
                 'submit' =>'required'
@@ -219,7 +227,7 @@ class ProblemController extends Controller
             $problem->notes = $request->input('notes');
             $problem->problem_type = $request->input('problem_type_id');
             $problem->logged_by = $operator->id;
-            $problem->importance = 0;
+            $problem->importance = $request->input('importance');
             // Assign Problem to Current Operator.
             if ($request->input('submit') == "Assign Problem to You")
             {
@@ -271,6 +279,8 @@ class ProblemController extends Controller
 
             $software = Software::join('affected_software', 'affected_software.software_id', '=', 'software.id')->join('problems', 'problems.id', '=', 'affected_software.problem_id')->where('problems.id', '=', $id)->select('software.*')->get();
 
+            $importance = Importance::find($problem->importance);
+
             if (!is_null($problem) && !is_null($callers))
             {
                 $data = array(
@@ -284,6 +294,7 @@ class ProblemController extends Controller
                     'resolved' => $resolved,
                     'hardware' => $hardware,
                     'software' => $software,
+                    'importance' => $importance,
                     'links' => PagesController::getOperatorLinks(),
                     'active' => 'Problems'
                 );
@@ -567,6 +578,8 @@ class ProblemController extends Controller
 
                 $resolved = DB::table('problems')->join('resolved_problems', 'problems.id', '=', 'resolved_problems.problem_id')->select('resolved_problems.solution_notes', 'resolved_problems.created_at')->where('problems.id', '=', $id)->get()->first();
 
+                $importance = Importance::orderBy('level')->get();
+
                 $data = array(
                     'title' => "Edit Existing Problem",
                     'desc' => "For editing a problem.",
@@ -575,6 +588,7 @@ class ProblemController extends Controller
                     'parent' => $parent,
                     'specialist'=>$assigned,
                     'resolved'=>$resolved,
+                    'importance'=>$importance,
                     'links' => PagesController::getOperatorLinks(),
                     'active' => 'Problems'
                 );
@@ -703,12 +717,14 @@ class ProblemController extends Controller
             $this->validate($request, [
                 'desc' => 'required',
                 'notes' => 'required',
-                'solved' => 'required'
+                'solved' => 'required',
+                'importance' => 'required'
             ]);
-
+            // Find current problem, and change the fields.
             $problem = Problem::find($id);
             $problem->description = $request->input('desc');
             $problem->notes = $request->input('notes');
+            $problem->importance = $request->input('importance');
             $problem->save();
 
             

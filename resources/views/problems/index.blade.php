@@ -10,14 +10,6 @@
 
 
 @section('content')
-<?php
-    $importance = array(
-        array('Low', 'w3-green'),
-        array('Medium', 'w3-deep-orange'),
-        array('High', 'w3-red'),
-        array('Urgent', 'w3-purple')
-    );
-?>
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <h2>Ongoing Problems</h2>
     <table id='ongoing-table' class="display cell-border stripe hover">
@@ -34,7 +26,7 @@
                 @else
                     None
                 @endif
-                </td><td>@if ($problem->pDesc != '0') ({{$problem->pDesc}}) @endif {{$problem->ptDesc}}</td><td>{{$problem->description}}</td><td>{{$problem->forename}} {{$problem->surname}}</td><td class="{{$importance[$problem->importance][1]}}">{{$importance[$problem->importance][0]}}</td><td>{{$problem->importance}}</td>
+                </td><td>@if ($problem->pDesc != '0') ({{$problem->pDesc}}) @endif {{$problem->ptDesc}}</td><td>{{$problem->description}}</td><td>{{$problem->forename}} {{$problem->surname}}</td><td class="{{$problem->class}}">{{$problem->text}}</td><td>{{$problem->level}}</td>
                 <td class="editbutton" value='{{$problem->pID}}' style="text-align: center;">
                     View/Edit
                 </td>
@@ -81,7 +73,7 @@
 $(document).ready( function () 
 {
     var table = $('#ongoing-table').dataTable({
-        order: [[4, 'desc'], [0, 'desc']],
+        order: [[5, 'desc'], [0, 'desc']],
         "aoColumnDefs": [
             {
                 "iDataSort": 6,

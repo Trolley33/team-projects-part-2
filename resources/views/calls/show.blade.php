@@ -82,6 +82,7 @@
                 {!!Form::open(['id'=>'editForm']) !!}
 
                 {{Form::submit('Edit Call', ['class'=> "menu-item w3-card w3-button w3-row but", 'style'=> 'width: 400px;'])}}
+                {!!Form::close() !!}
                     
                 {!!Form::open(['action' => ['CallsController@destroy', $call->id], 'method' => 'POST', 'onsubmit'=>"return confirm('Delete Call? This action cannot be undone.');"]) !!}
 

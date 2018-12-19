@@ -33,6 +33,7 @@
   <div style="text-align: center;"> 
     {{Form::hidden('desc', $problem_description)}}
     {{Form::hidden('notes', $problem_notes)}}
+    {{Form::hidden('importance', $problem_importance)}}
     {{Form::hidden('user_id', $user->id)}}
     {{Form::hidden('problem_type_id', $problem_type->id)}}
 
