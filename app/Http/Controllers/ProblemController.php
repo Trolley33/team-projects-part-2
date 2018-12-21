@@ -123,7 +123,8 @@ class ProblemController extends Controller
             $problem_types = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('problem_types.*, IFNULL(parents.description,0) as parent_description')->get();
             
             $user = User::find($user_id);
-
+	    if (!is_null($user))
+	    {
             $data = array(
                 'title' => "Create Problem",
                 'desc' => " ",
@@ -134,6 +135,8 @@ class ProblemController extends Controller
             );
 
             return view('problems.select_problem_type_for_problem')->with($data);
+	    }
+	    return redirect('/problems/create')->with('error', 'Invalid user.');
         }
         return redirect('login')->with('error', 'Please log in first.'); 
     }
@@ -142,6 +145,7 @@ class ProblemController extends Controller
     {
         if (PagesController::hasAccess(1))
         {
+	    // TODO: check all '::find's before showing view.
             $pt = ProblemType::find($problem_type_id);
             $user = User::find($user_id);
             $importance = Importance::orderBy('level')->get();
