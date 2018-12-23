@@ -136,7 +136,7 @@ class ProblemController extends Controller
 
             return view('problems.select_problem_type_for_problem')->with($data);
 	    }
-	    return redirect('/problems/create')->with('error', 'Invalid user.');
+	    return redirect('/problems/create')->with('error', 'Invalid User selected.');
         }
         return redirect('login')->with('error', 'Please log in first.'); 
     }
@@ -145,22 +145,25 @@ class ProblemController extends Controller
     {
         if (PagesController::hasAccess(1))
         {
-	    // TODO: check all '::find's before showing view.
             $pt = ProblemType::find($problem_type_id);
             $user = User::find($user_id);
             $importance = Importance::orderBy('level')->get();
+            if (!is_null($pt) && !is_null($user) && !is_null($importance))
+            {
+                $data = array(
+                    'title' => "Create Problem",
+                    'desc' => " ",
+                    'user'=>$user,
+                    'importance'=>$importance,
+                    'problem_type'=>$pt,
+                    'links' => PagesController::getOperatorLinks(),
+                    'active' => 'Problems'
+                );
 
-            $data = array(
-                'title' => "Create Problem",
-                'desc' => " ",
-                'user'=>$user,
-                'importance'=>$importance,
-                'problem_type'=>$pt,
-                'links' => PagesController::getOperatorLinks(),
-                'active' => 'Problems'
-            );
+                return view('problems.add_problem_details')->with($data);
+            }
 
-            return view('problems.add_problem_details')->with($data);
+            return redirect('/problems/create')->with('error', 'Invalid User/Problem Type/Importance selected.');
         }
         return redirect('login')->with('error', 'Please log in first.'); 
     }
@@ -185,21 +188,26 @@ class ProblemController extends Controller
                 $parent = $problem_type;
             }
 
-            $data = array(
-                'title' => "Edit Assigned Specialist",
-                'desc' => "",
-                'problem_description'=>$request->input('desc'),
-                'problem_notes'=>$request->input('notes'),
-                'problem_importance'=>$request->input('importance'),
-                'user'=>$user,
-                'parent'=>$parent,
-                'problem_type'=>$problem_type,
-                'specialists'=>$specialists,
-                'links' => PagesController::getOperatorLinks(),
-                'active' => 'Problems'
-            );
+            if (!is_null($user) && !is_null($problem_type))
+            {
+                $data = array(
+                    'title' => "Edit Assigned Specialist",
+                    'desc' => "",
+                    'problem_description'=>$request->input('desc'),
+                    'problem_notes'=>$request->input('notes'),
+                    'problem_importance'=>$request->input('importance'),
+                    'user'=>$user,
+                    'parent'=>$parent,
+                    'problem_type'=>$problem_type,
+                    'specialists'=>$specialists,
+                    'links' => PagesController::getOperatorLinks(),
+                    'active' => 'Problems'
+                );
 
-            return view('problems.select_specialist_for_problem')->with($data);
+                return view('problems.select_specialist_for_problem')->with($data);
+            }
+
+            return redirect('/problems/create')->with('error', 'Invalid User/Problem Type selected.');
         }
         return redirect('login')->with('error', 'Please log in first.'); 
     }
@@ -304,7 +312,7 @@ class ProblemController extends Controller
                 );
                 return view('problems.show')->with($data);
             }
-            return "Error completing that request.";
+            return redirect('/problems')->with('error', 'Invalid/corrupted problem selected.');
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
@@ -328,7 +336,7 @@ class ProblemController extends Controller
                 );
                 return view('problems.select_user_for_call')->with($data);
             }
-            return "Error completing that request.";
+            return redirect('/calls/create')->with('error', 'Invalid User or Problem Selected');
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
@@ -352,7 +360,7 @@ class ProblemController extends Controller
                 );
                 return view('problems.add_call')->with($data);
             }
-            return "Error completing that request.";
+            return redirect('/calls/create')->with('error', 'Invalid Problem Selected');
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
@@ -379,7 +387,7 @@ class ProblemController extends Controller
                 );
                 return view('problems.select_equipment_to_add')->with($data);
             }
-            return "Error completing that request.";
+            return redirect('/problems')->with('error', 'Invalid problem selected.');
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
@@ -432,7 +440,7 @@ class ProblemController extends Controller
 
                 return view('problems.select_equipment_to_remove')->with($data);
             }
-            return "Error completing that request.";
+            return redirect('/problems')->with('error', 'Invalid problem selected.');
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
@@ -483,7 +491,7 @@ class ProblemController extends Controller
                 );
                 return view('problems.select_software_to_add')->with($data);
             }
-            return "Error completing that request.";
+            return redirect('/problems')->with('error', 'Invalid problem selected.');
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
@@ -535,7 +543,7 @@ class ProblemController extends Controller
 
                 return view('problems.select_software_to_remove')->with($data);
             }
-            return "Error completing that request.";
+            return redirect('/problems')->with('error', 'Invalid problem selected.');
         }
         return redirect('login')->with('error', 'Please log in first.');
     }

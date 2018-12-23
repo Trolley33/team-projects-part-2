@@ -68,7 +68,7 @@ $(document).ready( function ()
     $('.selectBox').click(function ()
     {
       $(this).children('.selectRadio').prop('checked', true);
-      $('#addProblemType').prop('disabled', false);
+      $('#addCall').prop('disabled', false);
     });
 
     $('input:radio[name="existing"]').change(
