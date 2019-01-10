@@ -40,12 +40,11 @@
                         </tr>
                         <tr class="w3-hover-light-grey solve">
                             <th>Problem Type</th>
-                            <td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';">
+                            <td>
                                 @if (!is_null($parent))
                                     ({{$parent->description}})
                                 @endif
                                 {{$problem_type->description}}
-                                <span class="icon">View</span>  
                             </td>
                         </tr>
                         <tr class="w3-hover-light-grey solve">
@@ -59,9 +58,8 @@
                         <tr class="w3-hover-light-grey solve">
                             <th>Assigned Helper</th>
                             @if (!is_null($specialist))
-                            <td class="editbutton" onclick="window.location.href = '/users/{{$specialist->id}}';">
-                                    {{$specialist->forename}} {{$specialist->surname}}
-                                <span class="icon">View</span></td>
+                            <td>
+                                {{$specialist->forename}} {{$specialist->surname}}</td>
                             </tr>
                             @else
                                 <td>
@@ -101,13 +99,6 @@
                             Edit Details
                         </div>
                     </a><br />
-                    {!!Form::open(['action' => ['ProblemController@destroy', $problem->id], 'method' => 'POST', 'onsubmit'=>"return confirm('Delete Problem? This action cannot be undone, and may lead to unintended consequences.');"]) !!}
-
-                    {{Form::hidden('_method', 'DELETE')}}
-                    
-                    {{Form::submit('Delete Problem', ['class'=> "menu-item w3-card w3-button w3-row w3-red", 'style'=> 'width: 400px;'])}}
-                    
-                    {!!Form::close() !!}
                 </div>
                 <hr />
                 <!-- callers -->
@@ -116,29 +107,19 @@
                     <table id='caller-table' class="display cell-border stripe hover slidable" style="width:100%;">
                         <thead>
                             <tr>
-                                <th>Full Name</th><th>Notes</th><th>Logged At</th><th>---</th>
+                                <th>Full Name</th><th>Notes</th><th>Logged At</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($callers as $caller)
                             <tr>
-                                <td class="editbutton" onclick="window.location.href = '/users/{{$caller->id}}';">{{$caller->forename}} {{$caller->surname}}</td>
+                                <td>{{$caller->forename}} {{$caller->surname}}</td>
                                 <td>{{$caller->notes}}</td>
                                 <td>{{$caller->cAT}}</td>
-                                <td class="editbutton" onclick="window.location.href = '/calls/{{$caller->cID}}';" style="text-align: center;">
-                                    View/Edit
-                                </td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    <div style="text-align: center;">
-                    <a class="blank" href="/problems/{{$problem->id}}/add_call">
-                        <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
-                            Add New Call
-                        </div>
-                    </a><br />
-                    </div>
                 </div>
                 <hr />
                 <!-- hardware -->
@@ -147,7 +128,7 @@
                     <table id='equipment-table' class="display cell-border stripe hover slidable" style="width:100%;">
                         <thead>
                             <tr>
-                                <th>Serial Number</th><th>Description</th><th>Model</th><th>---</th>
+                                <th>Serial Number</th><th>Description</th><th>Model</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -156,9 +137,6 @@
                                 <td>{{$h->serial_number}}</td>
                                 <td>{{$h->description}}</td>
                                 <td>{{$h->model}}</td>
-                                <td class="editbutton" onclick="window.location.href = '/equipment/{{$h->id}}';" style="text-align: center;">
-                                    View/Edit
-                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -183,7 +161,7 @@
                     <table id='software-table' class="display cell-border stripe hover" style="width:100%;">
                         <thead>
                             <tr>
-                                <th>Software Name</th><th>Description</th><th>---</th>
+                                <th>Software Name</th><th>Description</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -191,9 +169,6 @@
                             <tr>
                                 <td>{{$s->name}}</td>
                                 <td>{{$s->description}}</td>
-                                <td class="editbutton" onclick="window.location.href = '/software/{{$s->id}}';" style="text-align: center;">
-                                    View/Edit
-                                </td>
                             </tr>
                             @endforeach
 
@@ -219,13 +194,6 @@
     </div>
 
     <script>
-
-    function pad(v)
-    {
-        v=v.toString();
-        if(v.length == 1) return "0" + ""+ v;
-        else return v;
-    }
 
     $(document).ready(function () {
 

@@ -56,7 +56,7 @@ class ProblemController extends Controller
             ));
                 
             $resolved = DB::select(DB::raw(
-                'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problems.description, IFNULL(parents.description,0) as pDesc, problems.importance, users.forename, users.surname, calls.id as cID, IFNULL(specialists.forename,0) as sForename, IFNULL(specialists.surname,0) as sSurname, IFNULL(specialists.id,0) as sID
+                'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problems.description, IFNULL(parents.description,0) as pDesc, problems.importance, users.forename, users.surname, calls.id as cID, IFNULL(specialists.forename,0) as sForename, IFNULL(specialists.surname,0) as sSurname, IFNULL(specialists.id,0) as sID, rp.created_at as solved_at
                 FROM problems
                 JOIN calls
                 ON (
@@ -146,6 +146,7 @@ class ProblemController extends Controller
         if (PagesController::hasAccess(1))
         {
             $pt = ProblemType::find($problem_type_id);
+            $parent = ProblemType::find($pt->parent);
             $user = User::find($user_id);
             $importance = Importance::orderBy('level')->get();
             if (!is_null($pt) && !is_null($user) && !is_null($importance))
@@ -156,6 +157,7 @@ class ProblemController extends Controller
                     'user'=>$user,
                     'importance'=>$importance,
                     'problem_type'=>$pt,
+                    'parent'=>$parent,
                     'links' => PagesController::getOperatorLinks(),
                     'active' => 'Problems'
                 );
@@ -275,8 +277,16 @@ class ProblemController extends Controller
      */
     public function show($id)
     {
-        if (PagesController::hasAccess(1))
+        if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {
+            if (PagesController::hasAccess(1))
+            {
+                $links = PagesController::getOperatorLinks();
+            }
+            if (PagesController::hasAccess(2))
+            {
+                $links = PagesController::getSpecialistLinks();
+            }
             $problem = Problem::find($id);
             $type = ProblemType::find($problem->problem_type);
             $parent = ProblemType::find($type->parent);
@@ -307,12 +317,26 @@ class ProblemController extends Controller
                     'hardware' => $hardware,
                     'software' => $software,
                     'importance' => $importance,
-                    'links' => PagesController::getOperatorLinks(),
+                    'links' => $links,
                     'active' => 'Problems'
                 );
-                return view('problems.show')->with($data);
+                if (PagesController::hasAccess(1))
+                {
+                    return view('problems.show')->with($data);
+                }
+                elseif (PagesController::hasAccess(2))
+                {
+                    return view('problems.show_specialist')->with($data);
+                }
             }
-            return redirect('/problems')->with('error', 'Invalid/corrupted problem selected.');
+            if (PagesController::hasAccess(1))
+            {
+                return redirect('/problems')->with('error', 'Invalid/corrupted problem selected.');
+            }
+            elseif (PagesController::hasAccess(2))
+            {
+                return redirect('/specialist')->with('error', 'Invalid/corrupted problem selected.');
+            }
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
@@ -367,8 +391,17 @@ class ProblemController extends Controller
 
     public function select_equipment_to_add($id)
     {
-        if (PagesController::hasAccess(1))
+        if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {
+            if (PagesController::hasAccess(1))
+            {
+                $links = PagesController::getOperatorLinks();
+            }
+            if (PagesController::hasAccess(2))
+            {
+                $links = PagesController::getSpecialistLinks();
+            }
+
             $problem = Problem::find($id);
 
             $equipment = Equipment::all();
@@ -377,25 +410,33 @@ class ProblemController extends Controller
             if (!is_null($problem))
             {
                 $data = array(
-                    'title' => "Add Call to Problem.",
-                    'desc' => "Select a user to create a call for.",
+                    'title' => "Add Affected Equipment to Problem.",
+                    'desc' => "Select equipment affected by problem.",
                     'problem' => $problem,
                     'equipment' => $equipment,
                     'affected' => $affected_hardware,
-                    'links' => PagesController::getOperatorLinks(),
+                    'links' => $links,
                     'active' => 'Problems'
                 );
                 return view('problems.select_equipment_to_add')->with($data);
             }
-            return redirect('/problems')->with('error', 'Invalid problem selected.');
+            if (PagesController::hasAccess(1))
+            {
+                return redirect('/problems')->with('error', 'Invalid problem selected.');
+            }
+            elseif (PagesController::hasAccess(2))
+            {
+                return redirect('/specialist')->with('error', 'Invalid problem selected.');
+            }
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
 
     public function append_equipment(Request $request)
     {
-        if (PagesController::hasAccess(1))
+        if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {            
+
             $this->validate($request, [
                 'problem-id' => 'required',
                 'equipment' => 'required',
@@ -413,15 +454,22 @@ class ProblemController extends Controller
             }
 
             return redirect('/problems/'.$request->input('problem-id'))->with('success', 'Equipment Added');
-
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
 
     public function select_equipment_to_remove($id)
     {
-        if (PagesController::hasAccess(1))
+        if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {
+            if (PagesController::hasAccess(1))
+            {
+                $links = PagesController::getOperatorLinks();
+            }
+            if (PagesController::hasAccess(2))
+            {
+                $links = PagesController::getSpecialistLinks();
+            }
             $problem = Problem::find($id);
 
             $equipment = Equipment::join('affected_hardware', 'equipment.id', '=', 'affected_hardware.equipment_id')->where('affected_hardware.problem_id', '=', $id)->get();
@@ -434,20 +482,27 @@ class ProblemController extends Controller
                     'desc' => "Select a user to create a call for.",
                     'problem' => $problem,
                     'equipment' => $equipment,
-                    'links' => PagesController::getOperatorLinks(),
+                    'links' => $links,
                     'active' => 'Problems'
                 );
 
                 return view('problems.select_equipment_to_remove')->with($data);
             }
-            return redirect('/problems')->with('error', 'Invalid problem selected.');
+            if (PagesController::hasAccess(1))
+            {
+                return redirect('/problems')->with('error', 'Invalid problem selected.');
+            }
+            elseif (PagesController::hasAccess(2))
+            {
+                return redirect('/specialist')->with('error', 'Invalid problem selected.');
+            }
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
 
     public function delete_equipment(Request $request)
     {
-        if (PagesController::hasAccess(1))
+        if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {            
             $this->validate($request, [
                 'problem-id' => 'required',
@@ -471,8 +526,16 @@ class ProblemController extends Controller
 
     public function select_software_to_add($id)
     {
-        if (PagesController::hasAccess(1))
+        if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {
+            if (PagesController::hasAccess(1))
+            {
+                $links = PagesController::getOperatorLinks();
+            }
+            if (PagesController::hasAccess(2))
+            {
+                $links = PagesController::getSpecialistLinks();
+            }
             $problem = Problem::find($id);
 
             $software = Software::all();
@@ -486,19 +549,26 @@ class ProblemController extends Controller
                     'problem' => $problem,
                     'software' => $software,
                     'affected' => $affected_software,
-                    'links' => PagesController::getOperatorLinks(),
+                    'links' => $links,
                     'active' => 'Problems'
                 );
                 return view('problems.select_software_to_add')->with($data);
             }
-            return redirect('/problems')->with('error', 'Invalid problem selected.');
+            if (PagesController::hasAccess(1))
+            {
+                return redirect('/problems')->with('error', 'Invalid problem selected.');
+            }
+            elseif (PagesController::hasAccess(2))
+            {
+                return redirect('/specialist')->with('error', 'Invalid problem selected.');
+            }
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
 
     public function append_software(Request $request)
     {
-        if (PagesController::hasAccess(1))
+        if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {            
             $this->validate($request, [
                 'problem-id' => 'required',
@@ -517,15 +587,22 @@ class ProblemController extends Controller
             }
 
             return redirect('/problems/'.$request->input('problem-id'))->with('success', 'Software Added');
-
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
 
     public function select_software_to_remove($id)
     {
-        if (PagesController::hasAccess(1))
+        if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {
+            if (PagesController::hasAccess(1))
+            {
+                $links = PagesController::getOperatorLinks();
+            }
+            if (PagesController::hasAccess(2))
+            {
+                $links = PagesController::getSpecialistLinks();
+            }
             $problem = Problem::find($id);
 
             $software = Software::join('affected_software', 'software.id', '=', 'affected_software.software_id')->where('affected_software.problem_id', '=', $id)->get();
@@ -537,20 +614,27 @@ class ProblemController extends Controller
                     'desc' => "",
                     'problem' => $problem,
                     'software' => $software,
-                    'links' => PagesController::getOperatorLinks(),
+                    'links' => $links,
                     'active' => 'Problems'
                 );
 
                 return view('problems.select_software_to_remove')->with($data);
             }
-            return redirect('/problems')->with('error', 'Invalid problem selected.');
+            if (PagesController::hasAccess(1))
+            {
+                return redirect('/problems')->with('error', 'Invalid problem selected.');
+            }
+            elseif (PagesController::hasAccess(2))
+            {
+                return redirect('/specialist')->with('error', 'Invalid problem selected.');
+            }
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
 
     public function delete_software(Request $request)
     {
-        if (PagesController::hasAccess(1))
+        if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {            
             $this->validate($request, [
                 'problem-id' => 'required',
@@ -579,8 +663,16 @@ class ProblemController extends Controller
      */
     public function edit($id)
     {
-        if (PagesController::hasAccess(1))
+        if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {
+            if (PagesController::hasAccess(1))
+            {
+                $links = PagesController::getOperatorLinks();
+            }
+            if (PagesController::hasAccess(2))
+            {
+                $links = PagesController::getSpecialistLinks();
+            }
             $problem = Problem::find($id);
             $type = ProblemType::find($problem->problem_type);
             $parent = ProblemType::find($type->parent);
@@ -601,21 +693,36 @@ class ProblemController extends Controller
                     'specialist'=>$assigned,
                     'resolved'=>$resolved,
                     'importance'=>$importance,
-                    'links' => PagesController::getOperatorLinks(),
+                    'links' => $links,
                     'active' => 'Problems'
                 );
 
                 return view('problems.edit')->with($data);
             }
-            return redirect('/problems');
+            if (PagesController::hasAccess(1))
+            {
+                return redirect('/problems')->with('error', 'Invalid problem selected.');
+            }
+            elseif (PagesController::hasAccess(2))
+            {
+                return redirect('/specialist')->with('error', 'Invalid problem selected.');
+            }
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
 
     public function edit_problem_type ($id)
     {
-       if (PagesController::hasAccess(1))
+       if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {
+            if (PagesController::hasAccess(1))
+            {
+                $links = PagesController::getOperatorLinks();
+            }
+            if (PagesController::hasAccess(2))
+            {
+                $links = PagesController::getSpecialistLinks();
+            }
             $problem = Problem::find($id);
             if (!is_null($problem))
             {
@@ -626,20 +733,27 @@ class ProblemController extends Controller
                     'desc' => " ",
                     'problem'=>$problem,
                     'problem_types'=>$problem_types,
-                    'links' => PagesController::getOperatorLinks(),
+                    'links' => $links,
                     'active' => 'Problems'
                 );
 
                 return view('problems.edit_problem_type')->with($data);
             }
-            return redirect('/problems');
+            if (PagesController::hasAccess(1))
+            {
+                return redirect('/problems')->with('error', 'Invalid problem selected.');
+            }
+            elseif (PagesController::hasAccess(2))
+            {
+                return redirect('/specialist')->with('error', 'Invalid problem selected.');
+            }
         }
         return redirect('login')->with('error', 'Please log in first.'); 
     }
 
     public function add_problem_type ($problem_id, $type_id)
     {
-        if (PagesController::hasAccess(1))
+        if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {
             $problem = Problem::find($problem_id);
             $problem->problem_type = $type_id;
@@ -681,6 +795,23 @@ class ProblemController extends Controller
                 return view('problems.edit_specialist')->with($data);
             }
             return redirect('/problems');
+        }
+        if (PagesController::hasAccess(2))
+        {
+            $problem = Problem::find($id);
+            if (!is_null($problem))
+            {
+                $data = array(
+                    'title' => "Request Problem be Re-assigned?",
+                    'desc' => "Doing so will remove the problem from your list of problems.",
+                    'problem'=>$problem,
+                    'links' => PagesController::getSpecialistLinks(),
+                    'active' => 'Problems'
+                );
+
+                return view('problems.request_reassign')->with($data);
+            }
+            return redirect('/specialist');
         }
         return redirect('login')->with('error', 'Please log in first.'); 
     }
@@ -724,7 +855,7 @@ class ProblemController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (PagesController::hasAccess(1))
+        if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {            
             $this->validate($request, [
                 'desc' => 'required',
@@ -779,21 +910,24 @@ class ProblemController extends Controller
      */
     public function destroy($id)
     {
-        $problem = Problem::find($id);
-        $problem->delete();
+        if (PagesController::hasAccess(1))
+        {
+            $problem = Problem::find($id);
+            $problem->delete();
 
-        $affected_hardware = AffectedHardware::where('problem_id', '=', $id);
-        $affected_hardware->delete();
+            $affected_hardware = AffectedHardware::where('problem_id', '=', $id);
+            $affected_hardware->delete();
 
-        $affected_software = AffectedSoftware::where('problem_id', '=', $id);
-        $affected_software->delete();
+            $affected_software = AffectedSoftware::where('problem_id', '=', $id);
+            $affected_software->delete();
 
-        $calls = Call::where('problem_id', '=', $id);
-        $calls->delete();
+            $calls = Call::where('problem_id', '=', $id);
+            $calls->delete();
 
-        $resolved = ResolvedProblem::where('problem_id', '=', $id);
-        $resolved->delete();
+            $resolved = ResolvedProblem::where('problem_id', '=', $id);
+            $resolved->delete();
 
-        return redirect('/problems/')->with('success', 'Problem Permantly Deleted');
+            return redirect('/problems/')->with('success', 'Problem Permantly Deleted');
+        }
     }
 }

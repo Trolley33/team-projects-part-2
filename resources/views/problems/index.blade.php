@@ -15,7 +15,7 @@
     <table id='ongoing-table' class="display cell-border stripe hover">
         <thead>
             <tr>
-                <th>Time Logged</th><th>Assigned Helper</th><th>Problem Type</th><th>Description</th><th>Initial Caller</th><th>Importance</th><th>Hidden Column</th><th>Select</th>
+                <th>Time Logged</th><th>Assigned Helper</th><th>Problem Type</th><th>Description</th><th>Initial Caller</th><th>Importance</th><th>Hidden Column</th><th>---</th>
             </tr>
         </thead>
         <tbody>
@@ -47,18 +47,22 @@
     <table id='resolved-table' class="display cell-border stripe hover">
         <thead>
             <tr>
-                <th>Time Logged</th><th>Assigned Helper</th><th>Problem Type</th><th>Description</th><th>Initial Caller</th><th>Solved At</th><th>Select</th>
+                <th>Time Logged</th><th>Solved At</th><th>Assigned Helper</th><th>Problem Type</th><th>Description</th><th>Initial Caller</th><th>---</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($resolved as $problem)
             <tr>
-                <td>{{$problem->created_at}}</td><td>@if ($problem->sID != 0)
+                <td>{{$problem->created_at}}</td><td>{{$problem->solved_at}}</td>
+                <td>@if ($problem->sID != 0)
                     {{$problem->sForename}} {{$problem->sSurname}}
                 @else
                     None
                 @endif
-                </td><td>@if ($problem->pDesc != '0') ({{$problem->pDesc}}) @endif {{$problem->ptDesc}}</td><td>{{$problem->description}}</td><td>{{$problem->forename}} {{$problem->surname}}</td><td>some time</td>
+                </td>
+                <td>@if ($problem->pDesc != '0') ({{$problem->pDesc}}) @endif {{$problem->ptDesc}}</td>
+                <td>{{$problem->description}}</td>
+                <td>{{$problem->forename}} {{$problem->surname}}</td>
                 <td class="editbutton" value='{{$problem->pID}}' style="text-align: center;">
                     View/Edit
                 </td>

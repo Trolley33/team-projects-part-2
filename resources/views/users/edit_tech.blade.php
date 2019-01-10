@@ -72,18 +72,20 @@
                         <th>Password</th>
                         <td>{{Form::text('password', $user->password, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->password, 'id'=>'password'])}}</td>
                     </tr>
+                    @if ($job->access_level == '2')
                         <tr class="w3-hover-light-grey solve">
                             <th>Problem Specialism</th>
                             @if (!is_null($problem_type))
                             <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}/edit_specialism';" title="Edit">
-                                {{$problem_type->description}}
+                                {{$problem_type->description}}<span class="icon">Edit</span>
                             </td>
                             @else
                             <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}/edit_specialism';" title="Edit">
-                                Not Set
+                                Not Set<span class="icon">Edit</span>
                             </td>
                             @endif
                         </tr>
+                    @endif
                 </tbody>
             </table>
             {{Form::hidden('isCaller', 'false')}}

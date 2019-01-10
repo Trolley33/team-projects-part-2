@@ -381,6 +381,7 @@ class UserController extends Controller
                         'desc' => "For changing details about an account related to the system.",
                         'user'=>$user,
                         'jobs' => $jobs,
+                        'job'=>$job,
                         'problem_type'=>$problem_type,
                         'links' => PagesController::getOperatorLinks(),
                         'active' => 'Users'

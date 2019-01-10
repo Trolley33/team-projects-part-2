@@ -11,8 +11,10 @@ use App\Job;
 class PagesController extends Controller
 {
 
+    // Function that returns array of 'links' and their corrosponding display text. By using a public static function we get around using a global variable which caused problems. Can be accessed from any other controllers.
     public static function getOperatorLinks ()
     {
+        // href = which main page to redirect to, text = what to display.
         return [
             ['href'=>'back','text'=>'back'],
             ['href'=>'operator','text'=>'Home'],
@@ -26,32 +28,41 @@ class PagesController extends Controller
         ];
     }
 
+    // Function that returns array of 'links' and their corrosponding display text. By using a public static function we get around using a global variable which caused problems. Can be accessed from any other controllers.
     public static function getSpecialistLinks ()
     {
+        // href = which main page to redirect to, text = what to display.
         return [
             ['href'=>'back','text'=>'back'],
-            ['href'=>'specialist','text'=>'Home']
+            ['href'=>'specialist','text'=>'Home'],
+            ['href'=>'problems', 'text'=>'Problems']
         ];
     }
-
+    // Function that checks if the currently signed in user has the access level passed as a parameter. Returns true/false.
     public static function hasAccess($level)
     {
+        // Check that the csrf (token) cookie is set, and set it to a variable.
         if (isset($_COOKIE['csrf']))
         {
             $cookie = $_COOKIE['csrf'];
         }
+        // If unset then the user isn't logged in at all so return false.
         else
         {
             return false;
         }
         
+        // Find the user that has the crsf cookie linked to their account.
         $result = DB::table('users')->select('users.id')->where('users.remember_token', '=', $cookie)->get();
 
+        // If there is exactly 1 user with the token, then the user is definitely logged in.
         if (!is_null($result) && count($result) == 1)
         {
+            // Find the access level of the user from their job.
             $id = $result->first()->id;
             $user = User::find($id);
             $job = Job::find($user->job_id);
+            // If the access level matches the parameter, return true.
             if ($job->access_level == $level)
             {
                 return true;
@@ -61,35 +72,38 @@ class PagesController extends Controller
         return false;
     }
 
+    // Function that gets the currently logged in user as a 'User' object quickly.
     public static function getCurrentUser()
     {
+        // Check that the user is logged in as 1 of the 3 accepted accounts, as this ensures the cookie is set.
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2) || PagesController::hasAccess(3))
         {
+            // Find user who has the csrf cookie.
             $cookie = $_COOKIE['csrf'];
             $user = User::where('remember_token', '=', $cookie)->get()->first();
 
             return $user;
         }
-
+        // If the user can't be verified to have any access level, return null to prevent malicious access.
         return null;
     }
 
     public function index()
     {
-
+        // If user is logged in, redirect them to their homepage.
         if (PagesController::hasAccess(1))
         {
             return redirect('/operator');
         }
-        if (PagesController::hasAccess(2))
+        elseif (PagesController::hasAccess(2))
         {
             return redirect('/specialist');
         }
-        if (PagesController::hasAccess(3))
+        elseif (PagesController::hasAccess(3))
         {
             return redirect('/analyst');
         }
-
+        // If user is not logged in, show main index page.
         $data = array(
             'title' => "Make-It-All Helpdesk",
             'desc' => "For submitting and receiving tehnical queries."
@@ -99,6 +113,7 @@ class PagesController extends Controller
 
     public function login()
     {
+        // If user is already logged in, redirect them to their homepage.
         if (PagesController::hasAccess(1))
         {
             return redirect('/operator');
@@ -111,7 +126,7 @@ class PagesController extends Controller
         {
             return redirect('/analyst');
         }
-        
+        // If user is not logged in, show login page.
         $data = array(
             'title' => "Login Page",
             'desc' => "Please log in with your user credentials below."
@@ -122,18 +137,15 @@ class PagesController extends Controller
 
     public function logout()
     {
+        // Delete csrf token (set it to 0, and expire it).
         setcookie("csrf", "", time()-3600);
-
-        $data = array(
-            'title' => "Login Page",
-            'desc' => "Please log in with your user credentials below."
-        );
-
-        return redirect('/')->with('success', 'Logged Out', $data);
+        // Go back to index page.
+        return redirect('/')->with('success', 'Logged Out');
     }
 
     public function FAQ()
     {
+        // Load FAQ page, no access required.
         $data = array(
             'title' => "FAQ",
             'desc' => ""
@@ -142,25 +154,31 @@ class PagesController extends Controller
         return view('pages.faq')->with($data);
     }
 
+    // Function to verify a login attempt.
     public function verify()
     {
-        // do database query
         $name = $_POST['username'];
+        // Password stored as plain-text as HR's system would handle actual login attempts (as discussed on the forum), this serves as a temporary way to demonstrate logging in.
         $pass = $_POST['password'];
+        // Token generated from form.
         $token = $_POST['tok'];
 
+        // If username and password are correct.
         $result = DB::table('users')->select('users.id')->where('users.username', '=', $name, 'AND', 'users.password', '=', $pass)->get();
         if (!is_null($result) && count($result) == 1)
         {
+            // Get information about user.
             $id = $result->first()->id;
             $user = User::find($id);
             $job = Job::find($user->job_id);
 
+            // Set csrf token to expire in 24 hours.
             setcookie('csrf', $token, time() + 86400, "/");
-
+            // Set token in database (preventing logging in from multiple machines, which could cause problems).
             $user->remember_token = $token;
             $user->save();
 
+            // Redirect user to their appropriate homepage.
             $level = $job->access_level;
             if ($level == 1)
             {
@@ -175,15 +193,18 @@ class PagesController extends Controller
                 return redirect('analyst/');
             }
         }
-        return redirect('login');
+        // If any of this fails, redirect to login page.
+        return redirect('login')->with('error', 'Invalid username/password.');
 
     }
 
     // ==== Operator pages. ====
     public function operator_homepage()
     {
+        // If user allowed to access this page.
         if (PagesController::hasAccess(1))
         {
+            // Supply data to view.
             $data = array(
                 'title' => "Operator Homepage",
                 'desc' => "Please select a task.",
@@ -192,6 +213,7 @@ class PagesController extends Controller
             );
             return view('pages.operator.homepage')->with($data);
         }
+        // No access redirects to login page.
         return redirect('login')->with('error', 'Please log in first.');
     }
 
@@ -199,10 +221,13 @@ class PagesController extends Controller
     // ==== Specialist pages. ====
     public function specialist_homepage()
     {
+        // If user allowed to access this page.
         if (PagesController::hasAccess(2))
         {
+            // Get the currently logged in specialist's account information.
             $specialist = PagesController::getCurrentUser();
 
+            // Get all problem information for problems assigned to this specialist.
             $problems = DB::select(DB::raw(
                 "SELECT problems.id as id, problems.created_at, problem_types.description as ptDesc, problems.description, problems.assigned_to, problems.importance, IFNULL(parents.description,0) as pDesc, users.forename, users.surname, calls.id as cID, importance.text, importance.class, importance.level
                 FROM problems
@@ -225,7 +250,7 @@ class PagesController extends Controller
                 ON importance.id = problems.importance
                 WHERE problems.assigned_to = ".$specialist->id.";"
             ));
-
+            // Supply data to view.
             $data = array(
                 'title' => "Specialist Homepage",
                 'desc' => "Please select a task.",
@@ -236,6 +261,7 @@ class PagesController extends Controller
             );
             return view('pages.specialist.homepage')->with($data);
         }
+        // No access redirects to login.
         return redirect('login')->with('error', 'Please log in first.');
     }
 
@@ -243,6 +269,7 @@ class PagesController extends Controller
     // ==== Analyst pages. ====
     public function analyst_homepage()
     {
+        // TODO
         if (PagesController::hasAccess(3))
         {
             $data = array(

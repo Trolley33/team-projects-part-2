@@ -14,16 +14,16 @@
         margin-bottom: 100px;
     }
 
-    table{
+    #info-table{
         width: 90%;
         margin-left: 5%;
     }
 
-    td{
+    #info-table td{
         padding: 10px;
     }
 
-    th{
+    #info-table th{
         padding: 10px;
         background-color: lightgrey;
     }
@@ -39,7 +39,7 @@
     <div>
         <div class="w3-padding-large w3-white">
             <h2>{{$user->forename}} {{$user->surname}} - ID: {{sprintf('%04d',$user->employee_id)}}</h2>
-            <table>
+            <table id="info-table">
                 <tbody>
                     <tr class="w3-hover-light-grey solve">
                         <th>Full Name</th>
@@ -47,11 +47,13 @@
                     </tr>
                     <tr class="w3-hover-light-grey solve">
                         <th>Department Name</th>
-                        <td class="editbutton" onclick="window.location.href = '/departments/{{$job_info->dID}}';">{{$job_info->name}}</td>
+                        <td class="editbutton" onclick="window.location.href = '/departments/{{$job_info->dID}}';">{{$job_info->name}}
+                        </td>
                     </tr>
                     <tr class="w3-hover-light-grey solve">
                         <th>Job Title</th>
-                        <td class="editbutton" onclick="window.location.href = '/jobs/{{$job_info->jID}}';">{{$job_info->title}}</td>
+                        <td class="editbutton" onclick="window.location.href = '/jobs/{{$job_info->jID}}';">{{$job_info->title}}
+                        </td>
                     </tr>
                     <tr class="w3-hover-light-grey solve">
                         <th>Phone Number</th>
@@ -71,16 +73,20 @@
                         <th>Account Creation Date</th>
                         <td>{{$user->created_at}}</td>
                     </tr>
+                    @if ($job_info->access_level == '2')
                         <tr class="w3-hover-light-grey solve">
                             <th>Problem Specialism</th>
                             @if (!is_null($problem_type))
-                            <td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';">{{$problem_type->description}}</td>
+                            <td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';">{{$problem_type->description}}
+                            <span class="icon">View</span>
+                            </td>
                             @else
                             <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}/edit_specialism';" title="Edit">
-                                Not Set
+                                Not Set<span class="icon">Edit</span>
                             </td>
                             @endif
                         </tr>
+                    @endif
                 </tbody>
             </table>
 

@@ -40,6 +40,9 @@
                         <tr class="w3-hover-light-grey solve">
                             <th>Problem Type</th>
                             <td title="Edit" class="editbutton" onclick="window.location.href = '/problems/create/{{$user->id}}';">
+                                @if (!is_null($parent))
+                                    ({{$parent->description}}) 
+                                @endif
                                 {{$problem_type->description}}
                                 <span class="icon">Edit</span>
                             </td>
