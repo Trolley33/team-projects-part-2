@@ -16,87 +16,36 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 </head>
 <body>
-
-<style>
-.navbar {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-}
-
-.navbar-item {
-    float: left;
-}
-
-.navbar-item a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-.navbar-item a:hover {
-    background-color: #111;
-}
-
-.active {
-    background-color: #FFF;
-}
-
-.active a {
-    color: black;
-}
-
-.active a:hover {
-    background-color: #FFF;
-    color: black;
-}
-
-.editbutton:hover
-{
-    background-color: #BBBBBB !important;
-    cursor: pointer;
-}
-
-.slideHeader:hover
-{
-    background-color: #BBBBBB !important;
-    cursor: pointer;
-}
-.editbutton:hover .icon
-{
-    display: block;
-}
-.icon {
-    float: right;
-    display: none;
-}
-</style>
     <div class="header w3-container w3-dark-grey">
         <div class="w3-center">
             <h1>{{$title}}</h1>
             <h4>{{$desc}}</h4>
         </div>
     </div>
-        <ul class="navbar">
-            @if (isset($links))
-                @foreach ($links as $link)
-                @if ($link['href'] == 'back')
-                    <li class="navbar-item"><a href="javascript:history.back()"><img src="https://i.imgur.com/Cic9Xby.png" style="height: 1.45em;" /></a></li>
-                @elseif ($link['text'] == $active)
-                    <li class="navbar-item active"><a href="/{{$link['href']}}">{{$link['text']}}</a></li>
-                @else
-                    <li class="navbar-item"><a href="/{{$link['href']}}">{{$link['text']}}</a></li>
-                @endif
-
-                @endforeach
-                <li class="navbar-item" style="float: right !important; background-color: #515151;"><a href="/logout">Logout</a></li>
+    <ul class="navbar">
+        @if (isset($links))
+            @foreach ($links as $link)
+            @if ($link['href'] == 'back')
+                <li class="navbar-item"><a href="javascript:history.back()"><img src="https://i.imgur.com/Cic9Xby.png" style="height: 1.45em;" /></a></li>
+            @elseif ($link['text'] == $active)
+                <li class="navbar-item active"><a href="/{{$link['href']}}">{{$link['text']}}</a></li>
+            @else
+                <li class="navbar-item"><a href="/{{$link['href']}}">{{$link['text']}}</a></li>
             @endif
-        </ul>
+
+            @endforeach
+            <li class="navbar-item" style="float: right !important; background-color: #515151;"><a href="/logout">Logout</a></li>
+        @endif
+    </ul>
     @include('messages')
     @yield('content')
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.slideHeader').click(function(){
+                $(this).next('.slideable').slideToggle();
+            });
+        });
+    </script>
 </body>
 </html>

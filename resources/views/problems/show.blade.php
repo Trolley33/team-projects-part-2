@@ -1,32 +1,4 @@
 @extends('layouts.app')
-
-<style>
-    .call_menu
-    {
-        border-radius: 2px;
-        margin-top: 30px;
-        position: absolute;
-        left: 20%;
-        width: 60%;
-        min-width: 300px;
-        background-color: white;
-        margin-bottom: 100px;
-    }
-
-    #info-table{
-        width: 90%;
-        margin-left: 5%;
-    }
-
-    #info-table td{
-        padding: 10px;
-    }
-
-    #info-table th{
-        padding: 10px;
-        background-color: lightgrey;
-    }
-</style>
 @section('content')
 <div class="call_menu w3-center w3-padding w3-light-grey">
         <div>
@@ -97,7 +69,7 @@
                 </table>
                 <div style="text-align: center;">
                     <a class="blank" href="/problems/{{$problem->id}}/edit">
-                        <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                        <div class="w3-card w3-button w3-row bigbutton">
                             Edit Details
                         </div>
                     </a><br />
@@ -105,7 +77,7 @@
 
                     {{Form::hidden('_method', 'DELETE')}}
                     
-                    {{Form::submit('Delete Problem', ['class'=> "menu-item w3-card w3-button w3-row w3-red", 'style'=> 'width: 400px;'])}}
+                    {{Form::submit('Delete Problem', ['class'=> "bigbutton w3-card w3-button w3-row w3-red"])}}
                     
                     {!!Form::close() !!}
                 </div>
@@ -134,7 +106,7 @@
                     </table>
                     <div style="text-align: center;">
                     <a class="blank" href="/problems/{{$problem->id}}/add_call">
-                        <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                        <div class="bigbutton w3-card w3-button w3-row">
                             Add New Call
                         </div>
                     </a><br />
@@ -165,12 +137,12 @@
                     </table>
                     <div style="text-align: center;">
                     <a class="blank" href="/problems/{{$problem->id}}/add_equipment">
-                        <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                        <div class="bigbutton w3-card w3-button w3-row">
                             Add New Affected Equipment
                         </div>
                     </a><br />
                     <a class="blank" href="/problems/{{$problem->id}}/remove_equipment">
-                        <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                        <div class="bigbutton w3-card w3-button w3-row">
                             Remove Affected Equipment
                         </div>
                     </a><br />
@@ -201,12 +173,12 @@
                     </table>
                     <div style="text-align: center;">
                     <a class="blank" href="/problems/{{$problem->id}}/add_software">
-                        <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                        <div class="bigbutton w3-card w3-button w3-row">
                             Add New Affected Software
                         </div>
                     </a><br />
                     <a class="blank" href="/problems/{{$problem->id}}/remove_software">
-                        <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                        <div class="bigbutton w3-card w3-button w3-row">
                             Remove Affected Software
                         </div>
                     </a><br />

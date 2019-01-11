@@ -1,17 +1,9 @@
 @extends('layouts.app')
 
-<style>
-.editbutton:hover
-{
-    background-color: #BBBBBB !important;
-    cursor: pointer;
-}
-</style>
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <form id="addCallForm">
     <table id='problem-table' class="display cell-border stripe hover">
-
         <thead>
             <tr>
                 <th>Time Logged</th><th>Problem ID</th><th>Problem Type</th><th>Description</th><th>Initial Caller</th><th>Importance</th><th>Hidden Column</th><th>Select</th>

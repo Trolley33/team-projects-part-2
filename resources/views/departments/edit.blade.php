@@ -1,33 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
-<br />
-        {!! Form::open(['action' => ['DepartmentController@update', $department->id], 'method' => 'POST']) !!}
-            <div class="w3-container w3-white login w3-mobile">
-                <h2>{{$department->name}}</h2>
-                <span class="error"><?php if (isset($error)) echo $error; ?></span>
-                <span class="success"><?php if (isset($success)) echo $success; ?></span>
-                <br />
-                {{Form::label('', 'Previous Name')}}
-                <br/>
-                {{Form::text('', $department->name, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Department Name', 'disabled'])}}
-                <br />
-                {{Form::label('deptName', 'New Name')}}
-                <br/>
-                {{Form::text('deptName', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Department Name'])}}
-                <br />
-
-                {{Form::hidden('_method', 'PUT')}}
-
-                {{Form::submit('Submit', ['class'=>'w3-right w3-button w3-teal'])}}
-            </div>
-        {!! Form::close() !!}
-
-        
-
-<script>
-    $(document).ready(function () {
-    });
-</script>
-
+<div class="call_menu w3-center w3-padding w3-light-grey">
+    <div>
+        <div class="w3-padding-large w3-white">
+            <h2>Edit the {{$department->name}} Department</h2>
+            {!! Form::open(['action' => ['DepartmentController@update', $department->id], 'method' => 'POST']) !!}
+            <table>
+                <tbody>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>{{Form::label('', 'Previous Name')}}</th>
+                        <td>{{Form::text('', $department->name, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Department Name', 'disabled'])}}</td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>{{Form::label('deptName', 'New Name')}}</th>
+                        <td>{{Form::text('deptName', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Department Name'])}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            {{Form::hidden('_method', 'PUT')}}
+            {{Form::submit('Submit', ['class'=> "menu-item w3-card w3-button w3-row w3-teal"])}}
+            {!! Form::close() !!}
+            <br />
+        </div>
+    </div>
+</div>
 @endsection

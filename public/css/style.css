@@ -138,6 +138,96 @@ border-color: grey;
 padding: 10px;
 }
 
+.bigbutton
+{
+	width: 90%;
+	margin: 8px auto 8px auto;
+}
+.navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+.navbar-item {
+    float: left;
+}
+
+.navbar-item a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar-item a:hover {
+    background-color: #111;
+}
+
+.active {
+    background-color: #FFF;
+}
+
+.active a {
+    color: black;
+}
+
+.active a:hover {
+    background-color: #FFF;
+    color: black;
+}
+
+.editbutton:hover
+{
+    background-color: #BBBBBB !important;
+    cursor: pointer;
+}
+
+.slideHeader:hover
+{
+    background-color: #BBBBBB !important;
+    cursor: pointer;
+}
+
+.editbutton:hover .icon
+{
+    display: block;
+}
+.icon {
+    float: right;
+    display: none;
+}
+
+.call_menu
+{
+    max-width: 960px;
+    border-radius: 2px;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 75%;
+    min-width: 300px;
+    background-color: white;
+    margin-bottom: 100px;
+}
+
+.call_menu table{
+    width: 90%;
+    margin: auto;
+}
+
+.call_menu td{
+    padding: 10px;
+}
+
+.call_menu th{
+    padding: 10px;
+    background-color: lightgrey;
+}
+
 .ongoing td
 {
 background-color: #FFB4B0 !important;

@@ -1,24 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
-<br />
-        {!! Form::open(['action' => 'DepartmentController@store', 'method' => 'POST']) !!}
-            <div class="w3-container w3-white login w3-mobile">
-                <span class="error"><?php if (isset($error)) echo $error; ?></span>
-                <span class="success"><?php if (isset($success)) echo $success; ?></span>
-                <br />
-                {{Form::label('deptName', 'Department Name')}}
-                <br />
-                {{Form::text('deptName', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Department Name'])}}
-                <br />
+<div class="call_menu w3-center w3-padding w3-light-grey">
+    <div>
+        <div class="w3-padding-large w3-white">
+            <h2>Create a New Department</h2>
+            {!! Form::open(['action' => 'DepartmentController@store', 'method' => 'POST']) !!}
+            <table>
+                <tbody>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>{{Form::label('deptName', 'Department Name')}}</th>
+                        <td>{{Form::text('deptName', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Department Name'])}}</td>
+                    </tr>
+                
+                </tbody>
+            </table>
+            {{Form::submit('Submit', ['class'=> "menu-item w3-card w3-button w3-row w3-teal"])}}
+            {!! Form::close() !!}
 
-                {{Form::submit('Submit', ['class'=>'w3-right w3-button w3-teal'])}}
-            </div>
-        {!! Form::close() !!}
-
-<script>
-    $(document).ready(function () {
-    });
-</script>
-
+            <br />
+        </div>
+    </div>
+</div>
 @endsection

@@ -1,7 +1,4 @@
 @extends('layouts.app')
-
-
-
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
 	<table id='department-table' class="display cell-border stripe hover" style="width:100%;">
@@ -33,14 +30,6 @@
         </a><br />
 	</div>
 </div>
-
-<style>
-.editbutton:hover
-{
-	background-color: #BBBBBB !important;
-	cursor: pointer;
-}
-</style>
 
 <script>
 $(document).ready( function () 

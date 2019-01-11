@@ -37,18 +37,18 @@
 
 	<div style="text-align: center;">
         {!!Form::open(['id'=>'createForm']) !!}
-		{{Form::submit('Create User with Job Title', ['class'=> "menu-item w3-card 	w3-button w3-row", 'style'=> 'width: 400px;'])}}
+		{{Form::submit('Create User with Job Title', ['class'=> "bigbutton w3-card 	w3-button w3-row"])}}
 		{!!Form::close() !!}
 
         {!!Form::open(['id'=>'editForm']) !!}
-		{{Form::submit('Edit Job Title', ['class'=> "menu-item w3-card 	w3-button w3-row", 'style'=> 'width: 400px;'])}}
+		{{Form::submit('Edit Job Title', ['class'=> "bigbutton w3-card 	w3-button w3-row"])}}
 		{!!Form::close() !!}
 
         {!!Form::open(['action' => ['JobController@destroy', $job->id], 'method' => 'POST', 'onsubmit'=>"return confirmDelete()", 'id'=>'deleteForm']) !!}
 
 		{{Form::hidden('_method', 'DELETE')}}
 
-		{{Form::submit('Delete Job Title', ['class'=> "menu-item w3-card 	w3-button w3-row w3-red", 'style'=> 'width: 400px;'])}}
+		{{Form::submit('Delete Job Title', ['class'=> "bigbutton w3-card 	w3-button w3-row w3-red"])}}
 		{!!Form::close() !!}
 	</div>
 </div>
@@ -105,7 +105,7 @@ function confirmDelete()
     {
     	return false;
     }
-	return confirm("Really delete Job '" + job.title + "'? This action cannot be undone, and will also delete all related users.");
+	return confirm("Really delete Job '" + job.title + "'? This action cannot be undone, and will also delete all related employees.");
 }
 </script>
 

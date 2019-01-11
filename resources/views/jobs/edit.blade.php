@@ -1,47 +1,43 @@
 @extends('layouts.app')
 
 @section('content')
-<br />
-        {!! Form::open(['action' => ['JobController@update', $job->id], 'method' => 'POST']) !!}
-            <div class="w3-container w3-white login w3-mobile">
-                <h2>{{$job->title}}</h2>
-                <span class="error"><?php if (isset($error)) echo $error; ?></span>
-                <span class="success"><?php if (isset($success)) echo $success; ?></span>
-                <br />
-                <!-- Previous information -->
-                {{Form::label('', 'Previous Department')}}
-                <br />
-
-                <select id='prevDept' name='' class="w3-input" required  style="width: 100% !important;" disabled="true">
-                    <option>{{$dept->name}}</option>
-                </select>
-                <br /><br />
-
-                {{Form::label('', 'Previous Title')}}
-                <br/>
-                {{Form::text('', $job->title, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Previous Title', 'disabled'])}}
-                <br />
-
-                <!-- New information input -->
-                {{Form::label('department-select', 'New Department')}}
-                <br />
-
-                <select id='department-select' name='department-select' class="w3-input" required  style="width: 100% !important;">
-                </select>
-                <br /><br />
-
-                {{Form::label('jobTitle', 'New Title')}}
-                <br/>
-                {{Form::text('jobTitle', $job->title, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'New Title'])}}
-                <br />
-
-                {{Form::hidden('_method', 'PUT')}}
-
-                {{Form::submit('Submit', ['class'=>'w3-right w3-button w3-teal'])}}
-            </div>
-        {!! Form::close() !!}
-
-        
+<div class="call_menu w3-center w3-padding w3-light-grey">
+    <div>
+        <div class="w3-padding-large w3-white">
+            <h2>Edit {{$job->title}} Role</h2>
+            {!! Form::open(['action' => ['JobController@update', $job->id], 'method' => 'POST']) !!}
+            <table>
+                <tbody>
+                    <!-- Previous information -->
+                    <tr class="w3-hover-light-grey solve">
+                        <th>
+                            {{Form::label('', 'Previous Department')}}</th>
+                        <td><select id='prevDept' name='' class="w3-input" required  style="width: 100% !important;" disabled="true">
+                            <option>{{$dept->name}}</option>
+                        </select></td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>
+                            {{Form::label('', 'Previous Title')}}</th>
+                        <td>{{Form::text('', $job->title, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Previous Title', 'disabled'])}}</td>
+                    </tr>
+                    <tr class="w3-hover-light-grey solve">
+                        <th>{{Form::label('department-select', 'New Department')}}</th>
+                        <td><select id='department-select' name='department-select' class="w3-input" required  style="width: 100% !important;">
+                </select></td>
+                    </tr>  
+                    <tr class="w3-hover-light-grey solve">
+                        <th>{{Form::label('jobTitle', 'Job Title')}}</th>
+                        <td>{{Form::text('jobTitle', $job->title, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'New Title'])}}</td>
+                    </tr>                
+                </tbody>
+            </table>
+            {{Form::hidden('_method', 'PUT')}}
+            {{Form::submit('Submit', ['class'=> "menu-item w3-card w3-button w3-row w3-teal"])}}
+            {!! Form::close() !!}
+        </div>
+    </div>
+</div>  
 
 <script>
     $(document).ready(function () {

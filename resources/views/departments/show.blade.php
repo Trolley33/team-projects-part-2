@@ -71,6 +71,10 @@ $(document).ready( function ()
     	$('#createForm :input').prop('disabled', true);
     	$('#editForm :input').prop('disabled', true);
     	$('#deleteForm :input').prop('disabled', true);
+
+    	$('#createForm :input').hide();
+    	$('#editForm :input').hide();
+    	$('#deleteForm :input').hide();
     }
     else
     {
@@ -92,7 +96,7 @@ function confirmDelete()
     {
     	return false;
     }
-	return confirm("Really delete Department '" + department.name + "'? This action cannot be undone, and will also delete all related jobs.");
+	return confirm("Really delete Department '" + department.name + "'? This action cannot be undone; this will also delete all related jobs, and all employees with those jobs.");
 }
 </script>
 

@@ -3,7 +3,6 @@
 @section('content')
 
     <div class="w3-center menu">
-
         <div class="w3-padding w3-white" style='text-align:center'>
             <h3>Problem Related Tasks</h3><hr />
             <a class="blank" href="http://cort.sci-project.lboro.ac.uk/team4/problems/view_all.php">
@@ -57,17 +56,5 @@
             </table>
         </div>
     </div>
-
-
-<script>
-$(document).ready(function() 
-{
-    $('#back-btn').html("Logout");
-    $('#back-btn').click(function()
-    {
-        window.location.replace('/logout');
-    })
-});
-</script>
 
 @endsection

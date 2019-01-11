@@ -164,7 +164,7 @@ class PagesController extends Controller
         $token = $_POST['tok'];
 
         // If username and password are correct.
-        $result = DB::table('users')->select('users.id')->where('users.username', '=', $name, 'AND', 'users.password', '=', $pass)->get();
+        $result = DB::table('users')->select('users.id')->where('users.username', '=', $name)->where('users.password', '=', $pass)->get();
         if (!is_null($result) && count($result) == 1)
         {
             // Get information about user.

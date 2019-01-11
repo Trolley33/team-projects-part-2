@@ -12,7 +12,7 @@
 		<tbody>
 			@foreach ($types as $problem_type)
 			<tr>
-				<td>{{$problem_type->id}}</td><td>{{$problem_type->description}}</td>
+				<td>{{sprintf("%04d", $problem_type->id)}}</td><td>{{$problem_type->description}}</td>
 				<td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';" style="text-align: center;">
 					View/Edit
 				</td>
@@ -23,12 +23,12 @@
     </table>
 	<div style="text-align: center;">
         <a class="blank" href="/problem_types/create?type={{$parent->id}}">
-            <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+            <div class="bigbutton w3-card w3-button w3-row">
                 Create New Problem Type
             </div>
         </a><br />
         <a class="blank" href="/problem_types/{{$parent->id}}/edit">
-            <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+            <div class="bigbutton w3-card w3-button w3-row">
                 Edit Information
             </div>
         </a><br />
@@ -37,7 +37,7 @@
 
         {{Form::hidden('_method', 'DELETE')}}
         
-        {{Form::submit('Delete Problem Type', ['class'=> "menu-item w3-card w3-button w3-row w3-red", 'style'=>'width: 400px;'])}}
+        {{Form::submit('Delete Problem Type', ['class'=> "bigbutton w3-card w3-button w3-row w3-red"])}}
         
         {!!Form::close() !!}
         <br />
@@ -66,14 +66,6 @@
     </div>
     <hr />
 </div>
-
-<style>
-.editbutton:hover
-{
-	background-color: #BBBBBB !important;
-	cursor: pointer;
-}
-</style>
 
 <script>
 $(document).ready( function () 

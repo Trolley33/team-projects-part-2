@@ -1,12 +1,4 @@
 @extends('layouts.app')
-<?php
-    $importance = array(
-        array('Low', 'w3-green'),
-        array('Medium', 'w3-deep-orange'),
-        array('High', 'w3-red'),
-        array('Urgent', 'w3-purple')
-    );
-?>
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <h2>Assigned Problems for {{$user->forename}} {{$user->surname}}</h2>
