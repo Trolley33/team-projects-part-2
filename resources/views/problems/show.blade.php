@@ -1,16 +1,18 @@
 @extends('layouts.app')
+
 @section('content')
 <div class="call_menu w3-center w3-padding w3-light-grey">
         <div>
             <div class="w3-padding-large w3-white">
                 <h2>Problem Viewer</h2>
+                <!-- Main Information Table -->
                 <table id="info-table">
                     <tbody>
-                        <tr class="w3-hover-light-grey solve">
+                        <tr class="w3-hover-light-grey">
                             <th>Problem Number</th>
                             <td> #{{sprintf('%04d', $problem->id)}}</td>
                         </tr>
-                        <tr class="w3-hover-light-grey solve">
+                        <tr class="w3-hover-light-grey">
                             <th>Problem Type</th>
                             <td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';">
                                 @if (!is_null($parent))
@@ -20,15 +22,15 @@
                                 <span class="icon">View</span>  
                             </td>
                         </tr>
-                        <tr class="w3-hover-light-grey solve">
+                        <tr class="w3-hover-light-grey">
                             <th>Description</th>
                             <td> {{$problem->description}} </td>
                         </tr>
-                        <tr class="w3-hover-light-grey solve">
+                        <tr class="w3-hover-light-grey">
                             <th>Notes</th>
                             <td> {{$problem->notes}} </td>
                         </tr>
-                        <tr class="w3-hover-light-grey solve">
+                        <tr class="w3-hover-light-grey">
                             <th>Assigned Helper</th>
                             @if (!is_null($specialist))
                             <td class="editbutton" onclick="window.location.href = '/users/{{$specialist->id}}';">
@@ -41,12 +43,12 @@
                                 </td>
                             @endif
                         @if (is_null($resolved))
-                        <tr class="w3-hover-light-grey solve">
+                        <tr class="w3-hover-light-grey">
                             <th>Importance</th>
                             <td class="{{$importance->class}}">{{$importance->text}}</td>
                         </tr>
                         @endif
-                        <tr class="w3-hover-light-grey solve">
+                        <tr class="w3-hover-light-grey">
                             <th>Status</th>
                             @if (!is_null($resolved))
 
@@ -58,7 +60,7 @@
                         </tr>
                         @if (!is_null($resolved))
 
-                            <tr id = "8" class="w3-hover-light-grey solve">
+                            <tr id = "8" class="w3-hover-light-grey">
                                 <th>Solution Notes</th>
                                 <td>
                                     {{$resolved->solution_notes}}
@@ -67,6 +69,7 @@
                         @endif
                     </tbody>
                 </table>
+                <!-- Buttons -->
                 <div style="text-align: center;">
                     <a class="blank" href="/problems/{{$problem->id}}/edit">
                         <div class="w3-card w3-button w3-row bigbutton">
@@ -191,27 +194,13 @@
     </div>
 
     <script>
-
-    function pad(v)
-    {
-        v=v.toString();
-        if(v.length == 1) return "0" + ""+ v;
-        else return v;
-    }
-
     $(document).ready(function () {
-
         var table = $('#caller-table').dataTable({
             order: [[2, 'asc']]
         });
 
         var table2 = $('#equipment-table').DataTable();
         var table3 = $('#software-table').DataTable();
-        
-        $('.slideHeader').click(function(){
-            $(this).next('.slideable').slideToggle();
-        });
-
     });
     </script>
 @endsection

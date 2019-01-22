@@ -1,13 +1,5 @@
 @extends('layouts.app')
 
-<style>
-.editbutton:hover
-{
-    background-color: #BBBBBB !important;
-    cursor: pointer;
-}
-</style>
-
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <h2>Problem ID: {{$problem->id}}</h2>
@@ -47,7 +39,7 @@
         
     </table>
     <div style="text-align: center;">
-        <input id="addEquipment" class="menu-item w3-card w3-button w3-row" type="submit" value="Add Equipment to Problem" style="width: 400px;" disabled/>
+        <input id="addEquipment" class="bigbutton w3-card w3-button w3-row" type="submit" value="Add Equipment to Problem" disabled/>
     </div>
     {!! Form::close() !!}
 </div>

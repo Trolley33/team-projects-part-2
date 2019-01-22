@@ -1,18 +1,9 @@
 @extends('layouts.app')
 
-<style>
-.editbutton:hover
-{
-    background-color: #BBBBBB !important;
-    cursor: pointer;
-}
-</style>
-
-
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <h2>Ongoing Problems</h2>
-    <table id='ongoing-table' class="display cell-border stripe hover">
+    <table id='ongoing-table' class="display cell-border stripe hover" style="width:100%;">
         <thead>
             <tr>
                 <th>Time Logged</th><th>Assigned Helper</th><th>Problem Type</th><th>Description</th><th>Initial Caller</th><th>Importance</th><th>Hidden Column</th><th>---</th>
@@ -37,7 +28,7 @@
     </table>
     <div style="text-align: center;">
         <a class="blank" href="problems/create">
-            <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+            <div class="bigbutton w3-card w3-button w3-row">
                 Create New Problem
             </div>
         </a><br />

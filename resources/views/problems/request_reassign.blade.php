@@ -1,31 +1,4 @@
 @extends('layouts.app')
-<style>
-    .call_menu
-    {
-        border-radius: 2px;
-        margin-top: 30px;
-        position: absolute;
-        left: 20%;
-        width: 60%;
-        min-width: 300px;
-        background-color: white;
-        margin-bottom: 100px;
-    }
-
-    #info-table{
-        width: 90%;
-        margin-left: 5%;
-    }
-
-    #info-table td{
-        padding: 10px;
-    }
-
-    #info-table th{
-        padding: 10px;
-        background-color: lightgrey;
-    }
-</style>
 
 @section('content')
 <div class="call_menu w3-center w3-padding w3-light-grey">

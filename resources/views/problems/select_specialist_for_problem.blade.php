@@ -9,7 +9,7 @@
   <table id='specialist-table' class="display cell-border stripe hover" style="width:100%;">
     <thead>
       <tr>
-        <th>Employee ID</th><th>Specialist Name</th><th>Problem Specialism</th><th>Select</th>
+        <th>Employee ID</th><th>Specialist Name</th><th>Problem Specialism</th><th>No. of Active Jobs</th><th>Select</th>
       </tr>
     </thead>
     <tbody>
@@ -22,6 +22,7 @@
                         ({{$s->parent_description}})
                     @endif
                     {{$s->description}}</td>
+                    <td>{{$s->jobs}}</td>
         <td title="Select" class="selectBox editbutton" style="text-align: center;">
           <input class="selectRadio" type="radio" name='specialist' value="{{$s->id}}" />
         </td>
@@ -37,9 +38,9 @@
     {{Form::hidden('user_id', $user->id)}}
     {{Form::hidden('problem_type_id', $problem_type->id)}}
 
-    {{Form::submit('Assign Problem to You', ['class'=> "menu-item w3-card w3-button w3-row", 'name'=>'submit', 'style'=>'width: 400px;'])}}
+    {{Form::submit('Assign Problem to You', ['class'=> "bigbutton w3-card w3-button w3-row", 'name'=>'submit'])}}
     <br />
-    {{Form::submit('Assign Specialist', ['class'=> "menu-item w3-card w3-button w3-row", 'id'=>'addSpecialist', 'name'=>'submit', 'style'=>'width: 400px;', 'disabled'])}}
+    {{Form::submit('Assign Specialist', ['class'=> "bigbutton w3-card w3-button w3-row", 'id'=>'addSpecialist', 'name'=>'submit', 'disabled'])}}
 
     {!! Form::close() !!}
   </div>
@@ -48,43 +49,6 @@
 
 <div id="myModal" class="modal">
 </div>
-
-<style>
-.editbutton:hover
-{
-  background-color: #BBBBBB !important;
-  cursor: pointer;
-}
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-/* The Close Button */
-.close {
-  color: #bbb;
-  float: right;
-  margin-right: 10px;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-</style>
-
 <script>
 
 var modal;
@@ -143,7 +107,10 @@ $(document).ready( function ()
     });
     
     var table = $('#specialist-table').DataTable({
-        order: [['2', 'asc']]
+        order: [
+          ['3', 'asc'],
+          ['2', 'asc']
+        ]
     });
     // If we provide some sort of search term through the redirect, search it here.
     var search = "<?php if (session('search')) echo session('search');?>";

@@ -7,11 +7,11 @@
                 {!! Form::open(['action' => 'ProblemTypeController@store', 'method' => 'POST']) !!}
                 <table id="info-table">
                     <tbody>
-                        <tr class="w3-hover-light-grey solve">
+                        <tr class="w3-hover-light-grey">
                             <th>Parent Problem Type</th>
                             <td><select id='parent-select' name='parent-select' class="w3-input" required  style="width: 100% !important;"></select></td>
                         </tr>
-                        <tr class="w3-hover-light-grey solve">
+                        <tr class="w3-hover-light-grey">
                             <th>Description</th>
                             <td>{{Form::text('desc', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Problem Type Description'])}}</td>
                         </tr>

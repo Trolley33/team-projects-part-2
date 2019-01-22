@@ -3,6 +3,7 @@
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
 	<h2>Select Specialist For Problem #{{sprintf('%04d', $problem->id)}}</h2>
+  <hr />
   <h3>Problem Type: {{$type->description}}</h3>
 	<form id="addSpecialistForm">
 	<table id='problem-table' class="display cell-border stripe hover" style="width:100%;">
@@ -32,13 +33,13 @@
 	</table>
     <div style="text-align: center;">
         <a class="blank" href="/problems/{{$problem->id}}/add_operator">
-            <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+            <div class="bigbutton w3-card w3-button w3-row">
                 Assign Problem to You
             </div>
         </a><br />
     </div>
     <div style="text-align: center;">
-        <input id="addSpecialist" class="menu-item w3-card w3-button w3-row" type="submit" value="Choose Specialist" style="width: 400px;" disabled/>
+        <input id="addSpecialist" class="bigbutton w3-card w3-button w3-row" type="submit" value="Choose Specialist" disabled/>
     </div>
 
     </form>
@@ -46,43 +47,6 @@
 
 <div id="myModal" class="modal">
 </div>
-
-<style>
-.editbutton:hover
-{
-	background-color: #BBBBBB !important;
-	cursor: pointer;
-}
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-/* The Close Button */
-.close {
-  color: #bbb;
-  float: right;
-  margin-right: 10px;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-</style>
-
 <script>
 
 var modal;
