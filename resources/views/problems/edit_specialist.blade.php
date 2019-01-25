@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
-	<h2>Select Specialist For Problem #{{sprintf('%04d', $problem->id)}}</h2>
+	<h2>Select Specialist For Problem: {{sprintf('%04d', $problem->id)}}</h2>
   <hr />
   <h3>Problem Type: {{$type->description}}</h3>
 	<form id="addSpecialistForm">
@@ -22,7 +22,7 @@
                 ({{$s->parent_description}})
             @endif
             {{$s->description}}</td>
-        <td>{{$s->jobs}}</td>
+        <td style="text-align: right;">{{$s->jobs}}</td>
 				<td title="Select" class="selectBox editbutton" style="text-align: center;">
 					<input class="selectRadio" type="radio" name='specialist' value="{{$s->id}}" />
 				</td>
@@ -48,57 +48,27 @@
 <div id="myModal" class="modal">
 </div>
 <script>
-
-var modal;
-
 $(document).ready( function () 
 {
     var problem = <?php echo json_encode($problem); ?>;
     var parent = <?php echo json_encode($parent); ?>;
-
+    var assigned = <?php echo json_encode($assigned); ?>;
 
     $('.selectBox').click(function ()
     {
-      $(this).children('.selectRadio').prop('checked', true);
-      $('#addSpecialist').prop('disabled', false);
+        $(this).children('.selectRadio').prop('checked', true);
+        $('#addSpecialist').prop('disabled', false);
     });
 
-
-  modal = $('#myModal');
-
-  $(".modalOpener").click(function() {
-    $.get(
-        $(this).attr('value'),
-        function (data) {
-            modal.html(data);
-            $('#myModal div').first().prepend('<span onclick="closeModal()" class="close">&times;</span>')
-        }
-    );
-
-      modal.show();
-  });
-
-  $(window).click(function(event) {
-    var target = $(event.target);
-
-    if (!target.hasClass('modalOpener'))
-    {
-          if (target.closest('.modal div').length == 0)
-      {
-        closeModal();
-      }
-    }
-  });
-
-  $('input:radio[name="specialist"]').change(
-      function(){
-        $('#addSpecialist').prop('disabled', false);
+    $('input:radio[name="specialist"]').change(
+        function(){
+            $('#addSpecialist').prop('disabled', false);
     });
 
     $('input:radio[name="specialist"]').each(function (i, r)
     {
       var radio = $(r);
-      if (radio.val() == problem.problem_type)
+      if (radio.val() == assigned.id)
       {
         radio.prop('checked', true);
         $('#addSpecialist').prop('disabled', false);
@@ -126,12 +96,6 @@ $(document).ready( function ()
     }
     table.search(search).draw();
 });
-
-function closeModal ()
-{
-	modal.html('');
-	modal.hide();
-}
 </script>
 
 @endsection

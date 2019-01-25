@@ -7,7 +7,6 @@
 
     {{Form::hidden('problem-id', $problem->id)}}
     <table id='equipment-table' class="display cell-border stripe hover">
-
         <thead>
             <tr>
                 <th>Serial Number</th><th>Description</th><th>Model</th><th>Select</th>

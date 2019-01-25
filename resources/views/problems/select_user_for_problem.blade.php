@@ -15,7 +15,7 @@
             @foreach ($users as $user)
             <tr>
                 <td>{{sprintf('%04d',$user->employee_id)}}</td>
-                <td>{{$user->forename}} {{$user->surname}}</td><td>{{$user->name}}</td><td>{{$user->title}}</td><td>{{$user->phone_number}}</td>
+                <td class="editbutton modalOpener" value="/users/{{$user->id}}/compact">{{$user->forename}} {{$user->surname}}</td><td>{{$user->name}}</td><td>{{$user->title}}</td><td>{{$user->phone_number}}</td>
                 <td class="selectBox editbutton" style="text-align: center;">
                     <input class="selectRadio" type="radio" name='existing' value="{{$user->id}}" />
                 </td>

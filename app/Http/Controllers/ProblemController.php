@@ -30,7 +30,7 @@ class ProblemController extends Controller
         {
             // Get intial caller for problem.
             $ongoing = DB::select(DB::raw(
-                'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problems.description, IFNULL(parents.description,0) as pDesc, problems.importance, users.forename, users.surname, calls.id as cID, IFNULL(specialists.forename,0) as sForename, IFNULL(specialists.surname,0) as sSurname, IFNULL(specialists.id,0) as sID, importance.text, importance.class, importance.level
+                'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problem_types.id as ptID, problems.description, IFNULL(parents.description,0) as pDesc, problems.importance, users.forename, users.surname, users.id as uID, calls.id as cID, IFNULL(specialists.forename,0) as sForename, IFNULL(specialists.surname,0) as sSurname, IFNULL(specialists.id,0) as sID, importance.text, importance.class, importance.level
                 FROM problems
                 JOIN calls
                 ON (
@@ -56,7 +56,7 @@ class ProblemController extends Controller
             ));
                 
             $resolved = DB::select(DB::raw(
-                'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problems.description, IFNULL(parents.description,0) as pDesc, problems.importance, users.forename, users.surname, calls.id as cID, IFNULL(specialists.forename,0) as sForename, IFNULL(specialists.surname,0) as sSurname, IFNULL(specialists.id,0) as sID, rp.created_at as solved_at
+                'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problem_types.id as ptID, problems.description, IFNULL(parents.description,0) as pDesc, problems.importance, users.forename, users.surname, users.surname, users.id as uID, calls.id as cID, IFNULL(specialists.forename,0) as sForename, IFNULL(specialists.surname,0) as sSurname, IFNULL(specialists.id,0) as sID, rp.created_at as solved_at
                 FROM problems
                 JOIN calls
                 ON (
@@ -187,11 +187,6 @@ class ProblemController extends Controller
             $specialists = User::join('speciality', 'users.id', '=', 'speciality.specialist_id')->join('problem_types', 'speciality.problem_type_id', '=', 'problem_types.id')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, users.*')->get();
             */
             $specialists = User::join('speciality', 'users.id', '=', 'speciality.specialist_id')->join('problem_types', 'speciality.problem_type_id', '=', 'problem_types.id')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->leftJoin('problems', 'problems.assigned_to', '=', 'users.id')->selectRaw('speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id), 0) as jobs, users.*')->groupBy('users.id', 'speciality.id')->get();
-
-            if (is_null($parent))
-            {
-                $parent = $problem_type;
-            }
 
             if (!is_null($user) && !is_null($problem_type))
             {
@@ -773,6 +768,7 @@ class ProblemController extends Controller
        if (PagesController::hasAccess(1))
         {
             $problem = Problem::find($id);
+            $assigned = User::find($problem->assigned_to);
             $problem_type = ProblemType::find($problem->problem_type);
             $parent = ProblemType::find($problem_type->parent);
             if (!is_null($problem))
@@ -788,6 +784,7 @@ class ProblemController extends Controller
                     'title' => "Edit Assigned Specialist",
                     'desc' => "",
                     'problem'=>$problem,
+                    'assigned'=>$assigned,
                     'parent'=>$parent,
                     'type'=>$problem_type,
                     'specialists'=>$specialists,

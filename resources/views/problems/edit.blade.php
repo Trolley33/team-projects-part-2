@@ -5,11 +5,11 @@
             <div class="w3-padding-large w3-white">
                 <h2>Problem Viewer</h2>
                 {!! Form::open(['action' => ['ProblemController@update', $problem->id], 'method' => 'POST']) !!}
-                <table id="info-table">
+                <table>
                     <tbody>
                         <tr class="w3-hover-light-grey">
                             <th>Problem Number</th>
-                            <td> #{{sprintf('%04d', $problem->id)}}</td>
+                            <td class="editbutton" onclick="window.location.href= '/problems/{{$problem->id}}'">{{sprintf('%04d', $problem->id)}}<span class="icon">View</span></td>
                         </tr>
                         <tr class="w3-hover-light-grey">
                             <th>Problem Type</th>

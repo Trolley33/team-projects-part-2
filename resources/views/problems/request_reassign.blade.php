@@ -4,8 +4,8 @@
 <div class="call_menu w3-center w3-padding w3-light-grey">
     <div>
         <div class="w3-padding-large w3-white">
-            <h2>Request Problem #{{sprintf('%04d', $problem->id)}} be Re-assigned?</h2>
-            <table id="info-table">
+            <h2>Request Problem {{sprintf('%04d', $problem->id)}} be Re-assigned?</h2>
+            <table>
                 <tbody>
                     <tr class="w3-hover-light-grey">
                         <td class="editbutton w3-green" onclick="window.location.href = '/problems/{{$problem->id}}/remove_specialist';"><b>Yes</b></th>

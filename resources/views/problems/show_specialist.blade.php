@@ -6,11 +6,11 @@
             <div class="w3-padding-large w3-white">
                 <h2>Problem Viewer</h2>
                 <!-- Main Information Table -->
-                <table id="info-table">
+                <table>
                     <tbody>
                         <tr class="w3-hover-light-grey">
                             <th>Problem Number</th>
-                            <td> #{{sprintf('%04d', $problem->id)}}</td>
+                            <td>{{sprintf('%04d', $problem->id)}}</td>
                         </tr>
                         <tr class="w3-hover-light-grey">
                             <th>Problem Type</th>

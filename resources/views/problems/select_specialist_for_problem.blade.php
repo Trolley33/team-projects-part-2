@@ -3,8 +3,12 @@
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
   <h2>Select Specialist For New Problem</h2>
-  <h3>Creating New Problem for: {{$user->forename}} {{$user->surname}}</h3>
-  <h3>Problem Type: @if ($parent->description != '0') ({{$parent->description}}) @endif{{$problem_type->description}}</h3>
+  <h3>Creating New Problem for: <span class="editbutton modalOpener" value="/users/{{$user->id}}/compact">{{$user->forename}} {{$user->surname}}</span></h3>
+  <h3>Problem Type: 
+  <span class="editbutton modalOpener" value="/problem_types/{{$problem_type->id}}/compact">
+    @if (!is_null($parent)) 
+      ({{$parent->description}}) 
+    @endif{{$problem_type->description}}</span></h3>
   {!! Form::open(['action' => 'ProblemController@store', 'method' => 'POST']) !!}
   <table id='specialist-table' class="display cell-border stripe hover" style="width:100%;">
     <thead>
@@ -15,14 +19,14 @@
     <tbody>
       @foreach ($specialists as $s)
       <tr>
-        <td title="View" class="editbutton">{{sprintf('%04d', $s->employee_id)}}</td>
+        <td>{{sprintf('%04d', $s->employee_id)}}</td>
         <td title="View" class="editbutton modalOpener" value='/users/{{$s->id}}/compact'>{{$s->forename}} {{$s->surname}}</td>
                 <td title="View" class="editbutton modalOpener" value='/problem_types/{{$s->pID}}/compact'>
                     @if ($s->parent_description != '0')
                         ({{$s->parent_description}})
                     @endif
                     {{$s->description}}</td>
-                    <td>{{$s->jobs}}</td>
+                    <td style="text-align: right;">{{$s->jobs}}</td>
         <td title="Select" class="selectBox editbutton" style="text-align: center;">
           <input class="selectRadio" type="radio" name='specialist' value="{{$s->id}}" />
         </td>
@@ -46,18 +50,22 @@
   </div>
     </form>
 </div>
-
-<div id="myModal" class="modal">
-</div>
 <script>
-
-var modal;
 
 $(document).ready( function () 
 {
 
     var problem_type = <?php echo json_encode($problem_type); ?>;
-    var parent = <?php echo json_encode($parent); ?>;
+    var parent = <?php 
+        if (!is_null($parent))
+        {
+            echo json_encode($parent);
+        }
+        else
+        {
+            echo json_encode($problem_type);
+        } 
+        ?>;
 
 
     $('.selectBox').click(function ()
@@ -65,31 +73,6 @@ $(document).ready( function ()
       $(this).children('.selectRadio').prop('checked', true);
       $('#addSpecialist').prop('disabled', false);
     });
-    
-  modal = $('#myModal');
-  $(".modalOpener").click(function() {
-    $.get(
-        $(this).attr('value'),
-        function (data) {
-            modal.html(data);
-            $('#myModal div').first().prepend('<span onclick="closeModal()" class="close">&times;</span>')
-        }
-    );
-
-      modal.show();
-  });
-
-  $(window).click(function(event) {
-    var target = $(event.target);
-
-    if (!target.hasClass('modalOpener'))
-    {
-          if (target.closest('.modal div').length == 0)
-      {
-        closeModal();
-      }
-    }
-  });
 
   $('input:radio[name="specialist"]').change(
       function(){
@@ -124,14 +107,6 @@ $(document).ready( function ()
 
 
 });
-
-function closeModal ()
-{
-  modal.html('');
-  modal.hide();
-}
-
-
 </script>
 
 @endsection

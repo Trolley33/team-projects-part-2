@@ -5,7 +5,7 @@
             <div class="w3-padding-large w3-white">
                 <h2>Problem Type Creator</h2>
                 {!! Form::open(['action' => 'ProblemTypeController@store', 'method' => 'POST']) !!}
-                <table id="info-table">
+                <table>
                     <tbody>
                         <tr class="w3-hover-light-grey">
                             <th>Parent Problem Type</th>

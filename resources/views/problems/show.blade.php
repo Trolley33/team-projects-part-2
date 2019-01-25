@@ -1,16 +1,15 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="call_menu w3-center w3-padding w3-light-grey">
         <div>
             <div class="w3-padding-large w3-white">
                 <h2>Problem Viewer</h2>
                 <!-- Main Information Table -->
-                <table id="info-table">
+                <table>
                     <tbody>
                         <tr class="w3-hover-light-grey">
                             <th>Problem Number</th>
-                            <td> #{{sprintf('%04d', $problem->id)}}</td>
+                            <td>{{sprintf('%04d', $problem->id)}}</td>
                         </tr>
                         <tr class="w3-hover-light-grey">
                             <th>Problem Type</th>
@@ -97,7 +96,7 @@
                         <tbody>
                             @foreach ($callers as $caller)
                             <tr>
-                                <td class="editbutton" onclick="window.location.href = '/users/{{$caller->id}}';">{{$caller->forename}} {{$caller->surname}}</td>
+                                <td class="editbutton modalOpener" value='/users/{{$caller->id}}/compact';">{{$caller->forename}} {{$caller->surname}}</td>
                                 <td>{{$caller->notes}}</td>
                                 <td>{{$caller->cAT}}</td>
                                 <td class="editbutton" onclick="window.location.href = '/calls/{{$caller->cID}}';" style="text-align: center;">

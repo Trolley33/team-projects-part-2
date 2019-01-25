@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
-	<h2>Select Problem Type For Problem #{{sprintf('%04d', $problem->id)}}</h2>
+	<h2>Edit Problem Type For Problem: <span class="editbutton" onclick="window.location.href='/problems/{{$problem->id}}'">{{sprintf('%04d', $problem->id)}}</span></h2>
 	<form id="addProblemTypeForm">
 	<table id='problem-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
@@ -13,8 +13,8 @@
 		<tbody>
 			@foreach ($problem_types as $pt)
 			<tr>
-				<td title="View" class="editbutton">{{sprintf('%04d', $pt->id)}}</td>
-				<td title="View" class="editbutton modalOpener" value='{{$pt->id}}'>
+				<td>{{sprintf('%04d', $pt->id)}}</td>
+				<td title="View" class="editbutton modalOpener" value='/problem_types/{{$pt->id}}/compact'>
           @if ($pt->parent_description != '0')
             ({{$pt->parent_description}})
           @endif
@@ -33,50 +33,16 @@
     </form>
 </div>
 
-<div id="myModal" class="modal" value=''>
-</div>
-
 <script>
-
-var modal;
-
 $(document).ready( function () 
 {
     var problem = <?php echo json_encode($problem); ?>;
-
-
+    var page = 0;
     $('.selectBox').click(function ()
     {
       $(this).children('.selectRadio').prop('checked', true);
       $('#addProblemType').prop('disabled', false);
     });
-
-
-  modal = $('#myModal');
-
-  $(".modalOpener").click(function() {
-    $.get(
-        $(this).attr('value'),
-        function (data) {
-            modal.html(data);
-            $('#myModal div').first().prepend('<span onclick="closeModal()" class="close">&times;</span>')
-        }
-    );
-
-      modal.show();
-  });
-
-  $(window).click(function(event) {
-    var target = $(event.target);
-
-    if (!target.hasClass('modalOpener'))
-    { 
-      if (target.closest('.modal div').length == 0)
-      {
-        closeModal();
-      }
-    }
-  });
 
   $('input:radio[name="ptype"]').change(
       function(){
@@ -88,6 +54,7 @@ $(document).ready( function ()
       var radio = $(r);
       if (radio.val() == problem.problem_type)
       {
+        page = i/10;
         radio.prop('checked', true);
         $('#addProblemType').prop('disabled', false);
       }
@@ -103,14 +70,10 @@ $(document).ready( function ()
     var table = $('#problem-table').DataTable();
     // If we provide some sort of search term through the redirect, search it here.
     var search = "<?php if (session('search')) echo session('search'); ?>";
+    table.page(Math.floor(page)).draw('page');
     table.search(search).draw();
 });
 
-function closeModal ()
-{
-	modal.html('');
-	modal.hide();
-}
 </script>
 
 @endsection

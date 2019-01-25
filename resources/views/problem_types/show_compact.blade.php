@@ -9,7 +9,7 @@
                         @if (!is_null($parent))
                             <tr class="w3-hover-light-grey">
                                 <th>Parent Problem ID</th>
-                                <td class="editbutton" onclick="window.location.href = '/problem_types/{{$parent->id}}';">#{{sprintf('%04d', $parent->id)}}<span class="icon">View</span></td>
+                                <td class="editbutton" onclick="window.location.href = '/problem_types/{{$parent->id}}';">{{sprintf('%04d', $parent->id)}}<span class="icon">View</span></td>
                             </tr>
                             <tr class="w3-hover-light-grey">
                                 <th>Parent Problem Description</th>
@@ -18,7 +18,7 @@
                         @endif
                         <tr class="w3-hover-light-grey">
                             <th>Problem Type ID</th>
-                            <td class="editbutton" onclick="window.location.href = '/problem_types/{{$type->id}}';">#{{sprintf('%04d', $type->id)}}<span class="icon">View</span></td>
+                            <td class="editbutton" onclick="window.location.href = '/problem_types/{{$type->id}}';">{{sprintf('%04d', $type->id)}}<span class="icon">View</span></td>
                         </tr>
                         <tr class="w3-hover-light-grey">
                             <th>Description</th>

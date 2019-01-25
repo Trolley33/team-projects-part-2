@@ -6,7 +6,7 @@
             <div class="w3-padding-large w3-white">
                 <h2>Problem Creator</h2>
                 <hr />
-                <h3>Creating problem for: {{$user->forename}} {{$user->surname}}</h3>
+                <h3>Creating problem for: <span class="editbutton modalOpener" value="/users/{{$user->id}}/compact">{{$user->forename}} {{$user->surname}}</span></h3>
                 {!! Form::open(['action' => ['ProblemController@select_specialist_for_problem', $user->id, $problem_type->id], 'method' => 'POST']) !!}
                 <table id="info-table">
                     <tbody>
@@ -41,7 +41,6 @@
                     </tbody>
                 </table>
                 {{Form::submit('Assign Specialist', ['class'=> "bigbutton w3-card w3-button w3-row w3-teal"])}}
-
                 {!! Form::close() !!}
             </div>
         </div>

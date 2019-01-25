@@ -4,14 +4,14 @@
         <div>
             <div class="w3-padding-large w3-white">
                 <h2>Problem Type Viewer</h2>
-                <table id="info-table">
+                <table>
                     <tbody>
                         <tr class="w3-hover-light-grey">
                             <th>Parent Problem ID</th>
                             <td class="editbutton" onclick="window.location.href = '/problem_types/{{$parent->id}}';">#{{sprintf('%04d', $parent->id)}}<span class="icon">View</span></td>
                         </tr>
                         <tr class="w3-hover-light-grey">
-                            <th>Parent Problem Description</th>
+                            <th>Parent Problem<br/>Description</th>
                             <td class="editbutton" onclick="window.location.href = '/problem_types/{{$parent->id}}';">{{$parent->description}}<span class="icon">View</span></td>
                         </tr>
                         <tr class="w3-hover-light-grey">

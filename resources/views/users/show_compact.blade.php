@@ -36,6 +36,7 @@
                         <th>Account Creation Date</th>
                         <td>{{$user->created_at}}</td>
                     </tr>
+                    @if ($job_info->access_level == '2')
                         <tr class="w3-hover-light-grey">
                             <th>Problem Specialism</th>
                             @if (!is_null($problem_type))
@@ -50,6 +51,7 @@
                             </td>
                             @endif
                         </tr>
+                    @endif
                 </tbody>
             </table>
         </div>

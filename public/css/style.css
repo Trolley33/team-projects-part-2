@@ -93,14 +93,6 @@ min-width: 300px;
 background-color: white;
 }
 
-.menu-item {
-width: 90%;
-min-width: 200px;
-margin-top: 8px !important;
-margin-bottom: 8px !important;
-z-index: 2;
-}
-
 .fill
 {
 width: 100% !important;
@@ -214,17 +206,21 @@ padding: 10px;
     margin-bottom: 100px;
 }
 
-.call_menu table{
+.call_menu table:not(.display){
     width: 90%;
     margin: auto;
 }
 
-.call_menu td{
+.call_menu table:not(.display) td{
     padding: 10px;
+    min-width: 325px;
+    max-width: 325px;
 }
 
-.call_menu th{
+.call_menu table:not(.display) th{
     padding: 10px;
+    min-width: 150px;
+    max-width: 150px;
     background-color: lightgrey;
 }
 

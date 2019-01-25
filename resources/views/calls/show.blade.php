@@ -8,11 +8,11 @@
                 <tbody>
                     <tr class="w3-hover-light-grey">
                         <th>Related Problem ID</th>
-                        <td class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}';">#{{sprintf('%04d', $problem->id)}}<span class="icon">View</span></td>
+                        <td class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}';">{{sprintf('%04d', $problem->id)}}<span class="icon">View</span></td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Problem Type</th>
-                        <td>
+                        <td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';">
                             {{$problem_type->description}}<span class="icon">View</span> 
                         </td>
                     </tr>
@@ -24,7 +24,7 @@
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Caller ID</th>
-                        <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}';">#{{sprintf('%04d', $user->employee_id)}}<span class="icon">View</span></td>
+                        <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}';">{{sprintf('%04d', $user->employee_id)}}<span class="icon">View</span></td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Caller Name</th>

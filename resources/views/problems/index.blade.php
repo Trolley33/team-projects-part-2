@@ -12,13 +12,25 @@
         <tbody>
             @foreach ($ongoing as $problem)
             <tr>
-                <td>{{$problem->created_at}}</td><td>@if ($problem->sID != 0)
+                <td>{{$problem->created_at}}</td>
+                <td class="editbutton modalOpener" value='/users/{{$problem->sID}}/compact'>
+                @if ($problem->sID != 0)
                     {{$problem->sForename}} {{$problem->sSurname}}
                 @else
                     None
                 @endif
-                </td><td>@if ($problem->pDesc != '0') ({{$problem->pDesc}}) @endif {{$problem->ptDesc}}</td><td>{{$problem->description}}</td><td>{{$problem->forename}} {{$problem->surname}}</td><td class="{{$problem->class}}">{{$problem->text}}</td><td>{{$problem->level}}</td>
-                <td class="editbutton" value='{{$problem->pID}}' style="text-align: center;">
+                </td>
+                <td class="editbutton modalOpener" value='/problem_types/{{$problem->ptID}}/compact'>
+                @if ($problem->pDesc != '0') 
+                    ({{$problem->pDesc}}) 
+                @endif 
+                {{$problem->ptDesc}}</td>
+                <td>{{$problem->description}}</td>
+                <td class="editbutton modalOpener" value='/users/{{$problem->uID}}/compact'>
+                {{$problem->forename}} {{$problem->surname}}</td>
+                <td class="{{$problem->class}}">{{$problem->text}}</td>
+                <td>{{$problem->level}}</td>
+                <td class="editbutton" onclick='window.location.href="/problems/{{$problem->pID}}"' style="text-align: center;">
                     View/Edit
                 </td>
             </tr>
@@ -45,15 +57,16 @@
             @foreach ($resolved as $problem)
             <tr>
                 <td>{{$problem->created_at}}</td><td>{{$problem->solved_at}}</td>
-                <td>@if ($problem->sID != 0)
+                <td class="editbutton modalOpener" value='/users/{{$problem->sID}}/compact'>
+                    @if ($problem->sID != 0)
                     {{$problem->sForename}} {{$problem->sSurname}}
                 @else
                     None
                 @endif
                 </td>
-                <td>@if ($problem->pDesc != '0') ({{$problem->pDesc}}) @endif {{$problem->ptDesc}}</td>
+                <td class="editbutton modalOpener" value='/problem_types/{{$problem->ptID}}/compact'>@if ($problem->pDesc != '0') ({{$problem->pDesc}}) @endif {{$problem->ptDesc}}</td>
                 <td>{{$problem->description}}</td>
-                <td>{{$problem->forename}} {{$problem->surname}}</td>
+                <td class="editbutton modalOpener" value='/users/{{$problem->uID}}/compact'>{{$problem->forename}} {{$problem->surname}}</td>
                 <td class="editbutton" value='{{$problem->pID}}' style="text-align: center;">
                     View/Edit
                 </td>
@@ -84,11 +97,6 @@ $(document).ready( function ()
 
     var table = $('#resolved-table').dataTable({
         order: [[5, 'desc']]
-    });
-
-    $('.editbutton').click(function() 
-    {
-        window.location.href = '/problems/' + $(this).attr('value');
     });
 });
 </script>

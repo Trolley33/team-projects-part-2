@@ -14,8 +14,51 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
   
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script type="text/javascript">
+        var modal;
+        $(document).ready(function () {
+
+            modal = $('#myModal');
+
+            $(".modalOpener").click(function() {
+            $.get(
+                $(this).attr('value'),
+                function (data) {
+                    modal.html(data);
+                    $('#myModal div').first().prepend('<span onclick="closeModal()" class="close">&times;</span>')
+                }
+            );
+
+              modal.show();
+            });
+
+            $(window).click(function(event) {
+                var target = $(event.target);
+
+                if (!target.hasClass('modalOpener'))
+                { 
+                  if (target.closest('.modal div').length == 0)
+                  {
+                    closeModal();
+                  }
+                }
+            });
+
+            $('.slideHeader').click(function(){
+                $(this).next('.slideable').slideToggle();
+            });
+        });
+
+        function closeModal ()
+        {
+            modal.html('');
+            modal.hide();
+        }
+    </script>
 </head>
 <body>
+    <div id="myModal" class="modal" value=''>
+    </div>
     <div class="header w3-container w3-dark-grey">
         <div class="w3-center">
             <h1>{{$title}}</h1>
@@ -39,13 +82,7 @@
     </ul>
     @include('messages')
     @yield('content')
+    
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('.slideHeader').click(function(){
-                $(this).next('.slideable').slideToggle();
-            });
-        });
-    </script>
 </body>
 </html>

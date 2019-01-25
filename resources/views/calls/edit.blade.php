@@ -11,20 +11,20 @@
                     <!-- Problem info (not editable) -->
                     <tr class="w3-hover-light-grey">
                         <th>Related Problem ID</th>
-                        <td>{{Form::text('', $problem->id, ['required', 'class'=>'w3-input w3-border w3-round', 'disabled'])}}<span class="icon">View</span></td>
+                        <td class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}';">{{sprintf('%04d', $problem->id)}}<span class="icon">View</span></td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Problem Description</th>
-                        <td>{{Form::text('', $problem->description, ['required', 'class'=>'w3-input w3-border w3-round', 'disabled'])}}</td>
+                        <td>{{$problem->description}}</td>
                     </tr>
                     <!-- Caller info (not editable) -->
                     <tr class="w3-hover-light-grey">
                         <th>Caller ID</th>
-                        <td>{{Form::text('', $user->employee_id, ['required', 'class'=>'w3-input w3-border w3-round', 'disabled'])}}</td>
+                        <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}';">{{sprintf('%04d', $user->employee_id)}}<span class="icon">View</span></td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Caller Name</th>
-                        <td>{{Form::text('', $user->forename." ".$user->surname, ['required', 'class'=>'w3-input w3-border w3-round', 'disabled'])}}</td>
+                        <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}';">{{$user->forename." ".$user->surname}}<span class="icon">View</span></td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Notes</th>

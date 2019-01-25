@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
-    <h2>Problem ID: {{$problem->id}}</h2>
+    <h2>Problem ID: {{sprintf('%04d', $problem->id)}}</h2>
     <form id="addUserForm">
     <table id='user-table' class="display cell-border stripe hover">
 
@@ -15,7 +15,10 @@
             @foreach ($users as $user)
             <tr>
                 <td>{{sprintf('%04d',$user->employee_id)}}</td>
-                <td>{{$user->forename}} {{$user->surname}}</td><td>{{$user->name}}</td><td>{{$user->title}}</td><td>{{$user->phone_number}}</td>
+                <td class="editbutton modalOpener" value="/users/{{$user->id}}/compact">{{$user->forename}} {{$user->surname}}</td>
+                <td>{{$user->name}}</td>
+                <td>{{$user->title}}</td>
+                <td>{{$user->phone_number}}</td>
                 <td class="selectBox editbutton" style="text-align: center;">
                     <input class="selectRadio" type="radio" name='existing' value="{{$user->id}}" />
                 </td>

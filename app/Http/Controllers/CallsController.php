@@ -29,7 +29,7 @@ class CallsController extends Controller
         {
             // Retrieve all ongoing problems, where calls can be appended.
             $ongoing = DB::select(DB::raw(
-                'SELECT problems.id as pID, problems.created_at, problem_types.description as problemType, problems.description, IFNULL(parents.description,0) as pDesc, problems.importance, users.forename, users.surname, calls.id as cID, importance.text, importance.class, importance.level
+                'SELECT problems.id as pID, problems.created_at, problem_types.description as problemType, problems.description, IFNULL(parents.description,0) as pDesc, problem_types.id as ptID, problems.importance, users.forename, users.surname, users.id as uID,calls.id as cID, importance.text, importance.class, importance.level
                 FROM problems
                 JOIN calls
                 ON (

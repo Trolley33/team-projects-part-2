@@ -5,7 +5,7 @@
 	<h2>Select Problem Type For New Problem</h2>
 	<h3>Creating problem for: {{$user->forename}} {{$user->surname}}</h3>
 	<form id="addProblemTypeForm">
-	<table id='problem-table' class="display cell-border stripe hover" style="width:100%;">
+	<table id='problem-table' class="display cell-border stripe hover">
 		<thead>
 			<tr>
 				<th>Problem Type ID</th><th>Problem Type Name</th><th>Select</th>
@@ -14,7 +14,7 @@
 		<tbody>
 			@foreach ($problem_types as $pt)
 			<tr>
-				<td title="View" class="editbutton">{{sprintf('%04d', $pt->id)}}</td>
+				<td>{{sprintf('%04d', $pt->id)}}</td>
 				<td title="View" class="editbutton modalOpener" value='/problem_types/{{$pt->id}}/compact'>
           @if ($pt->parent_description != '0')
             ({{$pt->parent_description}})
@@ -35,12 +35,7 @@
     </form>
 </div>
 
-<div id="myModal" class="modal">
-</div>
 <script>
-
-var modal;
-
 $(document).ready( function () 
 {
 
@@ -49,33 +44,6 @@ $(document).ready( function ()
     	$(this).children('.selectRadio').prop('checked', true);
     	$('#addProblemType').prop('disabled', false);
     });
-
-
-	modal = $('#myModal');
-
-	$(".modalOpener").click(function() {
-		$.get(
-		    $(this).attr('value'),
-		    function (data) {
-		        modal.html(data);
-		        $('#myModal div').first().prepend('<span onclick="closeModal()" class="close">&times;</span>')
-		    }
-		);
-
-  		modal.show();
-	});
-
-	$(window).click(function(event) {
-		var target = $(event.target);
-
-		if (!target.hasClass('modalOpener'))
-		{	
-			if (target.closest('.modal div').length == 0)
-			{
-				closeModal();
-			}
-		}
-	});
 
 	$('input:radio[name="ptype"]').change(
     	function(){
@@ -95,11 +63,6 @@ $(document).ready( function ()
     table.search(search).draw();
 });
 
-function closeModal ()
-{
-	modal.html('');
-	modal.hide();
-}
 </script>
 
 @endsection
