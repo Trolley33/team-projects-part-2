@@ -8,18 +8,18 @@
             {!! Form::open(['action' => 'JobController@store', 'method' => 'POST']) !!}
             <table>
                 <tbody>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>{{Form::label('department-select', 'Department')}}</th>
                         <td><select id='department-select' name='department-select' class="w3-input" required  style="width: 100% !important;">
                 </select></td>
                     </tr>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>{{Form::label('jobTitle', 'Job Title')}}</th>
                         <td>{{Form::text('jobTitle', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Job Title'])}}</td>
                     </tr>                
                 </tbody>
             </table>
-            {{Form::submit('Submit', ['class'=> "menu-item w3-card w3-button w3-row w3-teal"])}}
+            {{Form::submit('Submit', ['class'=> "bigbutton w3-card w3-button w3-row w3-teal"])}}
             {!! Form::close() !!}
         </div>
     </div>

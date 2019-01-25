@@ -24,26 +24,18 @@
 
 	<div style="text-align: center;">
         <a class="blank" href="/software/create">
-            <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+            <div class="bigbutton w3-card w3-button w3-row">
                 Register New Software
             </div>
         </a><br />
 	</div>
 </div>
 
-<style>
-.editbutton:hover
-{
-	background-color: #BBBBBB !important;
-	cursor: pointer;
-}
-</style>
-
 <script>
 $(document).ready( function () 
 {
+ 
     var table = $('#software-table').DataTable();
-
     // If we provide some sort of search term through the redirect, search it here.
     var search = "<?php if (session('search')) echo session('search'); ?>";
     table.search(search).draw();

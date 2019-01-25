@@ -7,7 +7,7 @@
             <h2>Request Problem #{{sprintf('%04d', $problem->id)}} be Re-assigned?</h2>
             <table id="info-table">
                 <tbody>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <td class="editbutton w3-green" onclick="window.location.href = '/problems/{{$problem->id}}/remove_specialist';"><b>Yes</b></th>
                         <td class="editbutton w3-red" onclick="window.location.href = '/problems/{{$problem->id}}';"><b>No</b></td>
                     </tr>

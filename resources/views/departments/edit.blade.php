@@ -8,18 +8,18 @@
             {!! Form::open(['action' => ['DepartmentController@update', $department->id], 'method' => 'POST']) !!}
             <table>
                 <tbody>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>{{Form::label('', 'Previous Name')}}</th>
                         <td>{{Form::text('', $department->name, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Department Name', 'disabled'])}}</td>
                     </tr>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>{{Form::label('deptName', 'New Name')}}</th>
                         <td>{{Form::text('deptName', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Department Name'])}}</td>
                     </tr>
                 </tbody>
             </table>
             {{Form::hidden('_method', 'PUT')}}
-            {{Form::submit('Submit', ['class'=> "menu-item w3-card w3-button w3-row w3-teal"])}}
+            {{Form::submit('Submit', ['class'=> "bigbutton w3-card w3-button w3-row w3-teal"])}}
             {!! Form::close() !!}
             <br />
         </div>

@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 
-
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
 	<h2>{{$job->title}}</h2>
@@ -52,15 +51,6 @@
 		{!!Form::close() !!}
 	</div>
 </div>
-
-<style>
-.editbutton:hover
-{
-	background-color: #BBBBBB !important;
-	cursor: pointer;
-}
-</style>
-
 <script>
 
 var department;

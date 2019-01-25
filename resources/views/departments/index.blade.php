@@ -24,7 +24,7 @@
 
 	<div style="text-align: center;">
         <a class="blank" href="/departments/create">
-            <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+            <div class="bigbutton w3-card w3-button w3-row">
                 Create New Department
             </div>
         </a><br />

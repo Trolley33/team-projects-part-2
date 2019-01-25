@@ -24,13 +24,13 @@
         
     </table>
     <div style="text-align: center;">
-        <input id="addCall" class="menu-item w3-card w3-button w3-row" type="submit" value="Add Call to Problem" style="width: 400px;" disabled/>
+        <input id="addCall" class="bigbutton w3-card w3-button w3-row" type="submit" value="Add Call to Problem" disabled/>
     </div>
     </form>
 
     <div style="text-align: center;">
         <a class="blank" href="/problems/create">
-            <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+            <div class="bigbutton w3-card w3-button w3-row">
                 Create New Problem
             </div>
         </a><br />

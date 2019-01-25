@@ -1,37 +1,3 @@
-<style>
-    .call_menu
-    {
-        border-radius: 2px;
-        margin-top: 30px;
-        position: absolute;
-        left: 20%;
-        width: 60%;
-        min-width: 300px;
-        background-color: white;
-        margin-bottom: 100px;
-    }
-
-    table{
-        width: 90%;
-        margin-left: 5%;
-    }
-
-    td{
-        padding: 10px;
-    }
-
-    th{
-        padding: 10px;
-        background-color: lightgrey;
-    }
-
-    .editbutton:hover
-    {
-        background-color: #BBBBBB !important;
-        cursor: pointer;
-    }
-</style>
-
 @extends('layouts.app')
 
 @section('content')
@@ -43,37 +9,38 @@
             {!! Form::open(['action' => ['UserController@update', $user->id], 'method' => 'POST']) !!}
             <table>
                 <tbody>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>Employee ID</th>
                         <td>{{Form::number('empID', sprintf('%04d', $user->employee_id), ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->employee_id])}}</td>
                     </tr>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>Forename</th>
                         <td>{{Form::text('firstName', $user->forename, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->forename])}}</td>
                     </tr>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>Surname</th>
                         <td>{{Form::text('lastName', $user->surname, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->surname])}}</td>
                     </tr>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>Department</th>
                         <td><select id='department-select' name='department-select' class="w3-input" required  style="width: 100% !important;">
                         </select></td>
                     </tr>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>Job Title</th>
                         <td><select id='job-select' name='job-select' class="w3-input" required  style="width: 100% !important;">
                         </select></td>
                     </tr>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>Phone Number</th>
-                        <td>{{Form::number('phone', $user->phone_number, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->phone_number])}}</td>
+                        <td>{{Form::tel('phone', $user->phone_number, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'$user->phone_number', 'pattern'=>'[0-9]{11}', 'oninvalid'=>"this.setCustomValidity('Please enter a valid phone UK number (11 consecutive numbers).')",
+    'oninput'=>"this.setCustomValidity('')"])}}</td>
                     </tr>
                 </tbody>
             </table>
             {{Form::hidden('isCaller', 'true')}}
             {{Form::hidden('_method', 'PUT')}}
-            {{Form::submit('Submit Changes', ['class'=> "menu-item w3-card w3-button w3-row w3-teal"])}}
+            {{Form::submit('Submit Changes', ['class'=> "bigbutton w3-card w3-button w3-row w3-teal"])}}
             {!! Form::close() !!}
             <br />
         </div>

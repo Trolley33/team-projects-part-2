@@ -8,11 +8,11 @@
             {!! Form::open(['action' => 'SoftwareController@store', 'method' => 'POST']) !!}
             <table>
                 <tbody>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>{{Form::label('name', 'Software Name')}}</th>
                         <td>{{Form::text('name', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Software Name'])}}</td>
                     </tr>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>{{Form::label('desc', 'Software Description')}}</th>
                         <td>{{Form::text('desc', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Software Description'])}}</td>
                     </tr>

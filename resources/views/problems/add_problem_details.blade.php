@@ -10,7 +10,7 @@
                 {!! Form::open(['action' => ['ProblemController@select_specialist_for_problem', $user->id, $problem_type->id], 'method' => 'POST']) !!}
                 <table id="info-table">
                     <tbody>
-                        <tr class="w3-hover-light-grey solve">
+                        <tr class="w3-hover-light-grey">
                             <th>Problem Type</th>
                             <td title="Edit" class="editbutton" onclick="window.location.href = '/problems/create/{{$user->id}}';">
                                 @if (!is_null($parent))
@@ -20,11 +20,11 @@
                                 <span class="icon">Edit</span>
                             </td>
                         </tr>
-                        <tr class="w3-hover-light-grey solve">
+                        <tr class="w3-hover-light-grey">
                             <th>Description</th>
                             <td>{{Form::text('desc', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Description'])}}</td>
                         </tr>
-                        <tr class="w3-hover-light-grey solve">
+                        <tr class="w3-hover-light-grey">
                             <th>Notes</th>
                             <td>{{Form::textarea('notes', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Notes'])}}</td>
                         </tr>

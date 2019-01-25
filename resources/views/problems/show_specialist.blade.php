@@ -70,7 +70,7 @@
                 <!-- Buttons -->
                 <div style="text-align: center;">
                     <a class="blank" href="/problems/{{$problem->id}}/edit">
-                        <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                        <div class="bigbutton w3-card w3-button w3-row">
                             Edit Details
                         </div>
                     </a><br />
@@ -118,12 +118,12 @@
                     </table>
                     <div style="text-align: center;">
                     <a class="blank" href="/problems/{{$problem->id}}/add_equipment">
-                        <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                        <div class="bigbutton w3-card w3-button w3-row">
                             Add New Affected Equipment
                         </div>
                     </a><br />
                     <a class="blank" href="/problems/{{$problem->id}}/remove_equipment">
-                        <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                        <div class="bigbutton w3-card w3-button w3-row">
                             Remove Affected Equipment
                         </div>
                     </a><br />
@@ -151,12 +151,12 @@
                     </table>
                     <div style="text-align: center;">
                     <a class="blank" href="/problems/{{$problem->id}}/add_software">
-                        <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                        <div class="bigbutton w3-card w3-button w3-row">
                             Add New Affected Software
                         </div>
                     </a><br />
                     <a class="blank" href="/problems/{{$problem->id}}/remove_software">
-                        <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+                        <div class="bigbutton w3-card w3-button w3-row">
                             Remove Affected Software
                         </div>
                     </a><br />

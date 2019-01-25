@@ -19,7 +19,7 @@
                                     ({{$parent->description}})
                                 @endif
                                 {{$problem_type->description}}
-                                <span class="icon">View</span>  
+                                <span class="icon">View</span>
                             </td>
                         </tr>
                         <tr class="w3-hover-light-grey">

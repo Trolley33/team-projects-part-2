@@ -24,7 +24,7 @@
 
 	<div style="text-align: center;">
         <a class="blank" href="/equipment/create">
-            <div class="menu-item w3-card w3-button w3-row" style="width: 400px;">
+            <div class="bigbutton w3-card w3-button w3-row">
                 Register New Equipment
             </div>
         </a><br />

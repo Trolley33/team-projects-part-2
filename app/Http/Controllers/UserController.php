@@ -235,7 +235,8 @@ class UserController extends Controller
     {
         if (PagesController::hasAccess(1))
         {
-            $problem_types = ProblemType::all();
+            $problem_types = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('problem_types.*, IFNULL(parents.description,0) as parent_description')->get();
+            
             $user = User::find($id);
 
             $data = array(
@@ -285,6 +286,11 @@ class UserController extends Controller
             $info = DB::table('jobs')->join('users', 'jobs.id', '=', 'users.job_id')->join('departments' , 'jobs.department_id', '=', 'departments.id')->select( 'jobs.id as jID', 'jobs.title', 'jobs.access_level', 'departments.id as dID', 'departments.name')->where('users.id', '=', $id)->get()->first();
 
             $problem_type = Speciality::join('problem_types', 'problem_types.id', '=', 'speciality.problem_type_id')->where('speciality.specialist_id', '=', $id)->get()->first();
+            $parent = null;
+            if (!is_null($problem_type))
+            {
+                $parent = ProblemType::find($problem_type->parent);
+            }
 
             if (!is_null($user) && !is_null($info))
             {
@@ -294,6 +300,7 @@ class UserController extends Controller
                     'user' => $user,
                     'job_info' => $info,
                     'problem_type'=>$problem_type,
+                    'parent'=>$parent,
                     'links' => PagesController::getOperatorLinks(),
                     'active' => 'Users'
                 );
@@ -315,6 +322,11 @@ class UserController extends Controller
 
             $problem_type = Speciality::join('problem_types', 'problem_types.id', '=', 'speciality.problem_type_id')->where('speciality.specialist_id', '=', $id)->get()->first();
 
+            $parent = null;
+            if (!is_null($problem_type))
+            {
+                $parent = ProblemType::find($problem_type->parent);
+            }
             if (!is_null($user) && !is_null($info))
             {
                 $data = array(
@@ -323,6 +335,7 @@ class UserController extends Controller
                     'user' => $user,
                     'job_info' => $info,
                     'problem_type'=>$problem_type,
+                    'parent'=>$parent,
                     'links' => PagesController::getOperatorLinks(),
                     'active' => 'Users'
                 );
@@ -375,6 +388,12 @@ class UserController extends Controller
                     $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '!=', '0')->get();
 
                     $problem_type = Speciality::join('problem_types', 'problem_types.id', '=', 'speciality.problem_type_id')->where('speciality.specialist_id', '=', $id)->get()->first();
+
+                    $parent = null;
+                    if (!is_null($problem_type))
+                    {
+                        $parent = ProblemType::find($problem_type->parent);
+                    }
                     
                     $data = array(
                         'title' => "Edit System Account.",
@@ -383,6 +402,7 @@ class UserController extends Controller
                         'jobs' => $jobs,
                         'job'=>$job,
                         'problem_type'=>$problem_type,
+                        'parent'=>$parent,
                         'links' => PagesController::getOperatorLinks(),
                         'active' => 'Users'
                     );

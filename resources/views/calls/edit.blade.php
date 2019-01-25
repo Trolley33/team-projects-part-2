@@ -9,24 +9,24 @@
             <table>
                 <tbody>
                     <!-- Problem info (not editable) -->
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>Related Problem ID</th>
-                        <td>{{Form::text('', $problem->id, ['required', 'class'=>'w3-input w3-border w3-round', 'disabled'])}}</td>
+                        <td>{{Form::text('', $problem->id, ['required', 'class'=>'w3-input w3-border w3-round', 'disabled'])}}<span class="icon">View</span></td>
                     </tr>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>Problem Description</th>
                         <td>{{Form::text('', $problem->description, ['required', 'class'=>'w3-input w3-border w3-round', 'disabled'])}}</td>
                     </tr>
                     <!-- Caller info (not editable) -->
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>Caller ID</th>
                         <td>{{Form::text('', $user->employee_id, ['required', 'class'=>'w3-input w3-border w3-round', 'disabled'])}}</td>
                     </tr>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>Caller Name</th>
                         <td>{{Form::text('', $user->forename." ".$user->surname, ['required', 'class'=>'w3-input w3-border w3-round', 'disabled'])}}</td>
                     </tr>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>Notes</th>
                         <td>{{Form::textarea('notes', $call->notes, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Notes'])}}</td>
                     </tr>
@@ -34,7 +34,7 @@
             </table>
             {{Form::hidden('_method', 'PUT')}}
 
-            {{Form::submit('Submit Changes', ['class'=> "menu-item w3-card w3-button w3-row w3-teal"])}}
+            {{Form::submit('Submit Changes', ['class'=> "bigbutton w3-card w3-button w3-row w3-teal"])}}
 
             {!! Form::close() !!}
 

@@ -27,17 +27,17 @@
 	<div style="text-align: center;">
         {!!Form::open(['id'=>'createForm']) !!}
 
-		{{Form::submit('Create New Job Title', ['class'=> "menu-item w3-card 	w3-button w3-row", 'style'=> 'width: 400px;'])}}
+		{{Form::submit('Create New Job Title', ['class'=> "bigbutton w3-card 	w3-button w3-row"])}}
 		{!!Form::close() !!}
         {!!Form::open(['id'=>'editForm']) !!}
 
-		{{Form::submit('Edit Department', ['class'=> "menu-item w3-card 	w3-button w3-row", 'style'=> 'width: 400px;'])}}
+		{{Form::submit('Edit Department', ['class'=> "bigbutton w3-card 	w3-button w3-row"])}}
 		{!!Form::close() !!}
         {!!Form::open(['action' => ['DepartmentController@destroy', $department->id], 'method' => 'POST', 'onsubmit'=>"return confirmDelete()", 'id'=>'deleteForm']) !!}
 
 		{{Form::hidden('_method', 'DELETE')}}
 
-		{{Form::submit('Delete Department', ['class'=> "menu-item w3-card 	w3-button w3-row w3-red", 'style'=> 'width: 400px;'])}}
+		{{Form::submit('Delete Department', ['class'=> "bigbutton w3-card 	w3-button w3-row w3-red"])}}
 
 		{!!Form::close() !!}
     <br />

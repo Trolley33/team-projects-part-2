@@ -7,23 +7,23 @@
                 <table>
                     <tbody>
                         @if (!is_null($parent))
-                            <tr class="w3-hover-light-grey solve">
+                            <tr class="w3-hover-light-grey">
                                 <th>Parent Problem ID</th>
-                                <td class="editbutton" onclick="window.location.href = '/problem_types/{{$parent->id}}';">#{{sprintf('%04d', $parent->id)}}</td>
+                                <td class="editbutton" onclick="window.location.href = '/problem_types/{{$parent->id}}';">#{{sprintf('%04d', $parent->id)}}<span class="icon">View</span></td>
                             </tr>
-                            <tr class="w3-hover-light-grey solve">
+                            <tr class="w3-hover-light-grey">
                                 <th>Parent Problem Description</th>
-                                <td class="editbutton" onclick="window.location.href = '/problem_types/{{$parent->id}}';">{{$parent->description}}</td>
+                                <td class="editbutton" onclick="window.location.href = '/problem_types/{{$parent->id}}';">{{$parent->description}}<span class="icon">View</span></td>
                             </tr>
                         @endif
-                        <tr class="w3-hover-light-grey solve">
+                        <tr class="w3-hover-light-grey">
                             <th>Problem Type ID</th>
-                            <td class="editbutton" onclick="window.location.href = '/problem_types/{{$type->id}}';">#{{sprintf('%04d', $type->id)}}</td>
+                            <td class="editbutton" onclick="window.location.href = '/problem_types/{{$type->id}}';">#{{sprintf('%04d', $type->id)}}<span class="icon">View</span></td>
                         </tr>
-                        <tr class="w3-hover-light-grey solve">
+                        <tr class="w3-hover-light-grey">
                             <th>Description</th>
                             <td class="editbutton" onclick="window.location.href = '/problem_types/{{$type->id}}';">
-                                {{$type->description}}  
+                                {{$type->description}}<span class="icon">View</span> 
                             </td>
                         </tr>
                     </tbody>

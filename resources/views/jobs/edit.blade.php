@@ -9,31 +9,31 @@
             <table>
                 <tbody>
                     <!-- Previous information -->
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>
                             {{Form::label('', 'Previous Department')}}</th>
                         <td><select id='prevDept' name='' class="w3-input" required  style="width: 100% !important;" disabled="true">
                             <option>{{$dept->name}}</option>
                         </select></td>
                     </tr>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>
                             {{Form::label('', 'Previous Title')}}</th>
                         <td>{{Form::text('', $job->title, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Previous Title', 'disabled'])}}</td>
                     </tr>
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>{{Form::label('department-select', 'New Department')}}</th>
                         <td><select id='department-select' name='department-select' class="w3-input" required  style="width: 100% !important;">
                 </select></td>
                     </tr>  
-                    <tr class="w3-hover-light-grey solve">
+                    <tr class="w3-hover-light-grey">
                         <th>{{Form::label('jobTitle', 'Job Title')}}</th>
                         <td>{{Form::text('jobTitle', $job->title, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'New Title'])}}</td>
                     </tr>                
                 </tbody>
             </table>
             {{Form::hidden('_method', 'PUT')}}
-            {{Form::submit('Submit', ['class'=> "menu-item w3-card w3-button w3-row w3-teal"])}}
+            {{Form::submit('Submit', ['class'=> "bigbutton w3-card w3-button w3-row w3-teal"])}}
             {!! Form::close() !!}
         </div>
     </div>

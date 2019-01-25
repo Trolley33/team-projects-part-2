@@ -8,12 +8,12 @@
                 <tbody>
                     <tr class="w3-hover-light-grey">
                         <th>Related Problem ID</th>
-                        <td class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}';">#{{sprintf('%04d', $problem->id)}}</td>
+                        <td class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}';">#{{sprintf('%04d', $problem->id)}}<span class="icon">View</span></td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Problem Type</th>
                         <td>
-                            {{$problem_type->description}}  
+                            {{$problem_type->description}}<span class="icon">View</span> 
                         </td>
                     </tr>
                     <tr class="w3-hover-light-grey">
@@ -24,11 +24,11 @@
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Caller ID</th>
-                        <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}';">#{{sprintf('%04d', $user->employee_id)}}</td>
+                        <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}';">#{{sprintf('%04d', $user->employee_id)}}<span class="icon">View</span></td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Caller Name</th>
-                        <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}';">{{$user->forename}} {{$user->surname}}</td>
+                        <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}';">{{$user->forename}} {{$user->surname}}<span class="icon">View</span></td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Caller Phone Number</th>
@@ -47,14 +47,14 @@
             <br />
             {!!Form::open(['id'=>'editForm']) !!}
 
-            {{Form::submit('Edit Call', ['class'=> "menu-item w3-card w3-button w3-row but", 'style'=> 'width: 400px;'])}}
+            {{Form::submit('Edit Call', ['class'=> "bigbutton w3-card w3-button w3-row but"])}}
             {!!Form::close() !!}
                 
             {!!Form::open(['action' => ['CallsController@destroy', $call->id], 'method' => 'POST', 'onsubmit'=>"return confirm('Delete Call? This action cannot be undone.');"]) !!}
 
             {{Form::hidden('_method', 'DELETE')}}
             
-            {{Form::submit('Delete Call', ['class'=> "menu-item w3-card w3-button w3-row but w3-red", 'style'=> 'width: 400px;'])}}
+            {{Form::submit('Delete Call', ['class'=> "bigbutton w3-card w3-button w3-row but w3-red"])}}
             
             {!!Form::close() !!}
             <br />
