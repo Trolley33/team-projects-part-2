@@ -10,7 +10,7 @@
                 <tbody>
                     <tr class="w3-hover-light-grey">
                         <th>{{Form::label('department-select', 'Department')}}</th>
-                        <td><select id='department-select' name='department-select' class="w3-input" required  style="width: 100% !important;">
+                        <td><select id='department-select' name='department-select' class="w3-input" required style="width: 100% !important;">
                 </select></td>
                     </tr>
                     <tr class="w3-hover-light-grey">

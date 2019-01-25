@@ -14,7 +14,7 @@
 		<tbody>
 			@foreach ($problem_types as $pt)
 			<tr>
-				<td>{{sprintf('%04d', $pt->id)}}</td>
+				<td style="text-align: right;">{{sprintf('%04d', $pt->id)}}</td>
 				<td title="View" class="editbutton modalOpener" value='/problem_types/{{$pt->id}}/compact'>
           @if ($pt->parent_description != '0')
             ({{$pt->parent_description}})

@@ -13,7 +13,7 @@
             @foreach ($ongoing as $problem)
             <tr>
                 <td>{{$problem->created_at}}</td>
-                <td class="editbutton modalOpener" value='/problems/{{$problem->pID}}/compact'>{{sprintf('%04d',$problem->pID)}}</td>
+                <td class="editbutton modalOpener" value='/problems/{{$problem->pID}}/compact'  style="text-align: right;">{{sprintf('%04d',$problem->pID)}}</td>
                 <td class="editbutton modalOpener" value='/problem_types/{{$problem->ptID}}/compact'>
                     @if ($problem->pDesc != '0') 
                         ({{$problem->pDesc}}) 

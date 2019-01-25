@@ -14,7 +14,7 @@
         <tbody>
             @foreach ($users as $user)
             <tr>
-                <td>{{sprintf('%04d',$user->employee_id)}}</td>
+                <td style="text-align: right;">{{sprintf('%04d',$user->employee_id)}}</td>
                 <td class="editbutton modalOpener" value="/users/{{$user->id}}/compact">{{$user->forename}} {{$user->surname}}</td>
                 <td>{{$user->name}}</td>
                 <td>{{$user->title}}</td>

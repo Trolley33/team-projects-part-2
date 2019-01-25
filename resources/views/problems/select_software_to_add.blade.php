@@ -26,7 +26,7 @@
                 @endforeach
                 @if ($flag)
                 <tr>
-                    <td>{{$s->id}}</td>
+                    <td style="text-align: right;">{{sprintf('%04d', $s->id)}}</td>
                     <td>{{$s->name}}</td><td>{{$s->description}}</td>
                     <td class="selectBox editbutton" style="text-align: center;">
                         <input class="selectChecked" type="checkbox" name='software[]' value="{{$s->id}}" />

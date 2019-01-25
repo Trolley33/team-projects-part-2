@@ -21,7 +21,7 @@ class JobController extends Controller
     {
         if (PagesController::hasAccess(1))
         {
-            $jobs = Department::join('jobs', 'departments.id', '=', 'jobs.department_id')->leftJoin('users', 'jobs.id', '=', 'users.job_id')->selectRaw('jobs.id, jobs.title, departments.name, IFNULL(COUNT(users.id),0) as employees')->groupBy('jobs.id')->get();
+            $jobs = Department::join('jobs', 'departments.id', '=', 'jobs.department_id')->leftJoin('users', 'jobs.id', '=', 'users.job_id')->selectRaw('jobs.id, jobs.title, departments.name, departments.id as dID, IFNULL(COUNT(users.id),0) as employees')->groupBy('jobs.id')->get();
 
             $data = array(
                 'title' => "Job Information Viewer",

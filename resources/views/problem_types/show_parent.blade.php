@@ -6,13 +6,15 @@
 	<table id='problem-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
 			<tr>
-				<th>Problem Type ID</th><th>Problem Type Name</th><th>---</th>
+				<th>Problem Type ID</th><th>Problem Type Name</th><th>Specialists</th><th>Active Problems</th><th>---</th>
 			</tr>
 		</thead>
 		<tbody>
 			@foreach ($types as $problem_type)
 			<tr>
-				<td>{{sprintf("%04d", $problem_type->id)}}</td><td>{{$problem_type->description}}</td>
+				<td style="text-align: right;">{{sprintf("%04d", $problem_type->id)}}</td><td>{{$problem_type->description}}</td>
+                <td style="text-align: right;">{{$problem_type->specialists}}</td>
+                <td style="text-align: right;">{{$problem_type->problems}}</td>
 				<td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';" style="text-align: center;">
 					View/Edit
 				</td>

@@ -8,7 +8,7 @@
                     <tbody>
                         <tr class="w3-hover-light-grey">
                             <th>Parent Problem ID</th>
-                            <td class="editbutton" onclick="window.location.href = '/problem_types/{{$parent->id}}';">#{{sprintf('%04d', $parent->id)}}<span class="icon">View</span></td>
+                            <td class="editbutton" onclick="window.location.href = '/problem_types/{{$parent->id}}';">{{sprintf('%04d', $parent->id)}}<span class="icon">View</span></td>
                         </tr>
                         <tr class="w3-hover-light-grey">
                             <th>Parent Problem<br/>Description</th>
@@ -16,7 +16,7 @@
                         </tr>
                         <tr class="w3-hover-light-grey">
                             <th>Problem Type ID</th>
-                            <td>#{{sprintf('%04d', $problem_type->id)}}</td>
+                            <td>{{sprintf('%04d', $problem_type->id)}}</td>
                         </tr>
                         <tr class="w3-hover-light-grey">
                             <th>Description</th>

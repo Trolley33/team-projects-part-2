@@ -11,8 +11,8 @@
 		<tbody>
 			@foreach ($info as $department)
 			<tr>
-				<td>{{$department->id}}</td><td>{{$department->name}}</td>
-				<td>{{$department->employees}}</td>
+				<td style="text-align: right;">{{sprintf('%04d', $department->id)}}</td><td>{{$department->name}}</td>
+				<td style="text-align: right;">{{$department->employees}}</td>
 				<td class="editbutton" onclick="window.location.href = '/departments/{{$department->id}}';" style="text-align: center;">
 					View/Edit
 				</td>

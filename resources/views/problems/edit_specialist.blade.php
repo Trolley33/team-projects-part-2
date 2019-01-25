@@ -15,7 +15,7 @@
 		<tbody>
 			@foreach ($specialists as $s)
 			<tr>
-				<td title="View" class="editbutton">{{sprintf('%04d', $s->employee_id)}}</td>
+				<td style="text-align: right;">{{sprintf('%04d', $s->employee_id)}}</td>
 				<td title="View" class="editbutton modalOpener" value='/users/{{$s->id}}/compact'>{{$s->forename}} {{$s->surname}}</td>
         <td title="View" class="editbutton modalOpener" value='/problem_types/{{$s->pID}}/compact'>
             @if ($s->parent_description != '0')

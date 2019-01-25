@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-
-
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
 	<table id='user-table' class="display cell-border stripe hover" style="width:100%;">
@@ -13,7 +11,7 @@
 		<tbody>
 			@foreach ($info as $user)
 			<tr>
-				<td>{{sprintf('%04d',$user->employee_id)}}</td><td>{{$user->forename}} {{$user->surname}}</td><td>{{$user->name}}</td><td>{{$user->phone_number}}</td>
+				<td style="text-align: right;">{{sprintf('%04d',$user->employee_id)}}</td><td>{{$user->forename}} {{$user->surname}}</td><td>{{$user->name}}</td><td>{{$user->phone_number}}</td>
 				<td>
 					@if ($user->access_level == 1)
 						Operator

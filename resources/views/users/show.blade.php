@@ -13,12 +13,12 @@
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Department Name</th>
-                        <td class="editbutton" onclick="window.location.href = '/departments/{{$job_info->dID}}';">{{$job_info->name}}
+                        <td class="editbutton" onclick="window.location.href = '/departments/{{$job_info->dID}}';">{{$job_info->name}}<span class="icon">View</span>
                         </td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Job Title</th>
-                        <td class="editbutton" onclick="window.location.href = '/jobs/{{$job_info->jID}}';">{{$job_info->title}}
+                        <td class="editbutton" onclick="window.location.href = '/jobs/{{$job_info->jID}}';">{{$job_info->title}}<span class="icon">View</span>
                         </td>
                     </tr>
                     <tr class="w3-hover-light-grey">

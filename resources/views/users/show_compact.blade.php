@@ -8,15 +8,15 @@
                 <tbody>
                     <tr class="w3-hover-light-grey">
                         <th>Full Name</th>
-                        <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}';">{{$user->forename}} {{$user->surname}}</td>
+                        <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}';">{{$user->forename}} {{$user->surname}}<span class="icon">View</span></td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Department Name</th>
-                        <td class="editbutton" onclick="window.location.href = '/departments/{{$job_info->dID}}';">{{$job_info->name}}</td>
+                        <td class="editbutton" onclick="window.location.href = '/departments/{{$job_info->dID}}';">{{$job_info->name}}<span class="icon">View</span></td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Job Title</th>
-                        <td class="editbutton" onclick="window.location.href = '/jobs/{{$job_info->jID}}';">{{$job_info->title}}</td>
+                        <td class="editbutton" onclick="window.location.href = '/jobs/{{$job_info->jID}}';">{{$job_info->title}}<span class="icon">View</span></td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Phone Number</th>
@@ -44,10 +44,10 @@
                                 @if (!is_null($parent))
                                     ({{$parent->description}}) 
                                 @endif
-                                {{$problem_type->description}}</td>
+                                {{$problem_type->description}}<span class="icon">View</span></td>
                             @else
                             <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}/edit_specialism';" title="Edit">
-                                Not Set
+                                Not Set<span class="icon">Edit</span>
                             </td>
                             @endif
                         </tr>

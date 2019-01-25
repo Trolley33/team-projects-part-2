@@ -12,8 +12,8 @@
 		<tbody>
 			@foreach ($jobs as $job)
 			<tr>
-				<td>{{$job->id}}</td><td>{{$job->title}}</td>
-				<td>{{$job->name}}</td><td>{{$job->employees}}</td>
+				<td style="text-align: right;">{{sprintf('%04s', $job->id)}}</td><td>{{$job->title}}</td>
+				<td  class="editbutton" onclick="window.location.href='/departments/{{$job->dID}}'">{{$job->name}}</td><td style="text-align: right;">{{$job->employees}}</td>
 				<td class="editbutton" onclick="window.location.href = '/jobs/{{$job->id}}';" style="text-align: center;">
 					View/Edit
 				</td>

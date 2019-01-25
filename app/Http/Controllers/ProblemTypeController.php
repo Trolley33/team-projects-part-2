@@ -21,7 +21,7 @@ class ProblemTypeController extends Controller
 
         if (PagesController::hasAccess(1))
         {
-            $parents = ProblemType::where('parent', '=', '-1')->get();
+            $parents = ProblemType::leftJoin('speciality', 'speciality.problem_type_id', '=', 'problem_types.id')->leftJoin('problems', 'problems.problem_type', '=', 'problem_types.id')->selectRaw('problem_types.*, IFNULL(COUNT(speciality.specialist_id),0) as specialists, IFNULL(COUNT(problems.id),0) as problems')->where('problem_types.parent', '=', '-1')->groupBy('problem_types.id')->get();
 
             $data = array(
                 'title' => "Speciality Viewer",
@@ -128,7 +128,7 @@ class ProblemTypeController extends Controller
 
                 if ($problem_type->parent == '-1')
                 {
-                    $types = ProblemType::where('parent', '=', $id)->get();
+                    $types = ProblemType::leftJoin('speciality', 'speciality.problem_type_id', '=', 'problem_types.id')->leftJoin('problems', 'problems.problem_type', '=', 'problem_types.id')->selectRaw('problem_types.*, IFNULL(COUNT(speciality.specialist_id),0) as specialists, IFNULL(COUNT(problems.id),0) as problems')->where('problem_types.parent', '=', $id)->groupBy('problem_types.id')->get();
 
                     $data = array(
                         'title' => "Problem Type Viewer",

@@ -11,7 +11,7 @@
 		<tbody>
 			@foreach ($software as $s)
 			<tr>
-				<td>{{$s->id}}</td><td>{{$s->name}}</td>
+				<td style="text-align: right;">{{sprintf('%04d', $s->id)}}</td><td>{{$s->name}}</td>
 				<td>{{$s->description}}</td>
 				<td class="editbutton" onclick="window.location.href = '/software/{{$s->id}}';" style="text-align: center;">
 					View/Edit

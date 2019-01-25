@@ -9,7 +9,7 @@
                 <tbody>
                     <tr class="w3-hover-light-grey">
                         <th>Software ID</th>
-                        <td>{{$software->id}}</td>
+                        <td>{{sprintf('%04d', $software->id)}}</td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Name</th>
