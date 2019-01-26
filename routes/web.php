@@ -53,6 +53,7 @@ Route::get   ('/problems/{id}/edit', 'ProblemController@edit')->name('problems.e
 Route::get   ('/problems/{id}/add_call/{caller_id}', 'ProblemController@add_call')->name('problems.add_call');
 
 Route::get   ('/problems/{id}/edit_problem_type', 'ProblemController@edit_problem_type')->name('problems.edit_problem_type');
+Route::get ('/problems/{id}/remove_specialist', 'ReassignmentController@request_reassignment');
 Route::get   ('/problems/{problem_id}/add_problem_type/{type_id}', 'ProblemController@add_problem_type')->name('problems.add_problem_type');
 
 Route::get   ('/problems/{id}/edit_specialist', 'ProblemController@edit_specialist')->name('problems.edit_specialist');
