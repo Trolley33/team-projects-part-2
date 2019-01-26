@@ -26,7 +26,7 @@
                         </tr>
                         <tr class="w3-hover-light-grey">
                             <th>Notes</th>
-                            <td>{{Form::textarea('notes', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Notes'])}}</td>
+                            <td>{{Form::textarea('notes', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Notes', 'style'=>'resize: none;'])}}</td>
                         </tr>
                         <tr class="w3-hover-light-grey">
                             <th>Importance</th>

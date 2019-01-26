@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cookie;
 use App\User;
 use App\Job;
+use App\Reassignments;
 
 class PagesController extends Controller
 {
@@ -204,10 +205,41 @@ class PagesController extends Controller
         // If user allowed to access this page.
         if (PagesController::hasAccess(1))
         {
+            $me = PagesController::getCurrentUser();
+
+            // Get intial caller for problem.
+            $reassignments = DB::select(DB::raw(
+                'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problem_types.id as ptID, problems.description, IFNULL(parents.description,0) as pDesc, problems.importance, users.forename, users.surname, users.id as uID, calls.id as cID, IFNULL(specialists.forename,0) as sForename, IFNULL(specialists.surname,0) as sSurname, IFNULL(specialists.id,0) as sID, importance.text, importance.class, importance.level, reassignments.reason
+                FROM problems
+                JOIN calls
+                ON (
+                    problems.id = calls.problem_id
+                    AND calls.created_at = (
+                        SELECT MIN(created_at)
+                        FROM calls
+                        WHERE problem_id = problems.id
+                    )
+                )
+                JOIN users
+                ON users.id = calls.caller_id
+                JOIN problem_types
+                ON problem_types.id = problems.problem_type
+                JOIN importance
+                ON importance.id = problems.importance
+                JOIN reassignments
+                ON reassignments.problem_id = problems.id 
+                LEFT JOIN users specialists
+                ON (specialists.id = problems.assigned_to) OR (specialists.id = reassignments.specialist_id)
+                LEFT JOIN problem_types parents
+                ON problem_types.parent = parents.id
+                WHERE problems.logged_by = "'.$me->id.'";'
+            ));
+
             // Supply data to view.
             $data = array(
                 'title' => "Operator Homepage",
                 'desc' => "Please select a task.",
+                'unassigned'=>$reassignments,
                 'links'=>PagesController::getOperatorLinks(),
                 'active'=>'Home'
             );
@@ -248,7 +280,9 @@ class PagesController extends Controller
                 ON problem_types.parent = parents.id
                 JOIN importance
                 ON importance.id = problems.importance
-                WHERE problems.assigned_to = ".$specialist->id.";"
+                LEFT JOIN reassignments
+                ON problems.id = reassignments.problem_id
+                WHERE reassignments.problem_id IS NULL AND problems.assigned_to = ".$specialist->id.";"
             ));
             // Supply data to view.
             $data = array(

@@ -68,10 +68,13 @@ $(document).ready( function ()
     $('input:radio[name="specialist"]').each(function (i, r)
     {
       var radio = $(r);
-      if (radio.val() == assigned.id)
+      if (assigned !== null)
       {
-        radio.prop('checked', true);
-        $('#addSpecialist').prop('disabled', false);
+          if (radio.val() == assigned.id)
+          {
+            radio.prop('checked', true);
+            $('#addSpecialist').prop('disabled', false);
+          }
       }
     });
 

@@ -15,6 +15,7 @@ use App\Software;
 use App\Importance;
 use App\AffectedHardware;
 use App\AffectedSoftware;
+use App\Reassignments;
 
 class ProblemController extends Controller
 {
@@ -348,10 +349,21 @@ class ProblemController extends Controller
 
             if (!is_null($problem))
             {
+                $caller = DB::select(DB::raw('
+                    SELECT users.* FROM users
+                    JOIN calls
+                    ON calls.caller_id = users.id AND calls.created_at = (
+                        SELECT MIN(created_at)
+                        FROM calls
+                        WHERE problem_id = '.$problem->id.'
+                    );'));
+                
+
                 $data = array(
                     'title' => "Add Call to Problem.",
                     'desc' => "Select a user to create a call for.",
                     'problem' => $problem,
+                    'caller' => $caller,
                     'users' => $users,
                     'links' => PagesController::getOperatorLinks(),
                     'active' => 'Problems'
@@ -823,6 +835,8 @@ class ProblemController extends Controller
             $problem = Problem::find($id);
             $user = User::find($specialist_id);
             $problem->assigned_to = $user->id;
+            // If this was a reassigning, remove the request.
+            Reassignments::where('problem_id', '=', $problem->id)->delete();
             $problem->save();
 
             return redirect('/problems/'.$id.'/edit')->with('success', 'Problem Assigned to '.$user->forename.' '.$user->surname.'.');

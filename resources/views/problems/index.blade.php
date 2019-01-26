@@ -13,13 +13,16 @@
             @foreach ($ongoing as $problem)
             <tr>
                 <td>{{$problem->created_at}}</td>
-                <td class="editbutton modalOpener" value='/users/{{$problem->sID}}/compact'>
                 @if ($problem->sID != 0)
+                <td class="editbutton modalOpener" value='/users/{{$problem->sID}}/compact'>
+                    
                     {{$problem->sForename}} {{$problem->sSurname}}
-                @else
-                    None
-                @endif
                 </td>
+                @else
+                <td class="editbutton" onclick="window.location.href='/problems/{{$problem->pID}}/edit_specialist'">
+                    None
+                </td>
+                @endif
                 <td class="editbutton modalOpener" value='/problem_types/{{$problem->ptID}}/compact'>
                 @if ($problem->pDesc != '0') 
                     ({{$problem->pDesc}}) 
@@ -57,17 +60,20 @@
             @foreach ($resolved as $problem)
             <tr>
                 <td>{{$problem->created_at}}</td><td>{{$problem->solved_at}}</td>
+                @if ($problem->sID != 0)
                 <td class="editbutton modalOpener" value='/users/{{$problem->sID}}/compact'>
-                    @if ($problem->sID != 0)
+                    
                     {{$problem->sForename}} {{$problem->sSurname}}
-                @else
-                    None
-                @endif
                 </td>
+                @else
+                <td class="editbutton" onclick="window.location.href='/problems/{{$problem->sID}}/edit_specialist'">
+                    None
+                </td>
+                @endif
                 <td class="editbutton modalOpener" value='/problem_types/{{$problem->ptID}}/compact'>@if ($problem->pDesc != '0') ({{$problem->pDesc}}) @endif {{$problem->ptDesc}}</td>
                 <td>{{$problem->description}}</td>
                 <td class="editbutton modalOpener" value='/users/{{$problem->uID}}/compact'>{{$problem->forename}} {{$problem->surname}}</td>
-                <td class="editbutton" value='{{$problem->pID}}' style="text-align: center;">
+                <td class="editbutton" onclick="window.location.href='/problems/{{$problem->pID}}'" style="text-align: center;">
                     View/Edit
                 </td>
             </tr>
