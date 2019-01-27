@@ -256,43 +256,13 @@ class PagesController extends Controller
         // If user allowed to access this page.
         if (PagesController::hasAccess(2))
         {
-            // Get the currently logged in specialist's account information.
-            $specialist = PagesController::getCurrentUser();
-
-            // Get all problem information for problems assigned to this specialist.
-            $problems = DB::select(DB::raw(
-                "SELECT problems.id as id, problems.created_at, problem_types.description as ptDesc, problems.description, problems.assigned_to, problems.importance, IFNULL(parents.description,0) as pDesc, users.forename, users.surname, calls.id as cID, importance.text, importance.class, importance.level
-                FROM problems
-                JOIN calls
-                ON (
-                    problems.id = calls.problem_id
-                    AND calls.created_at = (
-                        SELECT MIN(created_at)
-                        FROM calls
-                        WHERE problem_id = problems.id
-                    )
-                )
-                JOIN users
-                ON users.id = calls.caller_id
-                JOIN problem_types
-                ON problem_types.id = problems.problem_type
-                LEFT JOIN problem_types parents
-                ON problem_types.parent = parents.id
-                JOIN importance
-                ON importance.id = problems.importance
-                LEFT JOIN reassignments
-                ON problems.id = reassignments.problem_id
-                WHERE reassignments.problem_id IS NULL AND problems.assigned_to = ".$specialist->id.";"
-            ));
-            // Supply data to view.
             $data = array(
-                'title' => "Specialist Homepage",
-                'desc' => "Please select a task.",
-                'user' => $specialist,
-                'problems' => $problems,
-                'links' => PagesController::getSpecialistLinks(),
-                'active' => 'Home'
+                'title'=> "Specialist Homepage",
+                'desc'=>"Please select a task.",
+                'links'=>PagesController::getSpecialistLinks(),
+                'active'=>'Home'
             );
+
             return view('pages.specialist.homepage')->with($data);
         }
         // No access redirects to login.

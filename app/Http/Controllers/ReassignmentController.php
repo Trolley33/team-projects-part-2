@@ -41,6 +41,7 @@ class ReassignmentController extends Controller
                 $assign->save();
 
                 $problem->assigned_to = 0;
+                $problem->save();
 
                 return redirect('/specialist')->with('success', 'Problem reassigned.');
             }

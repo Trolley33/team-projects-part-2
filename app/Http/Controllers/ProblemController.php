@@ -90,6 +90,77 @@ class ProblemController extends Controller
 
             return view('problems.index')->with($data);
         }
+        elseif (PagesController::hasAccess(2)) {
+            // Get the currently logged in specialist's account information.
+            $specialist = PagesController::getCurrentUser();
+
+            // Get all problem information for problems assigned to this specialist.
+            $ongoing = DB::select(DB::raw(
+                "SELECT problems.id as id, problems.created_at, problem_types.description as ptDesc, problems.description, problems.assigned_to, problems.importance, IFNULL(parents.description,0) as pDesc, users.forename, users.surname, users.id as uID, calls.id as cID, importance.text, importance.class, importance.level
+                FROM problems
+                JOIN calls
+                ON (
+                    problems.id = calls.problem_id
+                    AND calls.created_at = (
+                        SELECT MIN(created_at)
+                        FROM calls
+                        WHERE problem_id = problems.id
+                    )
+                )
+                JOIN users
+                ON users.id = calls.caller_id
+                JOIN problem_types
+                ON problem_types.id = problems.problem_type
+                LEFT JOIN problem_types parents
+                ON problem_types.parent = parents.id
+                JOIN importance
+                ON importance.id = problems.importance
+                LEFT JOIN reassignments
+                ON problems.id = reassignments.problem_id
+                LEFT JOIN resolved_problems
+                ON resolved_problems.problem_id = problems.id
+                WHERE reassignments.problem_id IS NULL AND resolved_problems.id IS NULL AND problems.assigned_to = ".$specialist->id.";"
+            ));
+
+            // Get all problem information for problems assigned to this specialist.
+            $resolved = DB::select(DB::raw(
+                "SELECT problems.id as id, problems.created_at, problems.updated_at, problem_types.description as ptDesc, problems.description, problems.assigned_to, problems.importance, IFNULL(parents.description,0) as pDesc, users.forename, users.surname, users.id as uID, calls.id as cID
+                FROM problems
+                JOIN calls
+                ON (
+                    problems.id = calls.problem_id
+                    AND calls.created_at = (
+                        SELECT MIN(created_at)
+                        FROM calls
+                        WHERE problem_id = problems.id
+                    )
+                )
+                JOIN users
+                ON users.id = calls.caller_id
+                JOIN problem_types
+                ON problem_types.id = problems.problem_type
+                LEFT JOIN problem_types parents
+                ON problem_types.parent = parents.id
+                JOIN importance
+                ON importance.id = problems.importance
+                LEFT JOIN reassignments
+                ON problems.id = reassignments.problem_id
+                JOIN resolved_problems
+                ON resolved_problems.problem_id = problems.id
+                WHERE reassignments.problem_id IS NULL AND problems.assigned_to = ".$specialist->id.";"
+            ));
+            // Supply data to view.
+            $data = array(
+                'title' => "Specialist Homepage",
+                'desc' => "Please select a task.",
+                'user' => $specialist,
+                'ongoing' => $ongoing,
+                'resolved' => $resolved,
+                'links' => PagesController::getSpecialistLinks(),
+                'active' => 'Problems'
+            );
+            return view('pages.specialist.problems')->with($data);
+        }
         return redirect('login')->with('error', 'Please log in first.');
     }
 
@@ -417,11 +488,12 @@ class ProblemController extends Controller
 
             $problem = Problem::find($id);
 
-            $equipment = Equipment::all();
-            $affected_hardware = AffectedHardware::where('problem_id', '=', $id)->get();
 
             if (!is_null($problem))
             {
+                $affected_hardware = AffectedHardware::where('problem_id', '=', $id)->get();
+                $equipment = Equipment::all();
+
                 $data = array(
                     'title' => "Add Affected Equipment to Problem.",
                     'desc' => "Select equipment affected by problem.",
@@ -868,6 +940,8 @@ class ProblemController extends Controller
             {
                 $user = PagesController::getCurrentUser();
                 $problem->assigned_to = $user->id;
+                // If this was a reassigning, remove the request.
+                Reassignments::where('problem_id', '=', $problem->id)->delete();
                 $problem->save();
 
                 return redirect('/problems/'.$id.'/edit')->with('success', 'Problem Assigned to You');

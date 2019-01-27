@@ -92,19 +92,22 @@
     </div>
 
     <script>
-    var table = $('#reassign-table').dataTable({
-        order: [[5, 'desc'], [0, 'desc']],
-        "aoColumnDefs": [
-            {
-                "iDataSort": 6,
-                "aTargets": [5] 
-            },
-            {
-                "targets": [6],
-                "visible": false,
-                "searchable": false
-            },
-        ]
-    });
+    $(document).ready( function () 
+    {
+        var table = $('#reassign-table').dataTable({
+            order: [[5, 'desc'], [0, 'desc']],
+            "aoColumnDefs": [
+                {
+                    "iDataSort": 6,
+                    "aTargets": [5] 
+                },
+                {
+                    "targets": [6],
+                    "visible": false,
+                    "searchable": false
+                },
+            ]
+        });
+    }
     </script>
 @endsection

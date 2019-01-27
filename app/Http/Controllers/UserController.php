@@ -314,7 +314,7 @@ class UserController extends Controller
 
     public function show_compact($id)
     {
-        if (PagesController::hasAccess(1))
+        if (PagesController::hasAccess(1)||PagesController::hasAccess(2))
         {
             $user = User::find($id);
 
@@ -329,9 +329,13 @@ class UserController extends Controller
             }
             if (!is_null($user) && !is_null($info))
             {
+                $viewer = PagesController::getCurrentUser();
+                $job = Job::find($viewer->job_id);
+                $level = $job->access_level;
                 $data = array(
                     'title' => "User Viewer.",
                     'desc' => "View user account information.",
+                    'level'=>$level,
                     'user' => $user,
                     'job_info' => $info,
                     'problem_type'=>$problem_type,

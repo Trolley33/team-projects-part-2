@@ -1,7 +1,7 @@
 @extends('layouts.compact')
 @section('content')
 <div class="call_menu w3-center w3-padding w3-light-grey">
-        <div>
+        <div class="compact">
             <div class="w3-padding-large w3-white">
                 <h2>Problem Type Viewer</h2>
                 <table>
@@ -55,6 +55,13 @@
 
     $(document).ready(function () {
         $('#specialist-table').DataTable();
+
+        var level = <?php echo $level; ?>;
+
+        if (level == 2) {
+            $('.compact .editbutton').attr('onclick', '');
+            $('.compact .editbutton').removeClass('editbutton');
+        }
     });
     </script>
 @endsection

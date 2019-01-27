@@ -8,15 +8,27 @@
                 <tbody>
                     <tr class="w3-hover-light-grey">
                         <th>Full Name</th>
+                        @if ($level == 1)
                         <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}';">{{$user->forename}} {{$user->surname}}<span class="icon">View</span></td>
+                        @elseif ($level == 2)
+                        <td>{{$user->forename}} {{$user->surname}}</td>
+                        @endif
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Department Name</th>
+                        @if ($level == 1)
                         <td class="editbutton" onclick="window.location.href = '/departments/{{$job_info->dID}}';">{{$job_info->name}}<span class="icon">View</span></td>
+                        @elseif ($level == 2)
+                         <td>{{$job_info->name}}</td>
+                        @endif
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Job Title</th>
+                        @if ($level == 1)
                         <td class="editbutton" onclick="window.location.href = '/jobs/{{$job_info->jID}}';">{{$job_info->title}}<span class="icon">View</span></td>
+                        @elseif ($level == 2)
+                         <td>{{$job_info->title}}</td>
+                        @endif
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Phone Number</th>
@@ -39,13 +51,32 @@
                     @if ($job_info->access_level == '2')
                         <tr class="w3-hover-light-grey">
                             <th>Problem Specialism</th>
-                            @if (!is_null($problem_type))
-                            <td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';">
+                        @if (!is_null($problem_type))
+                            @if ($level == 1)
+                             <td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';">
                                 @if (!is_null($parent))
                                     ({{$parent->description}}) 
                                 @endif
                                 {{$problem_type->description}}<span class="icon">View</span></td>
-                            @else
+                            </td>
+                            @elseif ($level == 2)
+                            <td>
+                                @if (!is_null($parent))
+                                    ({{$parent->description}}) 
+                                @endif
+                                {{$problem_type->description}}
+                            </td>
+                            @endif
+                        @else
+                            @if ($level == 1)
+                             <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}/edit_specialism';" title="Edit">
+                                Not Set<span class="icon">Edit</span>
+                            </td>
+                            @elseif ($level == 2)
+                            <td>
+                                Not Set
+                            </td>
+                            @endif
                             <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}/edit_specialism';" title="Edit">
                                 Not Set<span class="icon">Edit</span>
                             </td>

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\ProblemType;
 use App\Speciality;
 use App\User;
+use App\Job;
 
 
 class ProblemTypeController extends Controller
@@ -167,7 +168,7 @@ class ProblemTypeController extends Controller
 
     public function show_compact($id)
     {
-        if (PagesController::hasAccess(1))
+        if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {
             $type = ProblemType::find($id);
             if (!is_null($type))
@@ -176,11 +177,15 @@ class ProblemTypeController extends Controller
 
                 $parent = ProblemType::find($type->parent);
 
+                $viewer = PagesController::getCurrentUser();
+                $job = Job::find($viewer->job_id);
+                $level = $job->access_level;
                 $data = array(
                     'title' => "Problem Type Viewer",
                     'desc' => "View information on parent.",
                     'parent'=>$parent,
                     'type' => $type,
+                    'level'=>$level,
                     'specialists'=>$specialists,
                     'links'=>PagesController::getOperatorLinks(),
                     'active'=>'Problem Types'

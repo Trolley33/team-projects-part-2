@@ -14,11 +14,11 @@
                         </tr>
                         <tr class="w3-hover-light-grey">
                             <th>Problem Type</th>
-                            <td>
+                            <td class="editbutton modalOpener" value="/problem_types/{{$problem_type->id}}/compact">
                                 @if (!is_null($parent))
                                     ({{$parent->description}})
                                 @endif
-                                {{$problem_type->description}}
+                                {{$problem_type->description}}<span class="icon">View</span>
                             </td>
                         </tr>
                         <tr class="w3-hover-light-grey">
@@ -88,7 +88,7 @@
                         <tbody>
                             @foreach ($callers as $caller)
                             <tr>
-                                <td>{{$caller->forename}} {{$caller->surname}}</td>
+                                <td class="editbutton modalOpener" value="/users/{{$caller->id}}/compact">{{$caller->forename}} {{$caller->surname}}</td>
                                 <td>{{$caller->notes}}</td>
                                 <td>{{$caller->cAT}}</td>
                             </tr>
@@ -178,10 +178,6 @@
 
         var table2 = $('#equipment-table').DataTable();
         var table3 = $('#software-table').DataTable();
-        
-        $('.slideHeader').click(function(){
-            $(this).next('.slideable').slideToggle();
-        });
 
     });
     </script>
