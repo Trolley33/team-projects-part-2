@@ -57,6 +57,9 @@ Route::post ('/problems/{id}/remove_specialist', 'ReassignmentController@request
 Route::get   ('/problems/{problem_id}/add_problem_type/{type_id}', 'ProblemController@add_problem_type')->name('problems.add_problem_type');
 
 Route::get   ('/problems/{id}/edit_specialist', 'ProblemController@edit_specialist')->name('problems.edit_specialist');
+Route::get   ('/problems/{id}/solve/compact', 'ProblemController@solve_compact')->name('problems.solve_compact');
+
+Route::post ('/problems/{id}/solve', 'ProblemController@solve_problem')->name('problems.solve_problem');
 
 // Add calls to problem
 Route::get   ('/problems/{id}/add_call', 'ProblemController@select_user_for_call')->name('problems.select_user_for_call');

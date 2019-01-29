@@ -39,6 +39,16 @@ class PagesController extends Controller
             ['href'=>'problems', 'text'=>'Problems']
         ];
     }
+
+    // Function that returns array of 'links' and their corrosponding display text. By using a public static function we get around using a global variable which caused problems. Can be accessed from any other controllers.
+    public static function getAnalystLinks ()
+    {
+        // href = which main page to redirect to, text = what to display.
+        return [
+            ['href'=>'back','text'=>'back'],
+            ['href'=>'specialist','text'=>'Home']
+        ];
+    }
     // Function that checks if the currently signed in user has the access level passed as a parameter. Returns true/false.
     public static function hasAccess($level)
     {
@@ -278,7 +288,9 @@ class PagesController extends Controller
         {
             $data = array(
                 'title' => "Analyst Homepage",
-                'desc' => "Please select a task."
+                'desc' => "Please select a task.",
+                'links'=>PagesController::getAnalystLinks(),
+                'active'=>'Home'
             );
             return view('pages.analyst.homepage')->with($data);
         }

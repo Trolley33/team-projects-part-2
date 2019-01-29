@@ -54,7 +54,7 @@
                                 <td class="w3-green"> Solved ({{$resolved->created_at}})
                                 </td>
                             @else
-                                <td class="w3-red"> Unsolved </td>
+                                <td class="w3-red editbutton modalOpener"value='/problems/{{$problem->id}}/solve/compact'> Unsolved</td>
                             @endif
                         </tr>
                         @if (!is_null($resolved))

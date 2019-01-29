@@ -864,36 +864,30 @@ class ProblemController extends Controller
                 $assigned = User::find($problem->assigned_to);
                 $problem_type = ProblemType::find($problem->problem_type);
                 $parent = ProblemType::find($problem_type->parent);
-                if (!is_null($problem))
+                
+                $specialists = User::join('speciality', 'users.id', '=', 'speciality.specialist_id')->join('problem_types', 'speciality.problem_type_id', '=', 'problem_types.id')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->leftJoin('problems', 'problems.assigned_to', '=', 'users.id')->selectRaw('speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id), 0) as jobs, users.*')->groupBy('users.id', 'speciality.id')->get();
+
+                if (is_null($parent))
                 {
-                    $specialists = User::join('speciality', 'users.id', '=', 'speciality.specialist_id')->join('problem_types', 'speciality.problem_type_id', '=', 'problem_types.id')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->leftJoin('problems', 'problems.assigned_to', '=', 'users.id')->selectRaw('speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id), 0) as jobs, users.*')->groupBy('users.id', 'speciality.id')->get();
-
-                    if (is_null($parent))
-                    {
-                        $parent = $problem_type;
-                    }
-
-                    $data = array(
-                        'title' => "Edit Assigned Specialist",
-                        'desc' => "",
-                        'problem'=>$problem,
-                        'assigned'=>$assigned,
-                        'parent'=>$parent,
-                        'type'=>$problem_type,
-                        'specialists'=>$specialists,
-                        'links' => PagesController::getOperatorLinks(),
-                        'active' => 'Problems'
-                    );
-
-                    return view('problems.edit_specialist')->with($data);
+                    $parent = $problem_type;
                 }
-                return redirect('/problems');
+
+                $data = array(
+                    'title' => "Edit Assigned Specialist",
+                    'desc' => "",
+                    'problem'=>$problem,
+                    'assigned'=>$assigned,
+                    'parent'=>$parent,
+                    'type'=>$problem_type,
+                    'specialists'=>$specialists,
+                    'links' => PagesController::getOperatorLinks(),
+                    'active' => 'Problems'
+                );
+
+                return view('problems.edit_specialist')->with($data);
             }
             if (PagesController::hasAccess(2))
             {
-                $problem = Problem::find($id);
-                if (!is_null($problem))
-                {
                     $data = array(
                         'title' => "Request Problem be Re-assigned?",
                         'desc' => "Doing so will remove the problem from your list of problems.",
@@ -903,19 +897,71 @@ class ProblemController extends Controller
                     );
 
                     return view('problems.request_reassign')->with($data);
-                }
-                return redirect('/specialist');
             }
             return redirect('login')->with('error', 'Please log in first.'); 
         }
         return redirect('/problems/'.$id)->with('error', 'Sorry, something went wrong.');
     }
 
+    public function solve_compact ($id)
+    {
+        $problem = Problem::find($id);
+        if (!is_null($problem))
+        {
+            if (PagesController::hasAccess(1))
+            {
+                $data = array(
+                    'problem'=>$problem
+                );
+
+                return view('problems.solve_compact')->with($data);
+            }
+            if (PagesController::hasAccess(2))
+            {
+                
+            }
+            return redirect('login')->with('error', 'Please log in first.'); 
+        }
+        
+    }
+
+    public function solve_problem (Request $request, $id)
+    {
+        $problem = Problem::find($id);
+        if (!is_null($problem))
+        {
+            $this->validate($request, [
+                'notes' => 'required'
+            ]);
+
+            if (PagesController::hasAccess(1))
+            {
+                $solver = PagesController::getCurrentUser();
+
+                $resolved = new ResolvedProblem();
+                $resolved->problem_id = $problem->id;
+                $resolved->solved_by = $solver->id;
+                $resolved->solution_notes = $request->input('notes');
+                $resolved->save();
+
+                return redirect('/problems/'.$problem->id)->with('success', 'Problem marked as solved.');
+            }
+            if (PagesController::hasAccess(2))
+            {
+
+            }
+            return redirect('/login')->with('error', 'Please log in first.');
+        }
+
+        return redirect('/problems/'.$id)->with('error', 'Sorry, something went wrong.');
+
+    }
+
     public function add_specialist($id, $specialist_id)
     {
         $problem = Problem::find($id);
         $user = User::find($specialist_id);
-        if (!is_null($problem) && !is_null($specialist_id)) {
+        if (!is_null($problem) && !is_null($user)) {
             if (PagesController::hasAccess(1))
             {
                 $problem->assigned_to = $user->id;
