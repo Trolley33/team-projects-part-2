@@ -9,6 +9,8 @@ use App\User;
 use App\Job;
 use App\Reassignments;
 
+use Khill\Lavacharts\Lavacharts;
+
 class PagesController extends Controller
 {
 

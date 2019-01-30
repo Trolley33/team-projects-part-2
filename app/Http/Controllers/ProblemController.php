@@ -115,11 +115,9 @@ class ProblemController extends Controller
                 ON problem_types.parent = parents.id
                 JOIN importance
                 ON importance.id = problems.importance
-                LEFT JOIN reassignments
-                ON problems.id = reassignments.problem_id
                 LEFT JOIN resolved_problems
                 ON resolved_problems.problem_id = problems.id
-                WHERE reassignments.specialist_id != ".$specialist->id." AND resolved_problems.id IS NULL AND problems.assigned_to = ".$specialist->id.";"
+                WHERE resolved_problems.id IS NULL AND problems.assigned_to = ".$specialist->id.";"
             ));
 
             // Get all problem information for problems assigned to this specialist.
@@ -143,11 +141,9 @@ class ProblemController extends Controller
                 ON problem_types.parent = parents.id
                 JOIN importance
                 ON importance.id = problems.importance
-                LEFT JOIN reassignments
-                ON problems.id = reassignments.problem_id
                 JOIN resolved_problems
                 ON resolved_problems.problem_id = problems.id
-                WHERE reassignments.specialist_id != ".$specialist->id." AND problems.assigned_to = ".$specialist->id.";"
+                WHERE problems.assigned_to = ".$specialist->id.";"
             ));
             // Supply data to view.
             $data = array(
