@@ -11,6 +11,8 @@
             style="background-image: url({{asset('images/Team-FAQ.png')}});"></button></a>
     </div>
 
+    <!-- spoofed logins for quick access -->
+
 	<form method="post">
             @csrf
             <input type='hidden' name='tok' value = '<?php echo base64_encode(openssl_random_pseudo_bytes(16)); ?>' />

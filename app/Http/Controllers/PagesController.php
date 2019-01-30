@@ -46,7 +46,7 @@ class PagesController extends Controller
         // href = which main page to redirect to, text = what to display.
         return [
             ['href'=>'back','text'=>'back'],
-            ['href'=>'specialist','text'=>'Home']
+            ['href'=>'analyst','text'=>'Home']
         ];
     }
     // Function that checks if the currently signed in user has the access level passed as a parameter. Returns true/false.
@@ -239,10 +239,10 @@ class PagesController extends Controller
                 JOIN reassignments
                 ON reassignments.problem_id = problems.id 
                 LEFT JOIN users specialists
-                ON (specialists.id = problems.assigned_to) OR (specialists.id = reassignments.specialist_id)
+                ON specialists.id = reassignments.specialist_id
                 LEFT JOIN problem_types parents
                 ON problem_types.parent = parents.id
-                WHERE problems.logged_by = "'.$me->id.'";'
+                WHERE reassignments.reassigned_to = 0 AND problems.logged_by = "'.$me->id.'";'
             ));
 
             // Supply data to view.

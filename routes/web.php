@@ -11,7 +11,7 @@
 |
 */
 
-// Get routes. ==================================
+// Main pages routes. ==================================
 Route::get('/', 'PagesController@index');
 Route::get('/login', 'PagesController@login')->name('login');
 Route::get('/logout', 'PagesController@logout');
@@ -26,17 +26,23 @@ Route::get('/verify', function()
 Route::get('/operator/', 'PagesController@operator_homepage');
 Route::get('/operator/caller-info', 'PagesController@caller_info');
 Route::get('/operator/caller-info/{name}', ['uses' => 'PagesController@caller_info_from_name']);
-//Route::get('/operator/view-problems', 'PagesController@view_problems');
-//Route::get('/operator/log-call', 'PagesController@log_call');
-//Route::get('/operator/view-single-problem/{id}', ['uses' => 'PagesController@view_problem']);
 
 
 // Specialist pages.
 Route::get('/specialist/', 'PagesController@specialist_homepage');
-//Route::get('/specialist/view-problems', 'PagesController@view_problems');
 
 // Analyst pages.
 Route::get('/analyst/', 'PagesController@analyst_homepage');
+
+Route::get('/review/specialists', 'ReviewController@review_specialists');
+Route::get('/review/callers', 'ReviewController@review_callers');
+Route::get('/review/equipment', 'ReviewController@review_equipment');
+Route::get('/review/software', 'ReviewController@review_software');
+
+Route::get('/review/specialists/{id}', 'ReviewController@review_specialist');
+Route::get('/review/callers/{id}', 'ReviewController@review_caller');
+Route::get('/review/equipment/{id}', 'ReviewController@review_equipment_single');
+Route::get('/review/software/{id}', 'ReviewController@review_software_single');
 
 // Problem pages.
 Route::get   ('/problems/create','ProblemController@create')->name('problems.create');

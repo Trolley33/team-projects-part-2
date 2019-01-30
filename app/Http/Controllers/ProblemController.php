@@ -119,7 +119,7 @@ class ProblemController extends Controller
                 ON problems.id = reassignments.problem_id
                 LEFT JOIN resolved_problems
                 ON resolved_problems.problem_id = problems.id
-                WHERE reassignments.problem_id IS NULL AND resolved_problems.id IS NULL AND problems.assigned_to = ".$specialist->id.";"
+                WHERE reassignments.specialist_id != ".$specialist->id." AND resolved_problems.id IS NULL AND problems.assigned_to = ".$specialist->id.";"
             ));
 
             // Get all problem information for problems assigned to this specialist.
@@ -147,7 +147,7 @@ class ProblemController extends Controller
                 ON problems.id = reassignments.problem_id
                 JOIN resolved_problems
                 ON resolved_problems.problem_id = problems.id
-                WHERE reassignments.problem_id IS NULL AND problems.assigned_to = ".$specialist->id.";"
+                WHERE reassignments.specialist_id != ".$specialist->id." AND problems.assigned_to = ".$specialist->id.";"
             ));
             // Supply data to view.
             $data = array(
@@ -965,8 +965,14 @@ class ProblemController extends Controller
             if (PagesController::hasAccess(1))
             {
                 $problem->assigned_to = $user->id;
-                // If this was a reassigning, remove the request.
-                Reassignments::where('problem_id', '=', $problem->id)->delete();
+                // If this was a reassigning, chain new specialist onto row.
+                $r = Reassignments::where('problem_id', '=', $problem->id)->where('reassigned_to', '=', '0')->orderBy('created_at', 'desc')->first();
+                if (!is_null($r))
+                {
+                    $r->reassigned_to = $user->id;
+                    $r->save();
+                }
+
                 $problem->save();
     
                 return redirect('/problems/'.$id.'/edit')->with('success', 'Problem Assigned to '.$user->forename.' '.$user->surname.'.');
@@ -986,8 +992,14 @@ class ProblemController extends Controller
             {
                 $user = PagesController::getCurrentUser();
                 $problem->assigned_to = $user->id;
-                // If this was a reassigning, remove the request.
-                Reassignments::where('problem_id', '=', $problem->id)->delete();
+                // If this was a reassigning, chain new specialist onto row.
+                $r = Reassignments::where('problem_id', '=', $problem->id)->where('reassigned_to', '=', '0')->orderBy('created_at', 'desc')->first();
+                if (!is_null($r))
+                {
+                    $r->reassigned_to = $user->id;
+                    $r->save();
+                }
+
                 $problem->save();
 
                 return redirect('/problems/'.$id.'/edit')->with('success', 'Problem Assigned to You');

@@ -31,21 +31,17 @@ class ReassignmentController extends Controller
 
             $problem = Problem::find($id);
 
-            $result = Reassignments::where('problem_id', '=', $id)->first();
-            if (is_null($result))
-            {
-                $assign = new Reassignments();
-                $assign->problem_id = $problem->id;
-                $assign->specialist_id = $problem->assigned_to;
-                $assign->reason = $request->input('reason');
-                $assign->save();
+            $assign = new Reassignments();
+            $assign->problem_id = $problem->id;
+            $assign->specialist_id = $problem->assigned_to;
+            $assign->reason = $request->input('reason');
+            $assign->reassigned_to = 0;
+            $assign->save();
 
-                $problem->assigned_to = 0;
-                $problem->save();
+            $problem->assigned_to = 0;
+            $problem->save();
 
-                return redirect('/specialist')->with('success', 'Problem reassigned.');
-            }
-            return redirect('/specialist')->with('error', 'Sorry, that request failed, please try again later.');
+            return redirect('/specialist')->with('success', 'Problem reassigned.');
         }
 
         return redirect('login')->with('error', 'Please log in first.');
