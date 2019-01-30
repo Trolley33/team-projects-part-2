@@ -16,6 +16,7 @@
             </table>
             <hr />
             <div style="width: 80%; margin: auto;">
+            	<input id="start" type="date" /> - <input id="end" type="date" /> <button onclick="changeRange()" ">↺</button>
             	<canvas id='problems-solved-graph'>
             	</canvas>
         	</div>
@@ -66,16 +67,14 @@ $(document).ready( function ()
 	        }
 	    }
 	});
-
-	myChart.options.scales.xAxes[0].time.min = '2019-01-01';
-	myChart.options.scales.xAxes[0].time.max = '2019-01-31';
-	myChart.update();
 });
 
-function nextMonth()
+function changeRange()
 {
-	myChart.options.scales.xAxes[0].time.min = '2019-02-01';
-	myChart.options.scales.xAxes[0].time.max = '2019-02-28';
+	var start = $('#start');
+	var end = $('#end');
+	myChart.options.scales.xAxes[0].time.min = start.val();
+	myChart.options.scales.xAxes[0].time.max = end.val();
 	myChart.update();
 }
 </script>
