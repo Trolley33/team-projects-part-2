@@ -78,13 +78,27 @@ class ReviewController extends Controller
                         MONTH(resolved_problems.created_at), 
                         DAY(resolved_problems.created_at);
                     "));
+                $ra = DB::select(DB::raw("
+                        SELECT YEAR( reassignments.created_at) AS 'year', MONTH( reassignments.created_at) AS 'month', DAY( reassignments.created_at) AS 'day', COUNT(*) AS 'count' FROM reassignments
+                        WHERE reassignments.specialist_id = '". $id ."' 
+                        GROUP BY 
+                        DAY(reassignments.created_at),
+                        MONTH(reassignments.created_at), 
+                        YEAR(reassignments.created_at)
+                        ORDER BY YEAR(reassignments.created_at),
+                        MONTH(reassignments.created_at), 
+                        DAY(reassignments.created_at);
+                    "));
+
                 $resolved = $this->sql_to_json($rp);
+                $reassigned = $this->sql_to_json($ra);
 
                 $data = array(
                     'title'=>'Review Specialist',
                     'desc'=>'Currently Reviewing a Specialist',
                     'specialist'=>$specialist,
-                    'data'=>$resolved,
+                    'solved'=>$resolved,
+                    'reassigned'=>$reassigned,
                     'links'=>PagesController::getAnalystLinks(),
                     'active'=>'Review'
                 );
