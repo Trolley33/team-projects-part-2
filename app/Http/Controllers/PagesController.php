@@ -9,8 +9,6 @@ use App\User;
 use App\Job;
 use App\Reassignments;
 
-use Khill\Lavacharts\Lavacharts;
-
 class PagesController extends Controller
 {
 
@@ -287,8 +285,8 @@ class PagesController extends Controller
     {
         // TODO
         if (PagesController::hasAccess(3))
-        {
-            $data = array(
+        {   
+                $data = array(
                 'title' => "Analyst Homepage",
                 'desc' => "Please select a task.",
                 'links'=>PagesController::getAnalystLinks(),
