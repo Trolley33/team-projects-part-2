@@ -187,7 +187,30 @@
                     </div>
                 </div>
                 <hr />
-
+                <!-- reassignments -->
+                @if (!is_null($reassignments))
+                    <h2 class="slideHeader">Previously Assigned Helpers</h2>
+                    <div class="slideable">
+                        <table id='reassign-table' class="display cell-border stripe hover" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>Requested At</th>
+                                    <th>Previous Helper</th><th>Reason for Reassigning</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($reassignments as $r)
+                                <tr>
+                                    <td>{{$r->created_at}}</td>
+                                    <td class="editbutton modalOpener" value='/users/{{$r->uID}}/compact'>{{$r->forename}} {{$r->surname}}</td>
+                                    <td>{{$r->reason}}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr />
+                @endif
             </div>
         </div>
     </div>
@@ -198,8 +221,11 @@
             order: [[2, 'asc']]
         });
 
-        var table2 = $('#equipment-table').DataTable();
-        var table3 = $('#software-table').DataTable();
+        var eTable = $('#equipment-table').DataTable();
+        var sTable = $('#software-table').DataTable();
+        var rTable = $('#reassign-table').DataTable({
+                order: [[0, 'asc']]
+        });
     });
     </script>
 @endsection

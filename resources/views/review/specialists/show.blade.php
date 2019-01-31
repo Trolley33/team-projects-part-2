@@ -16,7 +16,7 @@
             </table>
             <hr />
             <div style="width: 80%; margin: auto;">
-            	<input id="start" type="date" /> - <input id="end" type="date" /> <button onclick="changeRange()" ">↺</button>
+            	<input id="start" type="date" /> - <input id="end" type="date" /> <button onclick="changeRange()">↺</button>
             	<canvas id='problems-solved-graph'>
             	</canvas>
         	</div>
@@ -29,35 +29,33 @@ var myChart;
 $(document).ready( function () 
 {
     var chart = $('#problems-solved-graph');
+    var solved = <?php echo json_encode($solved); ?>;
+    console.log(solved);
 
     myChart = new Chart(chart, {
-		type: 'line',
+		type: 'bar',
 		data: {
 		    datasets : [
 		        {
 		            label: "# of problems solved",
-		            borderColor: 'rgba(0, 255, 255, 1)',
-		            data : 
-		            	<?php echo json_encode($solved); ?>
-		        },
-		        {
-		            label: "# of problems reassigned",
-		            borderColor: 'rgba(0, 255, 0, 1)',
-		            data : 
-		            	<?php echo json_encode($reassigned); ?>
+		            backgroundColor: 'rgba(0, 255, 255, 0.5)',
+		            data : solved
 		        }
 		    ]
 		},
 		options: {
 	        scales: {
 	            xAxes: [{
+	            	bounds: 'ticks',
 	                type: 'time',
 	                time: {
-	                    unit: 'month'
-	                },
-	                ticks: {
-	                	source: 'data'
-	                }
+	                	unit: 'week'
+				    },
+				    ticks: {
+				    	source: 'auto'
+				    },
+				    barPercentage: 1.0,
+				    categoryPercentage: 0.9
 	            }],
 	            yAxes: [{
 	            	ticks: {

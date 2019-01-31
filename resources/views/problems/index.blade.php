@@ -102,7 +102,7 @@ $(document).ready( function ()
     });
 
     var table = $('#resolved-table').dataTable({
-        order: [[5, 'desc']]
+        order: [[1, 'desc']]
     });
 });
 </script>

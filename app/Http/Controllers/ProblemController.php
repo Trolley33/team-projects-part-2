@@ -251,10 +251,8 @@ class ProblemController extends Controller
             $user = User::find($user_id);
             $problem_type = ProblemType::find($problem_type_id);
             $parent = ProblemType::find($problem_type->parent);
-            /* Outdated.
-            $specialists = User::join('speciality', 'users.id', '=', 'speciality.specialist_id')->join('problem_types', 'speciality.problem_type_id', '=', 'problem_types.id')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, users.*')->get();
-            */
-            $specialists = User::join('speciality', 'users.id', '=', 'speciality.specialist_id')->join('problem_types', 'speciality.problem_type_id', '=', 'problem_types.id')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->leftJoin('problems', 'problems.assigned_to', '=', 'users.id')->selectRaw('speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id), 0) as jobs, users.*')->groupBy('users.id', 'speciality.id')->get();
+           
+            $specialists = User::join('speciality', 'users.id', '=', 'speciality.specialist_id')->join('problem_types', 'speciality.problem_type_id', '=', 'problem_types.id')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->leftJoin('problems', 'problems.assigned_to', '=', 'users.id')->leftJoin('resolved_problems', 'problems.id', '=', 'resolved_problems.problem_id')->selectRaw('speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id) - COUNT(resolved_problems.id), 0) as jobs, users.*')->groupBy('users.id', 'speciality.id')->get();
 
             if (!is_null($user) && !is_null($problem_type))
             {
@@ -369,6 +367,8 @@ class ProblemController extends Controller
 
                 $software = Software::join('affected_software', 'affected_software.software_id', '=', 'software.id')->join('problems', 'problems.id', '=', 'affected_software.problem_id')->where('problems.id', '=', $id)->select('software.*')->get();
 
+                $reassignments = Reassignments::join('problems', 'problems.id', '=', 'reassignments.problem_id')->join('users', 'users.id', '=', 'reassignments.specialist_id')->select('users.id as uID', 'users.forename', 'users.surname', 'reassignments.reason', 'reassignments.created_at')->where('problems.id', '=', $id)->get();
+
                 $importance = Importance::find($problem->importance);
 
                 if (!is_null($problem) && !is_null($callers))
@@ -384,6 +384,7 @@ class ProblemController extends Controller
                         'resolved' => $resolved,
                         'hardware' => $hardware,
                         'software' => $software,
+                        'reassignments'=>$reassignments,
                         'importance' => $importance,
                         'links' => $links,
                         'active' => 'Problems'
@@ -861,7 +862,7 @@ class ProblemController extends Controller
                 $problem_type = ProblemType::find($problem->problem_type);
                 $parent = ProblemType::find($problem_type->parent);
                 
-                $specialists = User::join('speciality', 'users.id', '=', 'speciality.specialist_id')->join('problem_types', 'speciality.problem_type_id', '=', 'problem_types.id')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->leftJoin('problems', 'problems.assigned_to', '=', 'users.id')->selectRaw('speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id), 0) as jobs, users.*')->groupBy('users.id', 'speciality.id')->get();
+                $specialists = User::join('speciality', 'users.id', '=', 'speciality.specialist_id')->join('problem_types', 'speciality.problem_type_id', '=', 'problem_types.id')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->leftJoin('problems', 'problems.assigned_to', '=', 'users.id')->leftJoin('resolved_problems', 'problems.id', '=', 'resolved_problems.problem_id')->selectRaw('speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id) - COUNT(resolved_problems.id), 0) as jobs, users.*')->groupBy('users.id', 'speciality.id')->get();
 
                 if (is_null($parent))
                 {
