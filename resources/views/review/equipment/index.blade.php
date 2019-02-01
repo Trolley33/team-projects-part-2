@@ -11,7 +11,7 @@
 		<tbody>
 			@foreach ($equipment as $e)
 			<tr>
-				<td style="text-align: right;">{{$e->serial_no}}</td><td>{{$e->make}} {{$e->model}}</td>
+				<td>{{$e->serial_number}}</td><td>{{$e->description}}</td><td>{{$e->model}}</td>
 				<td class="editbutton" onclick="window.location.href = '/review/equipment/{{$e->id}}';" style="text-align: center;">
 					Review Equipment
 				</td>

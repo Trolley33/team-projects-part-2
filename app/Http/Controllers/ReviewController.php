@@ -84,6 +84,8 @@ class ReviewController extends Controller
             if (PagesController::hasAccess(3))
             {
                 // Get all info about specialist, for graphing.
+                $datasets = array();
+
                 $rp = DB::select(DB::raw("
                         SELECT YEARWEEK( resolved_problems.created_at) AS 'yw', COUNT(*) AS 'count' FROM resolved_problems
                         WHERE resolved_problems.solved_by = '". $id ."' 
@@ -101,15 +103,16 @@ class ReviewController extends Controller
                         YEARWEEK(resolved_problems.created_at)
                         ORDER BY YEARWEEK(resolved_problems.created_at);
                     "));
-                $resolved = $this->sql_to_json($rp);
-                $timeToSolve = $this->sql_to_json($tts);
+
+                array_push($datasets, array('data' => $this->sql_to_json($rp), 'yLabel' => "Problems Solved Per Week", 'color' => 'rgb(30,128,128)'));
+
+                array_push($datasets, array('data' => $this->sql_to_json($tts), 'yLabel' => "AVG Time to Solve Problems (Minutes)", 'color' => 'rgb(191, 53, 84)'));
 
                 $data = array(
                     'title'=>'Review Specialist',
                     'desc'=>'Currently Reviewing a Specialist',
                     'specialist'=>$specialist,
-                    'solved'=>$resolved,
-                    'timeToSolve'=>$timeToSolve,
+                    'datasets'=>$datasets,
                     'links'=>PagesController::getAnalystLinks(),
                     'active'=>'Review'
                 );
@@ -131,7 +134,40 @@ class ReviewController extends Controller
 
     public function review_equipment_single ($id)
     {
-        
+        $equip = Equipment::find($id);
+        if (!is_null($equip))
+        {
+            if (PagesController::hasAccess(3))
+            {
+                // Get all info about equipment, for graphing.
+                $datasets = array();
+                $i = DB::select(DB::raw("
+                        SELECT YEARWEEK( affected_hardware.created_at) AS 'yw', COUNT(*) AS 'count' FROM affected_hardware
+                        WHERE affected_hardware.equipment_id = '". $id ."' 
+                        GROUP BY 
+                        yw
+                        ORDER BY yw;
+                    "));
+
+                array_push($datasets, array('data' => $this->sql_to_json($i), 'yLabel' => "Related Problems", 'color' => 'rgb(155,30,155)'));
+
+                $data = array(
+                    'title'=>'Review Equipment',
+                    'desc'=>'Currently Reviewing Equipment',
+                    'equipment'=>$equip,
+                    'datasets'=>$datasets,
+                    'links'=>PagesController::getAnalystLinks(),
+                    'active'=>'Review'
+                );
+
+                return view('review.equipment.show')->with($data);
+            }
+
+            return redirect('/login')->with('error', 'Please log in first.');
+
+            }
+
+        return redirect('/review/equipment')->with('error', 'Sorry, something went wrong.');
     }
 
     public function review_software_single ($id)
