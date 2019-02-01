@@ -6,19 +6,16 @@
         <div class="w3-padding-large w3-white">
             <h2>Reviewing Specialist {{$specialist->forename}} {{$specialist->surname}}</h2>
             <hr />
-             <table>
-                <tbody>
-                    <tr class="w3-hover-light-grey">
-                        <th># of Problems Solved</th>
-                    	<td></td>
-                    </tr>
-		        </tbody>
-            </table>
-            <hr />
-            <div style="width: 80%; margin: auto;">
+            <div style="width: 600px; margin: auto;">
+            	<select id="data-changer" onchange="swapDataSet()">
+            		<option value="0" selected>Problems Solved</option>
+            		<option value="1">Time Taken to Solve Problem</option>
+            	</select>
+            	<br />
             	<input id="start" type="date" /> - <input id="end" type="date" /> <button onclick="changeRange()">↺</button>
-            	<canvas id='problems-solved-graph'>
+            	<canvas width="600" height="300" id='problems-solved-graph'>
             	</canvas>
+        	</div>
         	</div>
         </div>
     </div>
@@ -26,21 +23,36 @@
 
 <script>
 var myChart;
+var sets = [];
+
 $(document).ready( function () 
 {
     var chart = $('#problems-solved-graph');
-    var solved = <?php echo json_encode($solved); ?>;
-    console.log(solved);
+
+    sets.push(
+    {
+    	ylabel: 'Problems Solved Per Week',
+		dataset: {
+			label: '',
+	        backgroundColor: 'rgb(0,128,128)',
+	    	data: <?php echo json_encode($solved); ?>
+	    }
+	});
+	sets.push(
+    {
+    	ylabel: 'AVG Time to Solve Problems (Minutes)',
+		dataset: {
+			label: '',
+	        backgroundColor: 'rgb(191, 53, 84)',
+	    	data: <?php echo json_encode($timeToSolve); ?>
+	    }
+	});
+
 
     myChart = new Chart(chart, {
 		type: 'bar',
 		data: {
 		    datasets : [
-		        {
-		            label: "# of problems solved",
-		            backgroundColor: 'rgba(0, 255, 255, 0.5)',
-		            data : solved
-		        }
 		    ]
 		},
 		options: {
@@ -52,20 +64,49 @@ $(document).ready( function ()
 	                	unit: 'week'
 				    },
 				    ticks: {
-				    	source: 'auto'
+				    	source: 'data'
 				    },
 				    barPercentage: 1.0,
-				    categoryPercentage: 0.9
+				    categoryPercentage: 1.0
 	            }],
 	            yAxes: [{
+	            	scaleLabel: {
+	            		display: true
+	            	},
 	            	ticks: {
 	            		beginAtZero: true
 	            	}
 	            }]
-	        }
+	        },
+	        // Container for pan options
+			pan: {
+				enabled: true,
+				mode: 'x',
+				speed: 10,
+				threshold: 10
+			},
+			zoom: {
+				enabled: true,
+				mode: 'x',
+				limits: {
+					max: 10,
+					min: 0.5
+				}
+			},
 	    }
 	});
+
+	swapDataSet(sets[0]);
+
 });
+function swapDataSet()
+{
+	var to = sets[$('#data-changer').val()];
+
+	myChart.options.scales.yAxes[0].scaleLabel.labelString = to.ylabel;
+	myChart.data.datasets[0] = to.dataset;
+	myChart.update();
+}
 
 function changeRange()
 {

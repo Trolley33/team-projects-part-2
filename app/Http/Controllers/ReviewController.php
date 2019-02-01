@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Job;
+use App\Equipment;
 use App\Reassignments;
 
 class ReviewController extends Controller
@@ -52,7 +53,22 @@ class ReviewController extends Controller
 
     public function review_equipment ()
     {
-        
+        if (PagesController::hasAccess(3))
+        {
+            $equip = Equipment::all();
+
+            $data = array(
+                'title'=>'Review Equipment',
+                'desc'=>'Select Equipment to Review',
+                'equipment'=>$equip,
+                'links'=>PagesController::getAnalystLinks(),
+                'active'=>'Review'
+            );
+
+            return view('review.equipment.index')->with($data);
+        }
+
+        return redirect('/login')->with('error', 'Please log in first.');
     }
 
     public function review_software ()
@@ -76,12 +92,24 @@ class ReviewController extends Controller
                         ORDER BY YEARWEEK(resolved_problems.created_at);
                     "));
 
+                $tts = DB::select(DB::raw("
+                        SELECT YEARWEEK( resolved_problems.created_at) AS 'yw', (AVG(TIME_TO_SEC(TIMEDIFF(resolved_problems.created_at, problems.created_at))) / 60) AS 'count' FROM resolved_problems
+                        JOIN problems
+                        ON problems.id = resolved_problems.problem_id
+                        WHERE resolved_problems.solved_by = '". $id ."' 
+                        GROUP BY 
+                        YEARWEEK(resolved_problems.created_at)
+                        ORDER BY YEARWEEK(resolved_problems.created_at);
+                    "));
                 $resolved = $this->sql_to_json($rp);
+                $timeToSolve = $this->sql_to_json($tts);
+
                 $data = array(
                     'title'=>'Review Specialist',
                     'desc'=>'Currently Reviewing a Specialist',
                     'specialist'=>$specialist,
                     'solved'=>$resolved,
+                    'timeToSolve'=>$timeToSolve,
                     'links'=>PagesController::getAnalystLinks(),
                     'active'=>'Review'
                 );
