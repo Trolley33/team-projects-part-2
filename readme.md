@@ -14,7 +14,7 @@ Any changes made there should be reflected here (short of some log files).
 [Presentation Notes](https://docs.google.com/document/d/1jxY9o4sXIJEbjpOxexVy8Mop6APVvg3jnCnLRWSoI1k/edit?usp=sharing).
 
 # Deliverable 2 Documentation
-[Design Report](https://docs.google.com/document/d/1GnCbdIPNtMTis2uQ1nko3Zn0efKupmbbtM00PDJlLNU/edit#).
+[Design Report](https://docs.google.com/document/d/1GnCbdIPNtMTis2uQ1nko3Zn0efKupmbbtM00PDJlLNU/edit?usp=sharing).
 
 # Links
 [Website](http://35.246.24.174/).
