@@ -905,17 +905,13 @@ class ProblemController extends Controller
         $problem = Problem::find($id);
         if (!is_null($problem))
         {
-            if (PagesController::hasAccess(1))
+            if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
             {
                 $data = array(
                     'problem'=>$problem
                 );
 
                 return view('problems.solve_compact')->with($data);
-            }
-            if (PagesController::hasAccess(2))
-            {
-                
             }
             return redirect('login')->with('error', 'Please log in first.'); 
         }
@@ -931,7 +927,7 @@ class ProblemController extends Controller
                 'notes' => 'required'
             ]);
 
-            if (PagesController::hasAccess(1))
+            if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
             {
                 $solver = PagesController::getCurrentUser();
 
