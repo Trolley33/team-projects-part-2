@@ -4,7 +4,7 @@
 <div class="call_menu w3-center w3-padding w3-light-grey">
     <div>
         <div class="w3-padding-large w3-white">
-            <h2>Reviewing Specialist {{$specialist->forename}} {{$specialist->surname}}</h2>
+            <h2>Reviewing Software {{$software->name}}</h2>
             <hr />
             <div style="width: 600px; margin: auto;">
             	<select id="data-changer" onchange="swapDataSet()">
@@ -29,7 +29,8 @@ var sets = [];
 $(document).ready( function () 
 {
     var chart = $('#graph');
-    <?php
+
+	<?php
     	foreach ($datasets as $key => $value) {
     		echo "sets.push({";
     			echo "yLabel: '". $value['yLabel']."', ";

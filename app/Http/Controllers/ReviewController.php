@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Job;
 use App\Equipment;
+use App\Software;
 use App\Reassignments;
 
 class ReviewController extends Controller
@@ -24,6 +25,36 @@ class ReviewController extends Controller
     	}
 
     	return $points;
+    }
+
+    public function review ()
+    {
+        if (PagesController::hasAccess(3))
+        {
+            // Get all info about specialist, for graphing.
+            $datasets = array();
+
+            $rp = DB::select(DB::raw("
+                SELECT YEARWEEK( resolved_problems.created_at) AS 'yw', COUNT(*) AS 'count' FROM resolved_problems
+                GROUP BY 
+                yw
+                ORDER BY yw;
+            "));            
+
+            array_push($datasets, array('data' => $this->sql_to_json($rp), 'yLabel' => "Problems Solved Per Week", 'color' => 'rgb(30,128,128)'));
+
+             $data = array(
+                'title'=>'Review Activity',
+                'desc'=>'Review all activity',
+                'datasets'=>$datasets,
+                'links'=>PagesController::getAnalystLinks(),
+                'active'=>'Review'
+            );
+
+            return view('review.index')->with($data);
+        }
+
+        return redirect('/login')->with('error','Please log in first.');
     }
 
     public function review_specialists ()
@@ -48,7 +79,20 @@ class ReviewController extends Controller
 
     public function review_callers ()
     {
-        
+        if (PagesController::hasAccess(3))
+        {
+            $callers = User::join('jobs', 'users.job_id', '=', 'jobs.id')->where('jobs.access_level', '=', '0')->select('users.*')->get();
+
+            $data = array(
+                'title'=>'Review Caller',
+                'desc'=>'Select a Caller to Review',
+                'callers'=>$callers,
+                'links'=>PagesController::getAnalystLinks(),
+                'active'=>'Review'
+            );
+            return view('review.callers.index')->with($data);
+        }
+        return redirect('/login')->with('error', 'Please log in first.');
     }
 
     public function review_equipment ()
@@ -73,7 +117,22 @@ class ReviewController extends Controller
 
     public function review_software ()
     {
-        
+        if (PagesController::hasAccess(3))
+        {
+            $soft = Software::all();
+
+            $data = array(
+                'title'=>'Review Software',
+                'desc'=>'Select Software to Review',
+                'software'=>$soft,
+                'links'=>PagesController::getAnalystLinks(),
+                'active'=>'Review'
+            );
+
+            return view('review.software.index')->with($data);
+        }
+
+        return redirect('/login')->with('error', 'Please log in first.');
     }
 
     public function review_specialist ($id)
@@ -90,8 +149,8 @@ class ReviewController extends Controller
                         SELECT YEARWEEK( resolved_problems.created_at) AS 'yw', COUNT(*) AS 'count' FROM resolved_problems
                         WHERE resolved_problems.solved_by = '". $id ."' 
                         GROUP BY 
-                        YEARWEEK(resolved_problems.created_at)
-                        ORDER BY YEARWEEK(resolved_problems.created_at);
+                        yw
+                        ORDER BY yw;
                     "));
 
                 $tts = DB::select(DB::raw("
@@ -100,8 +159,8 @@ class ReviewController extends Controller
                         ON problems.id = resolved_problems.problem_id
                         WHERE resolved_problems.solved_by = '". $id ."' 
                         GROUP BY 
-                        YEARWEEK(resolved_problems.created_at)
-                        ORDER BY YEARWEEK(resolved_problems.created_at);
+                        yw
+                        ORDER BY yw;
                     "));
 
                 array_push($datasets, array('data' => $this->sql_to_json($rp), 'yLabel' => "Problems Solved Per Week", 'color' => 'rgb(30,128,128)'));
@@ -129,7 +188,41 @@ class ReviewController extends Controller
 
     public function review_caller ($id)
     {
-        
+         $caller = User::find($id);
+        if (!is_null($caller))
+        {
+            if (PagesController::hasAccess(3))
+            {
+                // Get all info about caller, for graphing.
+                $datasets = array();
+
+                $rp = DB::select(DB::raw("
+                        SELECT YEARWEEK(calls.created_at) AS 'yw', COUNT(*) AS 'count' FROM calls
+                        WHERE calls.caller_id = '". $id ."' 
+                        GROUP BY yw
+                        ORDER BY yw;
+                    "));
+
+                array_push($datasets, array('data' => $this->sql_to_json($rp), 'yLabel' => "Calls Made Per Week", 'color' => 'rgb(155,120,50)'));
+
+
+                $data = array(
+                    'title'=>'Review Caller',
+                    'desc'=>'Currently Reviewing a Caller',
+                    'caller'=>$caller,
+                    'datasets'=>$datasets,
+                    'links'=>PagesController::getAnalystLinks(),
+                    'active'=>'Review'
+                );
+
+                return view('review.callers.show')->with($data);
+            }
+
+            return redirect('/login')->with('error', 'Please log in first.');
+
+            }
+
+        return redirect('/review/callers')->with('error', 'Sorry, something went wrong.');
     }
 
     public function review_equipment_single ($id)
@@ -172,7 +265,40 @@ class ReviewController extends Controller
 
     public function review_software_single ($id)
     {
-        
+        $soft = Software::find($id);
+        if (!is_null($soft))
+        {
+            if (PagesController::hasAccess(3))
+            {
+                // Get all info about software, for graphing.
+                $datasets = array();
+                $i = DB::select(DB::raw("
+                        SELECT YEARWEEK( affected_software.created_at) AS 'yw', COUNT(*) AS 'count' FROM affected_software
+                        WHERE affected_software.software_id = '". $id ."' 
+                        GROUP BY 
+                        yw
+                        ORDER BY yw;
+                    "));
+
+                array_push($datasets, array('data' => $this->sql_to_json($i), 'yLabel' => "Related Problems", 'color' => 'rgb(30,155,155)'));
+
+                $data = array(
+                    'title'=>'Review Software',
+                    'desc'=>'Currently Reviewing Software',
+                    'software'=>$soft,
+                    'datasets'=>$datasets,
+                    'links'=>PagesController::getAnalystLinks(),
+                    'active'=>'Review'
+                );
+
+                return view('review.software.show')->with($data);
+            }
+
+            return redirect('/login')->with('error', 'Please log in first.');
+
+            }
+
+        return redirect('/review/software')->with('error', 'Sorry, something went wrong.');
     }
 
 }

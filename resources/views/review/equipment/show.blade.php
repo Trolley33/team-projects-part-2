@@ -9,7 +9,7 @@
             <div style="width: 600px; margin: auto;">
             	<select id="data-changer" onchange="swapDataSet()">
             		@foreach ($datasets as $i=>$d)
-            			<option value="{{$i}}" selected>{{$d['yLabel']}}</option>
+            			<option value="{{$i}}">{{$d['yLabel']}}</option>
             		@endforeach
             	</select>
             	<br />

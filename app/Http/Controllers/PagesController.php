@@ -46,7 +46,8 @@ class PagesController extends Controller
         // href = which main page to redirect to, text = what to display.
         return [
             ['href'=>'back','text'=>'back'],
-            ['href'=>'analyst','text'=>'Home']
+            ['href'=>'analyst','text'=>'Home'],
+            ['href'=>'review', 'text'=>'Review']
         ];
     }
     // Function that checks if the currently signed in user has the access level passed as a parameter. Returns true/false.
