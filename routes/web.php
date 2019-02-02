@@ -34,6 +34,7 @@ Route::get('/specialist/', 'PagesController@specialist_homepage');
 // Analyst pages.
 Route::get('/analyst/', 'PagesController@analyst_homepage');
 
+Route::get('/review', 'ReviewController@review');
 Route::get('/review/specialists', 'ReviewController@review_specialists');
 Route::get('/review/callers', 'ReviewController@review_callers');
 Route::get('/review/equipment', 'ReviewController@review_equipment');

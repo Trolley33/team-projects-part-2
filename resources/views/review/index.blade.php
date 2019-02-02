@@ -7,6 +7,7 @@
             <h2>Review Activity</h2>
             <hr />
             <div style="width: 600px; margin: auto;">
+            	<h2>Overview</h2>
             	<select id="data-changer" onchange="swapDataSet()">
             		@foreach ($datasets as $i=>$d)
             			<option value="{{$i}}">{{$d['yLabel']}}</option>
@@ -15,6 +16,10 @@
             	<br />
             	<input id="start" type="date" /> - <input id="end" type="date" /> <button onclick="changeRange()">↺</button>
             	<canvas width="600" height="300" id='graph'>
+            	</canvas>
+            	<hr />
+            	<h2>Most Common Problem Types</h2>
+            	<canvas width="600" height="300" id='graph2'>
             	</canvas>
         	</div>
         	</div>
@@ -29,6 +34,7 @@ var sets = [];
 $(document).ready( function () 
 {
     var chart = $('#graph');
+    var chart2 = $('#graph2');
     <?php
     	foreach ($datasets as $key => $value) {
     		echo "sets.push({";
@@ -91,7 +97,51 @@ $(document).ready( function ()
 
 	swapDataSet(sets[0]);
 
+	var myChart2 = new Chart(chart2, {
+		type: 'bar',
+		data: {
+			labels : <?php echo json_encode(array_column($most_pt, 'x')); ?>,
+		    datasets : [
+			    {
+			    	data: <?php echo json_encode(array_column($most_pt, 'y')); ?>,
+			    	label: '',
+			    	backgroundColor: makeRandomColors(<?php echo count($most_pt); ?>)
+			    }
+		    ]
+		},
+		options: {
+	        scales: {
+	            xAxes: [{
+				    barPercentage: 1.0,
+				    categoryPercentage: 1.0
+	            }],
+	            yAxes: [{
+	            	scaleLabel: {
+	            		display: true,
+	            		labelString: 'Logged Problems'
+	            	},
+	            	ticks: {
+	            		beginAtZero: true
+	            	}
+	            }]
+	        }
+	    }
+	});
+
 });
+
+function makeRandomColors (n)
+{
+	colors = []
+	for (var i = 0; i < n; i++) 
+	{
+		var r = Math.floor((Math.random() * 255) + 1);
+		var g = Math.floor((Math.random() * 255) + 1);
+		var b = Math.floor((Math.random() * 255) + 1);
+		colors.push('rgb(' + r + "," + g + "," + b + ")");
+	}
+	return colors;
+}
 function swapDataSet()
 {
 	var to = sets[$('#data-changer').val()];

@@ -12,15 +12,22 @@ use App\Reassignments;
 
 class ReviewController extends Controller
 {
-    public static function sql_to_json ($result)
+    public static function sql_to_json ($result, $mode)
     {
     	$points = array();
     	foreach ($result as $row) 
     	{
     		$point = array();
-            $yw = strval($row->yw);
-    		$point['x'] = sprintf('%04d-W%02d-7', substr($yw, 0, 4), substr($yw, 4, 6));
-    		$point['y'] = $row->count;
+            if ($mode == 0)
+            {
+                $yw = strval($row->yw);
+        		$point['x'] = sprintf('%04d-W%02d-7', substr($yw, 0, 4), substr($yw, 4, 6));
+        		$point['y'] = $row->count;
+            }
+            elseif ($mode == 1) {
+                $point['x'] = $row->label;
+                $point['y'] = $row->count;
+            }
     		array_push($points, $point);
     	}
 
@@ -34,19 +41,50 @@ class ReviewController extends Controller
             // Get all info about specialist, for graphing.
             $datasets = array();
 
+            // Problems Placed
+            $pp = DB::select(DB::raw("
+                SELECT YEARWEEK(problems.created_at) AS 'yw', COUNT(*) AS 'count' FROM problems
+                GROUP BY 
+                yw
+                ORDER BY yw;
+            "));
+            // Resolved Problems
             $rp = DB::select(DB::raw("
                 SELECT YEARWEEK( resolved_problems.created_at) AS 'yw', COUNT(*) AS 'count' FROM resolved_problems
                 GROUP BY 
                 yw
                 ORDER BY yw;
-            "));            
+            "));
+            // Calls Placed
+            $cp = DB::select(DB::raw("
+                SELECT YEARWEEK( calls.created_at) AS 'yw', COUNT(*) AS 'count' FROM calls
+                GROUP BY 
+                yw
+                ORDER BY yw;
+            "));
 
-            array_push($datasets, array('data' => $this->sql_to_json($rp), 'yLabel' => "Problems Solved Per Week", 'color' => 'rgb(30,128,128)'));
+            $pt = DB::select(DB::raw("
+                SELECT parent.description as 'label', COUNT(*) AS 'count' FROM problem_types parent
+                LEFT JOIN problem_types pt
+                ON pt.parent = parent.id
+                JOIN problems
+                ON (problems.problem_type = pt.id) OR (problems.problem_type = parent.id)
+                WHERE parent.parent = -1
+                GROUP BY parent.id
+                ORDER BY count DESC;
+            "));
+
+            array_push($datasets, array('data' => $this->sql_to_json($pp, 0), 'yLabel' => "Problems Placed Per Week", 'color' => 'rgb(230,90,90)'));
+            array_push($datasets, array('data' => $this->sql_to_json($rp, 0), 'yLabel' => "Problems Solved Per Week", 'color' => 'rgb(30,128,128)'));
+            array_push($datasets, array('data' => $this->sql_to_json($cp, 0), 'yLabel' => "Calls Placed Per Week", 'color' => 'rgb(60,230,60)'));
+
+            $most_pt = $this->sql_to_json($pt, 1);
 
              $data = array(
                 'title'=>'Review Activity',
                 'desc'=>'Review all activity',
                 'datasets'=>$datasets,
+                'most_pt'=>$most_pt,
                 'links'=>PagesController::getAnalystLinks(),
                 'active'=>'Review'
             );
@@ -163,9 +201,9 @@ class ReviewController extends Controller
                         ORDER BY yw;
                     "));
 
-                array_push($datasets, array('data' => $this->sql_to_json($rp), 'yLabel' => "Problems Solved Per Week", 'color' => 'rgb(30,128,128)'));
+                array_push($datasets, array('data' => $this->sql_to_json($rp, 0), 'yLabel' => "Problems Solved Per Week", 'color' => 'rgb(30,128,128)'));
 
-                array_push($datasets, array('data' => $this->sql_to_json($tts), 'yLabel' => "AVG Time to Solve Problems (Minutes)", 'color' => 'rgb(191, 53, 84)'));
+                array_push($datasets, array('data' => $this->sql_to_json($tts, 0), 'yLabel' => "AVG Time to Solve Problems (Minutes)", 'color' => 'rgb(191, 53, 84)'));
 
                 $data = array(
                     'title'=>'Review Specialist',
@@ -203,7 +241,7 @@ class ReviewController extends Controller
                         ORDER BY yw;
                     "));
 
-                array_push($datasets, array('data' => $this->sql_to_json($rp), 'yLabel' => "Calls Made Per Week", 'color' => 'rgb(155,120,50)'));
+                array_push($datasets, array('data' => $this->sql_to_json($rp, 0), 'yLabel' => "Calls Made Per Week", 'color' => 'rgb(155,120,50)'));
 
 
                 $data = array(
@@ -242,7 +280,7 @@ class ReviewController extends Controller
                         ORDER BY yw;
                     "));
 
-                array_push($datasets, array('data' => $this->sql_to_json($i), 'yLabel' => "Related Problems", 'color' => 'rgb(155,30,155)'));
+                array_push($datasets, array('data' => $this->sql_to_json($i, 0), 'yLabel' => "Related Problems", 'color' => 'rgb(155,30,155)'));
 
                 $data = array(
                     'title'=>'Review Equipment',
@@ -280,7 +318,7 @@ class ReviewController extends Controller
                         ORDER BY yw;
                     "));
 
-                array_push($datasets, array('data' => $this->sql_to_json($i), 'yLabel' => "Related Problems", 'color' => 'rgb(30,155,155)'));
+                array_push($datasets, array('data' => $this->sql_to_json($i, 0), 'yLabel' => "Related Problems", 'color' => 'rgb(30,155,155)'));
 
                 $data = array(
                     'title'=>'Review Software',
