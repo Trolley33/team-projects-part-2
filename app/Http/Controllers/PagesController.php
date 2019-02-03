@@ -267,9 +267,11 @@ class PagesController extends Controller
         // If user allowed to access this page.
         if (PagesController::hasAccess(2))
         {
+            $user = PagesController::getCurrentUser();
             $data = array(
                 'title'=> "Specialist Homepage",
                 'desc'=>"Please select a task.",
+                'user'=>$user,
                 'links'=>PagesController::getSpecialistLinks(),
                 'active'=>'Home'
             );

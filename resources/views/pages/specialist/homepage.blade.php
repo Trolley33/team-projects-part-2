@@ -14,7 +14,7 @@
                     Book absence
                 </div>
             </a><br />
-            <a class="blank todo" href="">
+            <a class="blank" href="/users/{{$user->id}}/edit_specialism">
                 <div class="bigbutton w3-card w3-button w3-row">
                     Edit Specialism
                 </div>

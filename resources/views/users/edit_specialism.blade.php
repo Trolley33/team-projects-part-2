@@ -32,7 +32,6 @@
     </div>
     </form>
 </div>
-
 <div id="myModal" class="modal">
 </div>
 <script>
@@ -42,7 +41,8 @@ var modal;
 $(document).ready( function () 
 {
     var user = <?php echo json_encode($user); ?>;
-
+    var pt = <?php echo $pt_id; ?>;
+    var page = 0;
 
     $('.selectBox').click(function ()
     {
@@ -50,36 +50,20 @@ $(document).ready( function ()
     	$('#addSpecialism').prop('disabled', false);
     });
 
-
-	modal = $('#myModal');
-
-	$(".modalOpener").click(function() {
-		$.get(
-		    $(this).attr('value'),
-		    function (data) {
-		        modal.html(data);
-		        $('#myModal div').first().prepend('<span onclick="closeModal()" class="close">&times;</span>')
-		    }
-		);
-
-  		modal.show();
-	});
-
-	$(window).click(function(event) {
-		var target = $(event.target);
-
-		if (!target.hasClass('modalOpener'))
-		{	
-			if (target.closest('.modal div').length == 0)
-			{
-				closeModal();
-			}
-		}
-	});
-
 	$('input:radio[name="ptype"]').change(
     	function(){
         $('#addSpecialism').prop('disabled', false);
+    });
+
+    $('input:radio[name="ptype"]').each(function (i, r)
+    {
+      var radio = $(r);
+      if (radio.val() == pt)
+      {
+        page = i/10;
+        radio.prop('checked', true);
+        $('#addSpecialism').prop('disabled', false);
+      }
     });
 
     $('#addSpecialismForm').submit(function ()
@@ -91,14 +75,10 @@ $(document).ready( function ()
     var table = $('#problem-table').DataTable();
     // If we provide some sort of search term through the redirect, search it here.
     var search = "<?php if (session('search')) echo session('search'); ?>";
-    table.search(search).draw();
+    table.page(Math.floor(page)).draw('page');
+    // table.search(search).draw();
 });
 
-function closeModal ()
-{
-	modal.html('');
-	modal.hide();
-}
 </script>
 
 @endsection

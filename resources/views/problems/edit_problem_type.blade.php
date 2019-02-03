@@ -71,7 +71,7 @@ $(document).ready( function ()
     // If we provide some sort of search term through the redirect, search it here.
     var search = "<?php if (session('search')) echo session('search'); ?>";
     table.page(Math.floor(page)).draw('page');
-    table.search(search).draw();
+    // table.search(search).draw();
 });
 
 </script>

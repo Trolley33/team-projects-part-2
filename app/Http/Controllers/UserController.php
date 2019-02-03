@@ -233,42 +233,98 @@ class UserController extends Controller
 
     public function edit_specialism ($id)
     {
-        if (PagesController::hasAccess(1))
+        $user = User::find($id);
+        if (!is_null($user))
         {
-            $problem_types = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('problem_types.*, IFNULL(parents.description,0) as parent_description')->get();
-            
-            $user = User::find($id);
+            $specialism = Speciality::where('specialist_id', '=', $user->id)->first();
 
-            $data = array(
-                'title' => "Change User Specialism",
-                'desc' => " ",
-                'problem_types' => $problem_types,
-                'user'=>$user,
-                'links' => PagesController::getOperatorLinks(),
-                'active' => 'Users'
-            );
+            $pt_id = null;
+            if (!is_null($specialism))
+            {
+                $pt_id = $specialism->problem_type_id;
+            }
 
-            return view('users.edit_specialism')->with($data);
+
+            if (PagesController::hasAccess(1))
+            {
+                $problem_types = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('problem_types.*, IFNULL(parents.description,0) as parent_description')->get();
+                $data = array(
+                    'title' => "Change User Specialism",
+                    'desc' => " ",
+                    'problem_types' => $problem_types,
+                    'user'=>$user,
+                    'pt_id'=>$pt_id,
+                    'links' => PagesController::getOperatorLinks(),
+                    'active' => 'Users'
+                );
+
+                return view('users.edit_specialism')->with($data);
+            }
+            elseif (PagesController::hasAccess(2)) {
+                $me = PagesController::getCurrentUser();
+                if ($me->id == $user->id)
+                {
+                    $problem_types = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('problem_types.*, IFNULL(parents.description,0) as parent_description')->get();
+
+                    $data = array(
+                        'title' => "Change User Specialism",
+                        'desc' => " ",
+                        'problem_types' => $problem_types,
+                        'user'=>$user,
+                        'pt_id'=>$pt_id,
+                        'links' => PagesController::getSpecialistLinks(),
+                        'active' => 'Users'
+                    );
+
+                    return view('users.edit_specialism')->with($data);
+                    }
+                return redirect('/')->with('error', 'Sorry, something went wrong.');
+            }
+            return redirect('login')->with('error', 'Please log in first.');
         }
-        return redirect('login')->with('error', 'Please log in first.');
+        return redirect('/')->with('error', 'Sorry, something went wrong.');
     }
 
     public function add_specialism ($user_id, $pt_id)
     {
-        if (PagesController::hasAccess(1))
+        $user = User::find($user_id);
+        $pt = ProblemType::find($pt_id);
+        if (!is_null($user) && !is_null($pt))
         {
-            $specialism = Speciality::where('specialist_id', '=', $user_id)->get()->first();
-            if (is_null($specialism))
+            if (PagesController::hasAccess(1))
             {
-                $specialism = new Speciality();
-            }
-            $specialism->specialist_id = $user_id;
-            $specialism->problem_type_id = $pt_id;
-            $specialism->save();
+                $specialism = Speciality::where('specialist_id', '=', $user_id)->first();
+                if (is_null($specialism))
+                {
+                    $specialism = new Speciality();
+                }
+                $specialism->specialist_id = $user_id;
+                $specialism->problem_type_id = $pt_id;
+                $specialism->save();
 
-            return redirect('/users/'.$user_id)->with('Success', 'Speciality Added');
+                return redirect('/users/'.$user_id)->with('Success', 'Speciality Added');
+            }
+            if (PagesController::hasAccess(2))
+            {
+                $me = PagesController::getCurrentUser();
+                if ($me->id == $user->id)
+                {
+                    $specialism = Speciality::where('specialist_id', '=', $user_id)->first();
+                    if (is_null($specialism))
+                    {
+                        $specialism = new Speciality();
+                    }
+                    $specialism->specialist_id = $user_id;
+                    $specialism->problem_type_id = $pt_id;
+                    $specialism->save();
+
+                    return redirect('/specialist')->with('Success', 'Speciality Changed');
+                }
+                return redirect('/specialist')->with('error', 'Sorry, something went wrong.');
+            }
+            return redirect('/login')->with('error', 'Please log in first.');
         }
-        return redirect('login')->with('error', 'Please log in first.');
+        return redirect('/')->with('error', 'Sorry, something went wrong.');
     }
 
     /**
