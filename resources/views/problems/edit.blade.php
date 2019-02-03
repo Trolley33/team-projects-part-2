@@ -8,6 +8,10 @@
                 <table>
                     <tbody>
                         <tr class="w3-hover-light-grey">
+                            <th>Created At</th>
+                            <td>{{$problem->created_at}}</td>
+                        </tr>
+                        <tr class="w3-hover-light-grey">
                             <th>Problem Number</th>
                             <td class="editbutton" onclick="window.location.href= '/problems/{{$problem->id}}'">{{sprintf('%04d', $problem->id)}}<span class="icon">View</span></td>
                         </tr>
@@ -23,11 +27,11 @@
                         </tr>
                         <tr class="w3-hover-light-grey">
                             <th>Description</th>
-                            <td>{{Form::text('desc', $problem->description, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Description'])}}</td>
+                            <td>{{Form::text('desc', $problem->description, ['class'=>'w3-input w3-border w3-round', 'placeholder'=>'Description'])}}</td>
                         </tr>
                         <tr class="w3-hover-light-grey">
                             <th>Notes</th>
-                            <td>{{Form::textarea('notes', $problem->notes, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Notes'])}}</td>
+                            <td>{{Form::textarea('notes', $problem->notes, ['class'=>'w3-input w3-border w3-round', 'placeholder'=>'Notes'])}}</td>
                         </tr>
                         <tr>
                             <th>Importance</th>

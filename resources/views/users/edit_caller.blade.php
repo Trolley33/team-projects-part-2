@@ -11,15 +11,15 @@
                 <tbody>
                     <tr class="w3-hover-light-grey">
                         <th>Employee ID</th>
-                        <td>{{Form::number('empID', sprintf('%04d', $user->employee_id), ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->employee_id])}}</td>
+                        <td>{{Form::number('empID', sprintf('%04d', $user->employee_id), ['class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->employee_id])}}</td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Forename</th>
-                        <td>{{Form::text('firstName', $user->forename, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->forename])}}</td>
+                        <td>{{Form::text('firstName', $user->forename, ['class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->forename])}}</td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Surname</th>
-                        <td>{{Form::text('lastName', $user->surname, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->surname])}}</td>
+                        <td>{{Form::text('lastName', $user->surname, ['class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->surname])}}</td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Department</th>
@@ -33,7 +33,7 @@
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Phone Number</th>
-                        <td>{{Form::tel('phone', $user->phone_number, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'$user->phone_number', 'pattern'=>'[0-9]{11}', 'oninvalid'=>"this.setCustomValidity('Please enter a valid phone UK number (11 consecutive numbers).')",
+                        <td>{{Form::tel('phone', $user->phone_number, ['class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->phone_number, 'pattern'=>'[0-9]{11}', 'oninvalid'=>"this.setCustomValidity('Please enter a valid phone UK number (11 consecutive numbers).')",
     'oninput'=>"this.setCustomValidity('')"])}}</td>
                     </tr>
                 </tbody>

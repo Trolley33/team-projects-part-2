@@ -10,9 +10,17 @@
 
                 <tbody>
                     <tr class="w3-hover-light-grey">
-                            <th>Reason</th>
-                            <td>{{Form::textarea('reason', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Reason', 'style'=>'resize: none;'])}}</td>
-                        </tr>
+                        <th>Problem Description</th>
+                        <td>{{$problem->description}}</td>
+                    </tr>
+                    <tr class="w3-hover-light-grey">
+                        <th>Problem Notes</th>
+                        <td>{{$problem->notes}}</td>
+                    </tr>
+                    <tr class="w3-hover-light-grey">
+                        <th>Reason</th>
+                        <td>{{Form::textarea('reason', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Reason', 'style'=>'resize: none;'])}}</td>
+                    </tr>
                 </tbody>
             </table>
             {{Form::submit('Yes', ['class'=> "bigbutton w3-card w3-button w3-row w3-green"])}}

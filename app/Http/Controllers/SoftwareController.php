@@ -165,32 +165,40 @@ class SoftwareController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // If user is allowed to view this page.
         if (PagesController::hasAccess(1))
         {            
-            $this->validate($request, [
-                'name' => 'required',
-                'desc' => 'required'
-            ]);
-
-            $result = Software::where('name', $request->input('name'))->where('id', '!=', $id)->get();
-
-            if (count($result) == 0)
+            // Find software using ID supplied.
+            $software = Software::find($id);
+            if (!is_null($software))
             {
-                $newSoft = Software::find($id);
-                $newSoft->name = $request->input('name');
-                $newSoft->description = $request->input('desc');
-                $newSoft->save();
+                // Get info, or just set back to default values.
+                // ($x ?? $y assigns $y iff $x is null)
+                $name = $request->input('name') ?? $software->name;
+                $desc = $request->input('desc') ?? $software->description;
 
-                return redirect('/software')->with('success', 'Software Updated');
+                // Check for software with the same serial number inputted (not including this piece of software).
+                $result = Software::where('name', $name)->where('id', '!=', $id)->get();
+                if (count($result) == 0)
+                {
+                    $software->name = $name;
+                    $software->description = $desc;
+                    $software->save();
+
+                    return redirect('/software')->with('success', 'Software Updated');
+                }
+
+                // If duplicate serial no. show user the existing entry using 'search'.
+                $data = array(
+                    'error'=>'Duplicate Name',
+                    'search'=>$request->input('name')
+                );
+                return redirect('/software')->with($data);
             }
+            return redirect('/software')->with('Software not found.');
 
-            $data = array(
-                'error'=>'Duplicate Name',
-                'search'=>$request->input('name')
-            );
-
-            return redirect('/software')->with($data);
         }
+        // No access redirects to login.
         return redirect('login')->with('error', 'Please log in first.');
     }
 

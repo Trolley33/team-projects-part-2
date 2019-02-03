@@ -10,11 +10,11 @@
                 <tbody>
                     <tr class="w3-hover-light-grey">
                         <th>Name</th>
-                        <td>{{Form::text('name', $software->name, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Name'])}}</td>
+                        <td>{{Form::text('name', $software->name, ['class'=>'w3-input w3-border w3-round', 'placeholder'=>'Name'])}}</td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Description</th>
-                        <td>{{Form::text('desc', $software->description, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Description'])}}</td>
+                        <td>{{Form::text('desc', $software->description, ['class'=>'w3-input w3-border w3-round', 'placeholder'=>'Description'])}}</td>
                     </tr>
                 </tbody>
             </table>

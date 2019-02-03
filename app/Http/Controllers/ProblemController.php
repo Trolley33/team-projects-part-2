@@ -1018,15 +1018,15 @@ class ProblemController extends Controller
             if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
             {            
                 $this->validate($request, [
-                    'desc' => 'required',
-                    'notes' => 'required',
                     'solved' => 'required',
-                    'importance' => 'required'
                 ]);
+                $desc = $request->input('desc') ?? $problem->description;
+                $notes = $request->input('notes') ?? $problem->notes;
+                $importance = $request->input('importance') ?? $problem->importance;
                 // Find current problem, and change the fields.
-                $problem->description = $request->input('desc');
-                $problem->notes = $request->input('notes');
-                $problem->importance = $request->input('importance');
+                $problem->description = $desc;
+                $problem->notes = $notes;
+                $problem->importance = $importance;
                 $problem->save();
 
                 

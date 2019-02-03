@@ -121,7 +121,7 @@ class ReviewController extends Controller
     {
         if (PagesController::hasAccess(3))
         {
-            $callers = User::join('jobs', 'users.job_id', '=', 'jobs.id')->where('jobs.access_level', '=', '0')->select('users.*')->get();
+            $callers = User::all();
 
             $data = array(
                 'title'=>'Review Caller',

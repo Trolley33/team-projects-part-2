@@ -8,6 +8,10 @@
                 <table>
                     <tbody>
                         <tr class="w3-hover-light-grey">
+                            <th>Created At</th>
+                            <td>{{$problem->created_at}}</td>
+                        </tr>
+                        <tr class="w3-hover-light-grey">
                             <th>Problem Number</th>
                             <td>{{sprintf('%04d', $problem->id)}}</td>
                         </tr>
@@ -37,8 +41,8 @@
                                 <span class="icon">View</span></td>
                             </tr>
                             @else
-                                <td>
-                                    None
+                                <td class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}/edit_specialist';">
+                                    None<span class="icon">Edit</span>
                                 </td>
                             @endif
                         @if (is_null($resolved))

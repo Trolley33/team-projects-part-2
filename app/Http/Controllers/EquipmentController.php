@@ -183,38 +183,37 @@ class EquipmentController extends Controller
         // If user is allowed to view this page.
         if (PagesController::hasAccess(1))
         {            
-            // Validate required data has been submitted.
-            $this->validate($request, [
-                'serialNumber' => 'required',
-                'desc' => 'required',
-                'model' => 'required',
-            ]);
-            // Check for equipment with the same serial number inputted (not including this piece of equipment).
-            $equip = Equipment::where('serial_number', $request->input('serialNumber'))->where('id', '!=', $id)->get();
-            if (count($equip) == 0)
+            // Find equipment using ID supplied.
+            $equipment = Equipment::find($id);
+            if (!is_null($equipment))
             {
-                // Find equipment using ID supplied.
-                $equipment = Equipment::find($id);
-                if (!is_null($equipment))
+                // Get info, or just set back to default values.
+                // ($x ?? $y assigns $y iff $x is null)
+                $sn = $request->input('serialNumber') ?? $equipment->serial_number;
+                $desc = $request->input('desc') ?? $equipment->description;
+                $model = $request->input('model') ?? $equipment->model;
+
+                // Check for equipment with the same serial number inputted (not including this piece of equipment).
+                $result = Equipment::where('serial_number', $sn)->where('id', '!=', $id)->get();
+                if (count($result) == 0)
                 {
-                    $equipment->serial_number = $request->input('serialNumber');
-                    $equipment->description = $request->input('desc');
-                    $equipment->model = $request->input('model');
+                    $equipment->serial_number = $sn;
+                    $equipment->description = $desc;
+                    $equipment->model = $model;
                     $equipment->save();
 
                     return redirect('/equipment')->with('success', 'Equipment Updated');
                 }
 
-                return redirect('/equipment')->with('Equipment not found');
+                // If duplicate serial no. show user the existing entry using 'search'.
+                $data = array(
+                    'error'=>'Duplicate Serial Number',
+                    'search'=>$sn
+                );
+                return redirect('/equipment')->with($data);
             }
+            return redirect('/equipment')->with('Equipment not found');
 
-            // If duplicate serial no. show user the existing entry using 'search'.
-            $data = array(
-                'error'=>'Duplicate Serial Number',
-                'search'=>$request->input('serialNumber')
-            );
-
-            return redirect('/equipment')->with($data);
         }
         // No access redirects to login.
         return redirect('login')->with('error', 'Please log in first.');

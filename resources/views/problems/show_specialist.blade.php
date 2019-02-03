@@ -9,6 +9,10 @@
                 <table>
                     <tbody>
                         <tr class="w3-hover-light-grey">
+                            <th>Created At</th>
+                            <td>{{$problem->created_at}}</td>
+                        </tr>
+                        <tr class="w3-hover-light-grey">
                             <th>Problem Number</th>
                             <td>{{sprintf('%04d', $problem->id)}}</td>
                         </tr>
@@ -32,8 +36,8 @@
                         <tr class="w3-hover-light-grey">
                             <th>Assigned Helper</th>
                             @if (!is_null($specialist))
-                            <td>
-                                {{$specialist->forename}} {{$specialist->surname}}</td>
+                            <td title="Edit" class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}/edit_specialist';">
+                                {{$specialist->forename}} {{$specialist->surname}}<span class="icon">Edit</span></td>
                             </tr>
                             @else
                                 <td>

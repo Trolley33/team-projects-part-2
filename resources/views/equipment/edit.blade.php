@@ -10,15 +10,15 @@
                 <tbody>
                     <tr class="w3-hover-light-grey">
                         <th>Serial Number</th>
-                        <td>{{Form::text('serialNumber', $equipment->serial_number, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Serial No.'])}}</td>
+                        <td>{{Form::text('serialNumber', $equipment->serial_number, ['class'=>'w3-input w3-border w3-round', 'placeholder'=>'Serial No.'])}}</td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Description</th>
-                        <td>{{Form::text('desc', $equipment->description, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Description'])}}</td>
+                        <td>{{Form::text('desc', $equipment->description, ['class'=>'w3-input w3-border w3-round', 'placeholder'=>'Description'])}}</td>
                     </tr>
                     <tr class="w3-hover-light-grey">
                         <th>Model</th>
-                        <td>{{Form::text('model', $equipment->model, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Model'])}}</td>
+                        <td>{{Form::text('model', $equipment->model, ['class'=>'w3-input w3-border w3-round', 'placeholder'=>'Model'])}}</td>
                     </tr>
                 </tbody>
             </table>
