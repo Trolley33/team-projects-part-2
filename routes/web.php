@@ -39,11 +39,13 @@ Route::get('/review/specialists', 'ReviewController@review_specialists');
 Route::get('/review/callers', 'ReviewController@review_callers');
 Route::get('/review/equipment', 'ReviewController@review_equipment');
 Route::get('/review/software', 'ReviewController@review_software');
+Route::get('/review/problem_types', 'ReviewController@review_problem_types');
 
 Route::get('/review/specialists/{id}', 'ReviewController@review_specialist');
 Route::get('/review/callers/{id}', 'ReviewController@review_caller');
 Route::get('/review/equipment/{id}', 'ReviewController@review_equipment_single');
 Route::get('/review/software/{id}', 'ReviewController@review_software_single');
+Route::get('/review/problem_types/{id}', 'ReviewController@review_problem_type');
 
 // Problem pages.
 Route::get   ('/problems/create','ProblemController@create')->name('problems.create');

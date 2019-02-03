@@ -8,6 +8,8 @@ use App\User;
 use App\Job;
 use App\Equipment;
 use App\Software;
+use App\Call;
+use App\ProblemType;
 use App\Reassignments;
 
 class ReviewController extends Controller
@@ -173,6 +175,26 @@ class ReviewController extends Controller
         return redirect('/login')->with('error', 'Please log in first.');
     }
 
+    public function review_problem_types ()
+    {
+        if (PagesController::hasAccess(3))
+        {
+            $problem_type_table = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('problem_types.*, IFNULL(parents.description,0) as parent_description')->get();
+
+            $data = array(
+                'title'=>'Review Problem Types',
+                'desc'=>'Select Problem Types to Review',
+                'types'=>$problem_type_table,
+                'links'=>PagesController::getAnalystLinks(),
+                'active'=>'Review'
+            );
+
+            return view('review.problem_types.index')->with($data);
+        }
+
+        return redirect('/login')->with('error', 'Please log in first.');
+    }
+
     public function review_specialist ($id)
     {
         $specialist = User::find($id);
@@ -226,7 +248,7 @@ class ReviewController extends Controller
 
     public function review_caller ($id)
     {
-         $caller = User::find($id);
+        $caller = User::find($id);
         if (!is_null($caller))
         {
             if (PagesController::hasAccess(3))
@@ -243,11 +265,13 @@ class ReviewController extends Controller
 
                 array_push($datasets, array('data' => $this->sql_to_json($rp, 0), 'yLabel' => "Calls Made Per Week", 'color' => 'rgb(155,120,50)'));
 
+                $problem_type_table = Call::join('problems', 'problems.id', '=', 'calls.problem_id')->join('problem_types', 'problem_types.id', '=', 'problems.problem_type')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('problem_types.*, IFNULL(parents.description,0) as parent_description, COUNT(problem_types.id) as count')->where('calls.caller_id', '=', $id)->groupBy('problem_types.id')->orderBy('count', 'desc')->get();
 
                 $data = array(
                     'title'=>'Review Caller',
                     'desc'=>'Currently Reviewing a Caller',
                     'caller'=>$caller,
+                    'types'=>$problem_type_table,
                     'datasets'=>$datasets,
                     'links'=>PagesController::getAnalystLinks(),
                     'active'=>'Review'
@@ -337,6 +361,47 @@ class ReviewController extends Controller
             }
 
         return redirect('/review/software')->with('error', 'Sorry, something went wrong.');
+    }
+
+    public function review_problem_type ($id)
+    {
+        $pt = ProblemType::find($id);
+        if (!is_null($pt))
+        {
+            if (PagesController::hasAccess(3))
+            {
+                 // Get all info about software, for graphing.
+                $datasets = array();
+                $i = DB::select(DB::raw("
+                        SELECT YEARWEEK(problems.created_at) AS 'yw', COUNT(*) AS 'count' FROM problems
+                        WHERE problems.problem_type = '". $id ."' 
+                        GROUP BY 
+                        yw
+                        ORDER BY yw;
+                    "));
+
+                array_push($datasets, array('data' => $this->sql_to_json($i, 0), 'yLabel' => "Problems Logged", 'color' => 'rgb(50,100,155)'));
+
+
+                $parent = ProblemType::find($pt->parent);
+
+                $data = array(
+                    'title'=>'Review Problem Type',
+                    'desc'=>'Currently Reviewing Problem Type',
+                    'pt'=>$pt,
+                    'parent'=>$parent,
+                    'datasets'=>$datasets,
+                    'links'=>PagesController::getAnalystLinks(),
+                    'active'=>'Review'
+                );
+
+                return view('review.problem_types.show')->with($data);
+            }
+
+            return redirect('/login')->with('error', 'Please log in first.');
+        }
+
+        return redirect('/review/problem_types')->with('error', 'Sorry, something went wrong.');
     }
 
 }

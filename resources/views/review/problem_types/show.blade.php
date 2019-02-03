@@ -4,7 +4,12 @@
 <div class="call_menu w3-center w3-padding w3-light-grey">
     <div>
         <div class="w3-padding-large w3-white">
-            <h2>Reviewing Specialist {{$caller->forename}} {{$caller->surname}}</h2>
+            <h2>Reviewing Problem Type:
+            @if (!is_null($parent))
+				({{$parent->description}})
+			@endif
+			{{$pt->description}}
+			</h2>
             <hr />
             <div style="width: 600px; margin: auto;">
             	<select id="data-changer" onchange="swapDataSet()">
@@ -16,28 +21,6 @@
             	<input id="start" type="date" /> - <input id="end" type="date" /> <button onclick="changeRange()">↺</button>
             	<canvas width="600" height="300" id='graph'>
             	</canvas>
-            	<hr />
-            	<h3>Most Common Types of Problem</h3>
-            	<table id="pt-table" class="display cell-border stripe hover slidable" style="width:100%;">
-					<thead>
-                        <tr>
-                            <th>Problem Type</th><th>Number of Calls Related to Problem Type</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($types as $pt)
-                        <tr>
-                            <td class="editbutton modalOpener" value='/problem_types/{{$pt->id}}/compact';">
-                            @if ($pt->parent_description != '0')
-					            ({{$pt->parent_description}})
-					          @endif
-					          {{$pt->description}}
-					      	</td>
-                            <td>{{$pt->count}}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-            	</table>
         	</div>
         	</div>
         </div>
@@ -51,7 +34,8 @@ var sets = [];
 $(document).ready( function () 
 {
     var chart = $('#graph');
-    <?php
+
+	<?php
     	foreach ($datasets as $key => $value) {
     		echo "sets.push({";
     			echo "yLabel: '". $value['yLabel']."', ";
@@ -112,10 +96,6 @@ $(document).ready( function ()
 	});
 
 	swapDataSet(sets[0]);
-
-	$('#pt-table').DataTable({
-		order: [[1, 'desc']]
-	});
 
 });
 function swapDataSet()

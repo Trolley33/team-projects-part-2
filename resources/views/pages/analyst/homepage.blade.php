@@ -24,6 +24,11 @@
                     Review Software
                 </div>
             </a><br />
+            <a class="blank" href="/review/problem_types">
+                <div class="bigbutton w3-card w3-button w3-row">
+                    Review Problem Types
+                </div>
+            </a><br />
             <a class="blank" href="/review/____">
                 <div class="bigbutton w3-card w3-button w3-row">
                     Review ___
