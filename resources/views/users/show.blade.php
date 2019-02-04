@@ -57,6 +57,20 @@
                             @endif
                         </tr>
                     @endif
+                    @if (!is_null($timeoff))
+                        <tr class="w3-text-deep-orange">
+                            <th>Away From</th>
+                            <td>{{$timeoff->startDate}}</td>
+                        </tr>
+                        <tr class="w3-text-deep-orange">
+                            <th>Away Until</th>
+                            <td>{{$timeoff->endDate}}</td>
+                        </tr>
+                        <tr class="w3-text-deep-orange">
+                            <th>Reason for Time Off</th>
+                            <td>{{$timeoff->reason}}</td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
 

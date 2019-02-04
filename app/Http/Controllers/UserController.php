@@ -11,6 +11,7 @@ use App\Job;
 use App\Department;
 use App\Speciality;
 use App\ProblemType;
+use App\TimeOff;
 
 class UserController extends Controller
 {
@@ -350,6 +351,8 @@ class UserController extends Controller
 
             if (!is_null($user) && !is_null($info))
             {
+                $timeoff = TimeOff::where('user_id', '=', $id)->whereRaw('DATE_ADD(DATE(NOW()), INTERVAL 7 DAY) >= timeoff.startDate AND DATE(NOW()) <= timeoff.endDate')->orderBy('created_at', 'desc')->first();
+
                 $data = array(
                     'title' => "User Viewer.",
                     'desc' => "View user account information.",
@@ -357,6 +360,7 @@ class UserController extends Controller
                     'job_info' => $info,
                     'problem_type'=>$problem_type,
                     'parent'=>$parent,
+                    'timeoff'=>$timeoff,
                     'links' => PagesController::getOperatorLinks(),
                     'active' => 'Users'
                 );
@@ -385,6 +389,8 @@ class UserController extends Controller
             }
             if (!is_null($user) && !is_null($info))
             {
+                $timeoff = TimeOff::where('user_id', '=', $id)->whereRaw('DATE_ADD(DATE(NOW()), INTERVAL 7 DAY) >= timeoff.startDate AND DATE(NOW()) <= timeoff.endDate')->orderBy('created_at', 'desc')->first();
+
                 $viewer = PagesController::getCurrentUser();
                 $job = Job::find($viewer->job_id);
                 $level = $job->access_level;
@@ -396,6 +402,7 @@ class UserController extends Controller
                     'job_info' => $info,
                     'problem_type'=>$problem_type,
                     'parent'=>$parent,
+                    'timeoff'=>$timeoff,
                     'links' => PagesController::getOperatorLinks(),
                     'active' => 'Users'
                 );

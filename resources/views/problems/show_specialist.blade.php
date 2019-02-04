@@ -13,6 +13,10 @@
                             <td>{{$problem->created_at}}</td>
                         </tr>
                         <tr class="w3-hover-light-grey">
+                            <th>Logged By</th>
+                            <td class="editbutton modalOpener" value="/users/{{$operator->id}}/compact">{{$operator->forename}} {{$operator->surname}}<span class="icon">View</span></td>
+                        </tr>
+                        <tr class="w3-hover-light-grey">
                             <th>Problem Number</th>
                             <td>{{sprintf('%04d', $problem->id)}}</td>
                         </tr>

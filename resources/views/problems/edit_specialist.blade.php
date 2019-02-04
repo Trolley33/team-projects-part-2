@@ -16,7 +16,12 @@
 			@foreach ($specialists as $s)
 			<tr>
 				<td style="text-align: right;">{{sprintf('%04d', $s->employee_id)}}</td>
-				<td title="View" class="editbutton modalOpener" value='/users/{{$s->id}}/compact'>{{$s->forename}} {{$s->surname}}</td>
+				<td title="View" class="editbutton modalOpener" value='/users/{{$s->id}}/compact'>
+                    {{$s->forename}} {{$s->surname}}
+                    @if (!is_null($s->startDate))
+                        <span class="w3-text-deep-orange">(!)</span>
+                    @endif
+                </td>
         <td title="View" class="editbutton modalOpener" value='/problem_types/{{$s->pID}}/compact'>
             @if ($s->parent_description != '0')
                 ({{$s->parent_description}})
