@@ -9,9 +9,9 @@
                     View Assigned Problems
                 </div>
             </a><br />
-            <a class="blank todo" href="">
+            <a class="blank" href="/specialist/book_absence">
                 <div class="bigbutton w3-card w3-button w3-row">
-                    Book absence
+                    Book Absence
                 </div>
             </a><br />
             <a class="blank" href="/users/{{$user->id}}/edit_specialism">

@@ -19,7 +19,10 @@
 				<td title="View" class="editbutton modalOpener" value='/users/{{$s->id}}/compact'>
                     {{$s->forename}} {{$s->surname}}
                     @if (!is_null($s->startDate))
-                        <span class="w3-text-deep-orange">(!)</span>
+                        <!-- Check if time off within next week, only give warning (!) if so.-->
+                        @if (time() + (60*60*24*7) >= strtotime($s->startDate))
+                            <span class="w3-text-deep-orange editbutton modalOpener" value='/users/{{$s->id}}/compact'>(!)</span>
+                        @endif
                     @endif
                 </td>
         <td title="View" class="editbutton modalOpener" value='/problem_types/{{$s->pID}}/compact'>

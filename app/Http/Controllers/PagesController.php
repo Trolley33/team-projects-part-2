@@ -282,6 +282,31 @@ class PagesController extends Controller
         return redirect('login')->with('error', 'Please log in first.');
     }
 
+    public function book_absence()
+    {
+        // If user allowed to access this page.
+        if (PagesController::hasAccess(2))
+        {
+            $user = PagesController::getCurrentUser();
+            $data = array(
+                'title'=> "Book Time Off",
+                'desc'=>"Select a Date Range and Add a Reason",
+                'user'=>$user,
+                'links'=>PagesController::getSpecialistLinks(),
+                'active'=>'Home'
+            );
+
+            return view('pages.specialist.book_absence')->with($data);
+        }
+        // No access redirects to login.
+        return redirect('login')->with('error', 'Please log in first.');
+    }
+
+    public function create_time_off()
+    {
+        return "TODO";
+    }
+
 
     // ==== Analyst pages. ====
     public function analyst_homepage()

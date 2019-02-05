@@ -252,7 +252,32 @@ class ProblemController extends Controller
             $problem_type = ProblemType::find($problem_type_id);
             $parent = ProblemType::find($problem_type->parent);
             
-            $specialists = User::join('speciality', 'users.id', '=', 'speciality.specialist_id')->join('problem_types', 'speciality.problem_type_id', '=', 'problem_types.id')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->leftJoin('problems', 'problems.assigned_to', '=', 'users.id')->leftJoin('resolved_problems', 'problems.id', '=', 'resolved_problems.problem_id')->leftJoin('timeoff', 'timeoff.user_id', '=', 'users.id')->selectRaw('speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id) - COUNT(resolved_problems.id), 0) as jobs, users.*')->whereRaw('DATE(NOW()) NOT BETWEEN timeoff.startDate AND timeoff.endDate OR timeoff.id IS NULL')->groupBy('users.id', 'speciality.id')->get();
+            $specialists = DB::select(DB::raw(
+                    "SELECT speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id) - COUNT(resolved_problems.id), 0) as jobs, timeoff.startDate, users.*
+                    FROM users
+                    JOIN speciality
+                    ON users.id = speciality.specialist_id
+                    JOIN problem_types
+                    ON speciality.problem_type_id = problem_types.id
+                    LEFT JOIN problem_types as parents
+                    ON problem_types.parent = parents.id
+                    LEFT JOIN problems
+                    ON problems.assigned_to = users.id
+                    LEFT JOIN resolved_problems
+                    ON resolved_problems.problem_id = problems.id
+                    LEFT JOIN timeoff
+                    ON (timeoff.user_id = users.id AND 
+                        timeoff.id = (
+                            SELECT timeoff.id FROM timeoff
+                            ORDER BY timeoff.created_at desc
+                            LIMIT 1)
+                        )
+                    WHERE
+                        (DATE(NOW()) NOT BETWEEN timeoff.startDate AND timeoff.endDate)
+                        OR timeoff.id IS NULL
+                    GROUP BY users.id, speciality.id, timeoff.startDate
+                        "
+                ));
 
             if (!is_null($user) && !is_null($problem_type))
             {
@@ -359,7 +384,7 @@ class ProblemController extends Controller
 
                 $callers = DB::table('problems')->join('calls', 'problems.id', '=', 'calls.problem_id')->join('users', 'users.id', '=', 'calls.caller_id')->select('calls.id as cID', 'calls.notes', 'calls.created_at as cAT', 'users.*')->where('problems.id', '=', $id)->get();
 
-                $assigned = User::join('problems', 'problems.assigned_to', '=', 'users.id')->where('problems.id', '=', $id)->first();
+                $assigned = User::join('problems', 'problems.assigned_to', '=', 'users.id')->where('problems.id', '=', $id)->select('users.*')->first();
 
                 $resolved = Problem::join('resolved_problems', 'resolved_problems.problem_id', '=', 'problems.id')->select('resolved_problems.solution_notes', 'resolved_problems.created_at')->where('problems.id', '=', $id)->get()->first();
 
@@ -763,7 +788,7 @@ class ProblemController extends Controller
             $parent = ProblemType::find($type->parent);
             if (!is_null($problem))
             {
-                $assigned = DB::table('problems')->join('users', 'problems.assigned_to', '=', 'users.id')->select('users.*')->where('problems.id', '=', $id)->get()->first();
+                $assigned = DB::table('problems')->join('users', 'problems.assigned_to', '=', 'users.id')->select('users.*')->where('problems.id', '=', $id)->select('users.*')->first();
 
                 $resolved = DB::table('problems')->join('resolved_problems', 'problems.id', '=', 'resolved_problems.problem_id')->select('resolved_problems.solution_notes', 'resolved_problems.created_at')->where('problems.id', '=', $id)->get()->first();
 
@@ -886,7 +911,7 @@ class ProblemController extends Controller
                             LIMIT 1)
                         )
                     WHERE
-                        DATE(NOW()) NOT BETWEEN timeoff.startDate AND timeoff.endDate
+                        (DATE(NOW()) NOT BETWEEN timeoff.startDate AND timeoff.endDate)
                         OR timeoff.id IS NULL
                     GROUP BY users.id, speciality.id, timeoff.startDate
                         "

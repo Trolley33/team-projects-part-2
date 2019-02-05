@@ -3,10 +3,9 @@
 @section('content')
 <div class="">
         <div class="call_menu w3-center w3-padding" style='text-align:center'>
-            <h3>New Call</h3><hr />
             <a class="blank" href="calls/create">
                 <div class="bigbutton w3-card w3-button w3-row">
-                    Log New Call
+                    <h3>Log New Call</h3>
                 </div>
             </a><br />
         </div>

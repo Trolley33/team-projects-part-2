@@ -30,6 +30,8 @@ Route::get('/operator/caller-info/{name}', ['uses' => 'PagesController@caller_in
 
 // Specialist pages.
 Route::get('/specialist/', 'PagesController@specialist_homepage');
+Route::get('/specialist/book_absence', 'PagesController@book_absence');
+Route::post('/specialist/book_absence', 'PagesController@create_time_off');
 
 // Analyst pages.
 Route::get('/analyst/', 'PagesController@analyst_homepage');
