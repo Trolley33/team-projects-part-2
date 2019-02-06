@@ -37,6 +37,16 @@ Route::get('/specialist/timeoff/{id}/edit', 'PagesController@edit_absence');
 Route::put('/specialist/timeoff/{id}', 'PagesController@update_absence');
 Route::delete('/specialist/timeoff/{id}/delete', 'PagesController@delete_absence');
 
+// These use specialist ID.
+Route::get('/skills/create', 'SkillController@create');
+Route::post('/skills/create', 'SkillController@store');
+Route::get('/skills/{id}', 'SkillController@show');
+Route::get('/skills/{id}/compact', 'SkillController@show_compact');
+Route::get('/skills/{id}/{skill_id}/edit', 'SkillController@edit');
+// These two use skill ID only.
+Route::put('/skills/{id}', 'SkillController@update');
+Route::delete('/skills/{id}/delete', 'SkillController@delete');
+
 // Analyst pages.
 Route::get('/analyst/', 'PagesController@analyst_homepage');
 Route::get('/analyst/export', 'ReviewController@show_tables');

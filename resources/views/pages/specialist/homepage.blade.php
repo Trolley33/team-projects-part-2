@@ -19,9 +19,9 @@
                     Edit Specialism
                 </div>
             </a><br />
-            <a class="blank todo" href="">
+            <a class="blank" href="/skills/{{$user->id}}">
                 <div class="bigbutton w3-card w3-button w3-row">
-                    Edit Experience
+                    Edit Skills
                 </div>
             </a><br />
           </div>

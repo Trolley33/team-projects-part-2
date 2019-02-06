@@ -1,0 +1,55 @@
+@extends('layouts.app')
+@section('content')
+<div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
+    <h2>Listed Skills For: {{$user->forename}} {{$user->surname}}</h2>
+    <table id='skill-table' class="display cell-border stripe hover" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Problem Type</th><th>Ability</th><th>Edit Skill</th><th>Delete Skill</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($skills as $skill)
+            <tr>
+                <td>
+                @if (!is_null($skill->parentID))
+                    ({{$skill->parentDesc}})
+                @endif
+                {{$skill->ptDesc}}
+                </td>
+                <td>{{$skill->ability}}/10</td>
+                <td class="editbutton" style="text-align: center;" onclick="window.location.href = '/skills/{{$user->id}}/{{$skill->id}}/edit'">
+                    Edit
+                </td>
+                <td class="editbutton w3-red" style="text-align: center;" onclick="$('#{{$skill->id}}').submit()">
+                    Delete
+                    {!!Form::open(['action' => ['SkillController@delete', $skill->id], 'method' => 'POST', 'onsubmit'=>"return confirmDelete()", 'id'=>$skill->id, 'hidden']) !!}
+                    {{Form::hidden('_method', 'DELETE')}}
+                    {!!Form::close() !!}
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+    <div style="text-align: center;">
+        <a class="blank" href="/skills/create">
+            <div class="bigbutton w3-card w3-button w3-row">
+                Add New Skill
+            </div>
+        </a><br />
+    </div>
+</div>
+
+<script>
+$(document).ready( function () 
+{
+    var skill = $('#skill-table').DataTable({
+    });
+});
+
+function confirmDelete() {
+    return confirm("Really delete skill?");
+}
+</script>
+
+@endsection

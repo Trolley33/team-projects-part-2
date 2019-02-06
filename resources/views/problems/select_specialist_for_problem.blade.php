@@ -13,7 +13,7 @@
   <table id='specialist-table' class="display cell-border stripe hover" style="width:100%;">
     <thead>
       <tr>
-        <th>Employee ID</th><th>Specialist Name</th><th>Problem Specialism</th><th>No. of Active Jobs</th><th>Select</th>
+        <th>Employee ID</th><th>Specialist Name</th><th>Problem Specialism</th><th>Other Skills</th><th>Hidden Column</th><th>No. of Active Jobs</th><th>Select</th>
       </tr>
     </thead>
     <tbody>
@@ -32,7 +32,16 @@
             @if ($s->parent_description != '0')
                 ({{$s->parent_description}})
             @endif
-            {{$s->description}}</td>
+            {{$s->description}}
+        </td>
+        <td title="" class="editbutton modalOpener visisbleColumn" id='{{$s->id}}' value='/users/{{$s->id}}/compact'>
+            View
+        </td>
+        <td>
+            @if ($s->id == 2)
+                Login
+            @endif
+        </td>
         <td style="text-align: right;">{{$s->jobs}}</td>
         <td title="Select" class="selectBox editbutton" style="text-align: center;">
           <input class="selectRadio" type="radio" name='specialist' value="{{$s->id}}" />
@@ -58,6 +67,7 @@
     </form>
 </div>
 <script>
+var skillCells;
 
 $(document).ready( function () 
 {
@@ -96,19 +106,58 @@ $(document).ready( function ()
       }
     });
     
+   skillCells = $('.visisbleColumn');
+
     var table = $('#specialist-table').DataTable({
         order: [
-          ['3', 'asc'],
+          ['5', 'asc'],
           ['2', 'asc']
+        ],
+        "aoColumnDefs": [
+            {
+                "targets": [4],
+                "visible": false
+            },
         ]
     });
+
+    $('.dataTables_filter label input').bind('input', function() {
+        var text = $(this).val();
+        skillCells.each(function (i) {
+            var d = table.row(i).data();
+            if (text == '')
+            {
+                $(this).html("View");
+                return;
+            }
+
+            if (d[4].toLowerCase().includes(text.toLowerCase()))
+            {
+                $(this).html("Match Found <span class='w3-text-green'>(?)</span>");
+            }
+        });
+    });
+
     // If we provide some sort of search term through the redirect, search it here.
     var search = "<?php if (session('search')) echo session('search');?>";
-    
+
     if (search == '')
     {
         search = parent.description;
     }
+    // Highlight cells with (?)
+    skillCells.each(function (i) {
+        var d = table.row(i).data();
+        if (d[4].toLowerCase().includes(search.toLowerCase()))
+        {
+            $(this).html("Match Found <span class='w3-text-green'>(?)</span>");
+        }
+        else
+        {
+            $(this).html("View");
+        }
+    });
+
     table.search(search).draw();
 
 
