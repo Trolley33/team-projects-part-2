@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Cookie;
 use App\User;
 use App\Job;
 use App\Reassignments;
+use App\TimeOff;
 
 class PagesController extends Controller
 {
@@ -282,7 +283,30 @@ class PagesController extends Controller
         return redirect('login')->with('error', 'Please log in first.');
     }
 
-    public function book_absence()
+    public function timeoff ()
+    {
+        // If user allowed to access this page.
+        if (PagesController::hasAccess(2))
+        {
+            $user = PagesController::getCurrentUser();
+            $timeoff = TimeOff::where('user_id', $user->id)->get();
+
+            $data = array(
+                'title'=> "Manage Time Off",
+                'desc'=>"View Upcoming Time Off",
+                'user'=>$user,
+                'timeoff'=>$timeoff,
+                'links'=>PagesController::getSpecialistLinks(),
+                'active'=>'Home'
+            );
+
+            return view('pages.specialist.timeoff')->with($data);
+        }
+        // No access redirects to login.
+        return redirect('login')->with('error', 'Please log in first.');
+    }
+
+    public function book_absence ()
     {
         // If user allowed to access this page.
         if (PagesController::hasAccess(2))
@@ -302,9 +326,39 @@ class PagesController extends Controller
         return redirect('login')->with('error', 'Please log in first.');
     }
 
-    public function create_time_off()
+    public function create_time_off(Request $request)
     {
-        return "TODO";
+        if (PagesController::hasAccess(2))
+        {
+            $user = PagesController::getCurrentUser();
+            $this->validate($request, [
+                'start' => 'required',
+                'end' => 'required',
+                'reason' => 'required'
+            ]);
+            $start = $request->input('start');
+            $end = $request->input('end');
+            $reason = $request->input('reason');
+
+            if ($start < $end && (bool)strtotime($start) && (bool)strtotime($end))
+            {
+                $result = TimeOff::whereRaw("startDate BETWEEN ? AND ? OR endDate BETWEEN ? AND ?", [$start, $end, $start, $end])->get();
+                if (count($result) == 0)
+                {
+                    $timeoff = new TimeOff();
+                    $timeoff->user_id = $user->id;
+                    $timeoff->startDate = $start;
+                    $timeoff->endDate = $end;
+                    $timeoff->reason = $reason;
+                    $timeoff->save();
+                    redirect('/specialist/timeoff')->with('success', 'Time off booked.');
+                }
+                return redirect('/specialist/timeoff')->with('error', 'Time off already booked in this period.');
+            }
+
+            return redirect('/specialist/timeoff/book')->with('error', 'The date supplied was invalid.');
+        }
+        return redirect('/login')->with('error', 'Please log in first.');
     }
 
 
