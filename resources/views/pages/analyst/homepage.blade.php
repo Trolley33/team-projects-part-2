@@ -34,6 +34,12 @@
                     Review ___
                 </div>
             </a><br />
+            <hr>
+            <a class="blank" href="/analyst/export">
+                <div class="bigbutton w3-card w3-button w3-row">
+                    Export Data
+                </div>
+            </a><br />
           </div>
     </div>
 

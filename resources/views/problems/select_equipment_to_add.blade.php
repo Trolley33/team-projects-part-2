@@ -76,6 +76,10 @@ $(document).ready( function ()
             $('#addEquipment').prop('disabled', true);
         }
     });
+    $('.selectChecked').click(function ()
+    {
+        $(this).prop('checked', !$(this).prop('checked'));
+    });
     var table = $('#equipment-table').DataTable();
 
 });

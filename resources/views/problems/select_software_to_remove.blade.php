@@ -67,6 +67,10 @@ $(document).ready( function ()
             $('#removeSoftware').prop('disabled', true);
         }
     });
+    $('.selectChecked').click(function ()
+    {
+        $(this).prop('checked', !$(this).prop('checked'));
+    });
     var table = $('#software-table').DataTable();
 });
 </script>

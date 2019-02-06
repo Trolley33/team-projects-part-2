@@ -36,6 +36,106 @@ class ReviewController extends Controller
     	return $points;
     }
 
+    public function show_tables ()
+    {
+        if (!PagesController::hasAccess(3))
+        {
+            return redirect('/login')->with('error','Please log in first.');
+        }
+
+        $table_names = array(
+            'users',
+            'jobs',
+            'departments',
+            'speciality',
+            'timeoff',
+            'problems',
+            'calls',
+            'problem_types',
+            'resolved_problems',
+            'affected_hardware',
+            'affected_software',
+            'equipment',
+            'software',
+            'reassignments',
+            'importance',
+        );
+
+        $tables = array();
+
+        foreach ($table_names as $key => $name) {
+            $count = DB::select(DB::raw("SELECT COUNT(*) as c FROM $name"))[0]->c;
+            $tables[$name] = $count;
+        }
+
+        $data = array(
+                'title'=>'Export Data',
+                'desc'=>'Select tables to export data on.',
+                'tables'=>$tables,
+                'links'=>PagesController::getAnalystLinks(),
+                'active'=>'Review'
+            );
+
+        return view('pages.analyst.export')->with($data);
+
+
+    }
+    public function export (Request $request)
+    {
+        if (!PagesController::hasAccess(3))
+        {
+            return redirect('/login')->with('error','Please log in first.');
+        }
+
+        $this->validate($request, [
+            'table'=>'required'
+        ]);
+
+        $tables = $request->input('table');
+
+        header('Content-Type: text/csv; charset=utf-8');  
+        header('Content-Disposition: attachment; filename=data.csv');  
+        $output = fopen("php://output", "w");
+
+        $table_names = array(
+            'users',
+            'jobs',
+            'departments',
+            'speciality',
+            'timeoff',
+            'problems',
+            'calls',
+            'problem_types',
+            'resolved_problems',
+            'affected_hardware',
+            'affected_software',
+            'equipment',
+            'software',
+            'reassignments',
+            'importance',
+        );
+
+        foreach ($tables as $table) {
+            if (!in_array($table, $table_names))
+            {
+                continue;
+            }
+
+            fputcsv($output, array('-', '-', $table.' table', '-', '-'));
+            $columns = DB::getSchemaBuilder()->getColumnListing($table);
+            fputcsv($output, $columns);
+
+            $rows = DB::select(DB::raw("SELECT * FROM $table"));
+            foreach ($rows as $row) {
+                fputcsv($output, (array)$row);
+            }
+        }
+
+        fclose($output);
+
+        return "";        
+    }
+
     public function review ()
     {
         if (PagesController::hasAccess(3))
