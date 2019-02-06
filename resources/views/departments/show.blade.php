@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
+	<!-- Get department name based on department selected on the previous page -->
 	<h2>{{$department->name}}</h2>
 	<table id='job-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
@@ -10,6 +11,7 @@
 				<td>No. of Employees</td><th>---</th>
 			</tr>
 		</thead>
+		<!-- Generated list of roles in the Department -->
 		<tbody>
 			@foreach ($jobs as $job)
 			<tr>
@@ -24,6 +26,7 @@
 		</tbody>
 	</table>
 
+	<!-- Form submitted when the View/Edit button is selected for an employee, that provides information about the relvant employee in the next page -->
 	<div style="text-align: center;">
         {!!Form::open(['id'=>'createForm']) !!}
 
@@ -56,7 +59,7 @@
 
 var deptName = "";
 
-$(document).ready( function () 
+$(document).ready( function ()
 {
     var table = $('#job-table').DataTable();
 
@@ -66,6 +69,7 @@ $(document).ready( function ()
 
     department = <?php echo json_encode($department); ?>;
 
+		//If the department ID is 1, that is it's the Technical Support, then new roles cant be created, the name can't be changed and the department can't be deleted
     if (department.id == 1)
     {
     	$('#createForm :input').prop('disabled', true);
@@ -76,6 +80,7 @@ $(document).ready( function ()
     	$('#editForm :input').hide();
     	$('#deleteForm :input').hide();
     }
+		//If department ID isn't 1, that is it's not Technical Support , then the user is directed to the relvant page with the department ID
     else
     {
     	$('#createForm').submit(function () {
@@ -89,7 +94,7 @@ $(document).ready( function ()
     }
 
 });
-
+//Pop up to confirm that the user wants to delete the department
 function confirmDelete()
 {
 	if (department.id == 1)

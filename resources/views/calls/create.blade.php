@@ -3,20 +3,24 @@
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <form id="addCallForm">
+    <!-- Table with details about Problems -->
     <table id='problem-table' class="display cell-border stripe hover">
+        <!-- Table headers -->
         <thead>
             <tr>
                 <th>Time Logged</th><th>Problem ID</th><th>Problem Type</th><th>Description</th><th>Initial Caller</th><th>Importance</th><th>Hidden Column</th><th>Select</th>
             </tr>
         </thead>
+        <!-- Table body -->
         <tbody>
+            <!-- Details about each ongoing problem are added here from the database -->
             @foreach ($ongoing as $problem)
             <tr>
                 <td>{{$problem->created_at}}</td>
                 <td class="editbutton modalOpener" value='/problems/{{$problem->pID}}/compact'  style="text-align: right;">{{sprintf('%04d',$problem->pID)}}</td>
                 <td class="editbutton modalOpener" value='/problem_types/{{$problem->ptID}}/compact'>
-                    @if ($problem->pDesc != '0') 
-                        ({{$problem->pDesc}}) 
+                    @if ($problem->pDesc != '0')
+                        ({{$problem->pDesc}})
                     @endif
                     {{$problem->problemType}}</td>
                 <td>{{$problem->description}}</td>
@@ -30,13 +34,13 @@
             @endforeach
         </tbody>
 
-        
     </table>
+    <!-- Add call to Problem button, used to add call to problem selected -->
     <div style="text-align: center;">
         <input id="addCall" class="bigbutton w3-card w3-button w3-row" type="submit" value="Add Call to Problem" disabled/>
     </div>
     </form>
-
+    <!-- Create New Problem button -->
     <div style="text-align: center;">
         <a class="blank" href="/problems/create">
             <div class="bigbutton w3-card w3-button w3-row">
@@ -52,7 +56,7 @@
 <script>
 
 
-$(document).ready( function () 
+$(document).ready( function ()
 {
     var table = $('#problem-table').dataTable({
         order: [
@@ -61,7 +65,7 @@ $(document).ready( function ()
         "aoColumnDefs": [
             {
                 "iDataSort": 6,
-                "aTargets": [5] 
+                "aTargets": [5]
             },
             {
                 "targets": [6],
@@ -70,17 +74,18 @@ $(document).ready( function ()
             },
         ]
       });
+    // Enable Add Call to Problem button if problem is selected
     $('.selectBox').click(function ()
     {
       $(this).children('.selectRadio').prop('checked', true);
       $('#addCall').prop('disabled', false);
     });
-
+     //When problem selected is changed Add Call to Problem button is enabled
     $('input:radio[name="existing"]').change(
     function(){
         $('#addCall').prop('disabled', false);
     });
-
+    // Redirect to page where you can add a call for the selected problem
     $('#addCallForm').submit(function ()
     {
         window.location.href = '/problems/' + $("input[name='existing']:checked").val() + '/add_call';

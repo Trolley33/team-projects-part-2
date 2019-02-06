@@ -4,6 +4,7 @@
 	<table id='department-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
 			<tr>
+				<!-- Table with list of departments and information about them -->
 				<th>Department ID</th><th>Department Name</th>
 				<th>No. of Employees</th><th>---</th>
 			</tr>
@@ -22,6 +23,7 @@
 		</tbody>
 	</table>
 
+	<!-- Button to Create a new Department -->
 	<div style="text-align: center;">
         <a class="blank" href="/departments/create">
             <div class="bigbutton w3-card w3-button w3-row">
@@ -32,7 +34,7 @@
 </div>
 
 <script>
-$(document).ready( function () 
+$(document).ready( function ()
 {
     var table = $('#department-table').DataTable();
 
