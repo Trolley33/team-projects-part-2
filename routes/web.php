@@ -33,6 +33,9 @@ Route::get('/specialist/', 'PagesController@specialist_homepage');
 Route::get('/specialist/timeoff', 'PagesController@timeoff');
 Route::get('/specialist/timeoff/book_absence', 'PagesController@book_absence');
 Route::post('/specialist/timeoff/book_absence', 'PagesController@create_time_off');
+Route::get('/specialist/timeoff/{id}/edit', 'PagesController@edit_absence');
+Route::put('/specialist/timeoff/{id}', 'PagesController@update_absence');
+Route::delete('/specialist/timeoff/{id}/delete', 'PagesController@delete_absence');
 
 // Analyst pages.
 Route::get('/analyst/', 'PagesController@analyst_homepage');

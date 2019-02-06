@@ -37,7 +37,8 @@ class PagesController extends Controller
         return [
             ['href'=>'back','text'=>'back'],
             ['href'=>'specialist','text'=>'Home'],
-            ['href'=>'problems', 'text'=>'Problems']
+            ['href'=>'problems', 'text'=>'Problems'],
+            ['href'=>'specialist/timeoff', 'text'=>'Time Off']
         ];
     }
 
@@ -289,7 +290,7 @@ class PagesController extends Controller
         if (PagesController::hasAccess(2))
         {
             $user = PagesController::getCurrentUser();
-            $timeoff = TimeOff::where('user_id', $user->id)->get();
+            $timeoff = TimeOff::where('user_id', $user->id)->where('startDate', '>', date('Y-m-d'))->get();
 
             $data = array(
                 'title'=> "Manage Time Off",
@@ -297,7 +298,7 @@ class PagesController extends Controller
                 'user'=>$user,
                 'timeoff'=>$timeoff,
                 'links'=>PagesController::getSpecialistLinks(),
-                'active'=>'Home'
+                'active'=>'Time Off'
             );
 
             return view('pages.specialist.timeoff')->with($data);
@@ -317,7 +318,7 @@ class PagesController extends Controller
                 'desc'=>"Select a Date Range and Add a Reason",
                 'user'=>$user,
                 'links'=>PagesController::getSpecialistLinks(),
-                'active'=>'Home'
+                'active'=>'Time Off'
             );
 
             return view('pages.specialist.book_absence')->with($data);
@@ -351,7 +352,7 @@ class PagesController extends Controller
                     $timeoff->endDate = $end;
                     $timeoff->reason = $reason;
                     $timeoff->save();
-                    redirect('/specialist/timeoff')->with('success', 'Time off booked.');
+                    return redirect('/specialist/timeoff')->with('success', 'Time off booked.');
                 }
                 return redirect('/specialist/timeoff')->with('error', 'Time off already booked in this period.');
             }
@@ -361,6 +362,100 @@ class PagesController extends Controller
         return redirect('/login')->with('error', 'Please log in first.');
     }
 
+    public function edit_absence ($id)
+    {
+        $timeoff = TimeOff::find($id);
+        if (!is_null($timeoff))
+        {
+            if ($timeoff->startDate <= date('Y-m-d'))
+            {
+                return redirect('/specialist/timeoff')->with('error', "Can't edit absence while active.");
+            }
+            // If user allowed to access this page.
+            if (PagesController::hasAccess(2))
+            {
+                $user = PagesController::getCurrentUser();
+                $data = array(
+                    'title'=> "Book Time Off",
+                    'desc'=>"Select a Date Range and Add a Reason",
+                    'user'=>$user,
+                    'timeoff'=>$timeoff,
+                    'links'=>PagesController::getSpecialistLinks(),
+                    'active'=>'Time Off'
+                );
+
+                return view('pages.specialist.edit_absence')->with($data);
+            }
+            // No access redirects to login.
+            return redirect('login')->with('error', 'Please log in first.');
+        }
+
+        return redirect('/specialist/timeoff')->with('error', 'Sorry, something went wrong.');
+    }
+
+    public function update_absence (Request $request, $id)
+    {
+        $timeoff = TimeOff::find($id);
+        if (is_null($timeoff))
+        {
+            return redirect('/specialist/timeoff')->with('error', 'Sorry, something went wrong.');
+        }
+        if (!PagesController::hasAccess(2))
+        {
+            // No access redirects to login.
+            return redirect('login')->with('error', 'Please log in first.');
+        }
+        $user = PagesController::getCurrentUser();
+        if ($user->id != $timeoff->user_id)
+        {
+            return redirect('/specialist/timeoff')->with('error', "Sorry, you don't have access to this page.");
+        }
+
+        $start = $request->input('start') ?? $timeoff->startDate;
+        $end = $request->input('end') ?? $timeoff->endDate;
+        $reason = $request->input('reason') ?? $timeoff->reason;
+
+        if (!($start < $end && (bool)strtotime($start) && (bool)strtotime($end)))
+        {
+            return redirect('/specialist/timeoff/book')->with('error', 'The date supplied was invalid.');
+        }
+
+        $result = TimeOff::whereRaw("(startDate BETWEEN ? AND ? OR endDate BETWEEN ? AND ?) AND id != ?", [$start, $end, $start, $end, $timeoff->id])->get();
+        if (count($result) != 0)
+        {
+            return redirect('/specialist/timeoff')->with('error', 'Time off already booked in this period.');
+        }
+
+        $timeoff->startDate = $start;
+        $timeoff->endDate = $end;
+        $timeoff->reason = $reason;
+        $timeoff->save();
+
+        return redirect('specialist/timeoff')->with('success', 'Absence Updated');
+    }
+
+    public function delete_absence ($id)
+    {
+        $timeoff = TimeOff::find($id);
+        if (is_null($timeoff))
+        {
+            return redirect('/specialist/timeoff')->with('error', 'Sorry, something went wrong.');
+        }
+        if (!PagesController::hasAccess(2))
+        {
+            // No access redirects to login.
+            return redirect('login')->with('error', 'Please log in first.');
+        }
+        $user = PagesController::getCurrentUser();
+        if ($user->id != $timeoff->user_id)
+        {
+            return redirect('/specialist/timeoff')->with('error', "Sorry, you don't have access to this page.");
+        }
+        $timeoff->delete();
+
+        return redirect('specialist/timeoff')->with('success', 'Absence Deleted');
+    }
+
 
     // ==== Analyst pages. ====
     public function analyst_homepage()
@@ -368,7 +463,7 @@ class PagesController extends Controller
         // TODO
         if (PagesController::hasAccess(3))
         {   
-                $data = array(
+            $data = array(
                 'title' => "Analyst Homepage",
                 'desc' => "Please select a task.",
                 'links'=>PagesController::getAnalystLinks(),
