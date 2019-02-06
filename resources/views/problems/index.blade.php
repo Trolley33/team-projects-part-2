@@ -19,7 +19,7 @@
                     {{$problem->sForename}} {{$problem->sSurname}}
                 </td>
                 @else
-                <td class="editbutton" onclick="window.location.href='/problems/{{$problem->pID}}/edit_specialist'">
+                <td class="editbutton w3-pale-red" onclick="window.location.href='/problems/{{$problem->pID}}/edit_specialist'">
                     None
                 </td>
                 @endif

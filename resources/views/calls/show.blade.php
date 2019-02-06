@@ -7,6 +7,10 @@
             <table id="info-table">
                 <tbody>
                     <tr class="w3-hover-light-grey">
+                        <th>Logged At</th>
+                        <td> {{$call->created_at}} </td>
+                    </tr>
+                    <tr class="w3-hover-light-grey">
                         <th>Related Problem ID</th>
                         <td class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}';">{{sprintf('%04d', $problem->id)}}<span class="icon">View</span></td>
                     </tr>
@@ -35,12 +39,8 @@
                         <td>{{$user->phone_number}}</td>
                     </tr>
                     <tr class="w3-hover-light-grey">
-                        <th>Notes</th>
+                        <th>Call Notes</th>
                         <td> {{$call->notes}} </td>
-                    </tr>
-                    <tr class="w3-hover-light-grey">
-                        <th>Logged At</th>
-                        <td> {{$call->created_at}} </td>
                     </tr>
                 </tbody>
             </table>

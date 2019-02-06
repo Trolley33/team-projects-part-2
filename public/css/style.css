@@ -331,6 +331,10 @@ border-color: black;
   cursor: pointer;
 }
 
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button !important;
+}
+
 
 body{
 background: linear-gradient(312deg, #008477, #14cebf);
