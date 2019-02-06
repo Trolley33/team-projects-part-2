@@ -6,7 +6,7 @@
             <h3>Data Reviews</h3><hr />
             <a class="blank" href="/review/specialists">
                 <div class="bigbutton w3-card w3-button w3-row">
-                    Review Specialist
+                    Review Helpers
                 </div>
             </a><br />
             <a class="blank" href="/review/callers">
@@ -27,11 +27,6 @@
             <a class="blank" href="/review/problem_types">
                 <div class="bigbutton w3-card w3-button w3-row">
                     Review Problem Types
-                </div>
-            </a><br />
-            <a class="blank" href="/review/____">
-                <div class="bigbutton w3-card w3-button w3-row">
-                    Review ___
                 </div>
             </a><br />
             <hr>

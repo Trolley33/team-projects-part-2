@@ -18,21 +18,21 @@
   
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
     <script type="text/javascript">
+
         var modal;
         $(document).ready(function () {
 
             modal = $('#myModal');
 
             $(".modalOpener").click(function() {
-            $.get(
-                $(this).attr('value'),
-                function (data) {
-                    modal.html(data);
-                    $('#myModal div').first().prepend('<span onclick="closeModal()" class="close">&times;</span>')
-                }
-            );
-
-              modal.show();
+                $.get(
+                    $(this).attr('value'),
+                    function (data) {
+                        modal.html(data);
+                        $('#myModal div').first().prepend('<span onclick="closeModal()" class="close">&times;</span>')
+                    }
+                );
+                modal.show();
             });
 
             $(window).click(function(event) {
@@ -51,11 +51,56 @@
                 $(this).next('.slideable').slideToggle();
             });
         });
-
+        // Modal helper function.
         function closeModal ()
         {
             modal.html('');
             modal.hide();
+        }
+        
+        // Graphing helper functions
+        function swapDataSet()
+        {
+            var to = sets[$('#data-changer').val()];
+
+            myChart.options.scales.yAxes[0].scaleLabel.labelString = to.yLabel;
+            myChart.data.datasets[0] = to.dataset;
+            myChart.update();
+        }
+
+        function changeRange()
+        {
+            var start = $('#start');
+            var end = $('#end');
+            var startDate = new Date(start.val());
+            var endDate = new Date(end.val());
+            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) 
+            {
+                resetRange();
+                return;
+            }
+            if (start.val() > end.val())
+            {
+                alert('Start date cannot be after end date.');
+                return;
+            }
+
+            myChart.options.scales.xAxes[0].time.min = start.val();
+            myChart.options.scales.xAxes[0].time.max = end.val();
+            myChart.update();
+        }
+
+        function resetRange()
+        {
+            myChart.options.scales.xAxes[0].time.min = null;
+            myChart.options.scales.xAxes[0].time.max = null;
+            myChart.update();
+        }
+
+        // Zero padding function for YYYY-MM-DD
+        // *(https://stackoverflow.com/a/7379989)
+        function zfill(num, len) {
+            return (Array(len).join("0") + num).slice(-len);
         }
     </script>
 </head>
@@ -86,6 +131,27 @@
     @include('messages')
     @yield('content')
     
+<script>
+    $(document).ready (function () {
+        // On pages with a chart object.
+        if (typeof myChart != 'undefined')
+        {
+            // Perform date manipulation, in order to get start -> end = 1 quarter, with current month in center.
+            var startDate = new Date();
+            // Shift back 1 month
+            startDate.setMonth(startDate.getMonth()-1);
+            startDate.setDate(1);
+            // Set start to first sunday of month
+            startDate.setDate((7+1) - startDate.getDay());
 
+            // Shift forward 3 months.
+            var endDate = new Date(startDate.getTime() + (1000*60*60*24*7*4*3));
+            // Format date to YYYY-MM-DD using zfill helper function.
+            $('#start').val(startDate.getFullYear() + "-" + zfill(startDate.getMonth() + 1, 2) + "-" + zfill(startDate.getDate(), 2));
+            $('#end').val(endDate.getFullYear() + "-" + zfill(endDate.getMonth() + 1, 2) + "-" + zfill(endDate.getDate(), 2));
+            changeRange();
+        }
+    });
+</script>
 </body>
 </html>

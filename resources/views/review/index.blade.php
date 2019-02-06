@@ -14,7 +14,7 @@
             		@endforeach
             	</select>
             	<br />
-            	<input id="start" type="date" /> - <input id="end" type="date" /> <button onclick="changeRange()">↺</button>
+            	<input id="start" type="date" /> - <input id="end" type="date" /> <button onclick="changeRange()">↺</button> <button onclick="resetRange()">✖</button>
             	<canvas width="600" height="300" id='graph'>
             	</canvas>
             	<hr />
@@ -155,8 +155,28 @@ function changeRange()
 {
 	var start = $('#start');
 	var end = $('#end');
+	var startDate = new Date(start.val());
+	var endDate = new Date(end.val());
+	if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) 
+	{
+		resetRange();
+		return;
+	}
+	if (start.val() > end.val())
+	{
+		alert('Start date cannot be after end date.');
+		return;
+	}
+
 	myChart.options.scales.xAxes[0].time.min = start.val();
 	myChart.options.scales.xAxes[0].time.max = end.val();
+	myChart.update();
+}
+
+function resetRange()
+{
+	myChart.options.scales.xAxes[0].time.min = null;
+	myChart.options.scales.xAxes[0].time.max = null;
 	myChart.update();
 }
 </script>

@@ -13,7 +13,7 @@
             		@endforeach
             	</select>
             	<br />
-            	<input id="start" type="date" /> - <input id="end" type="date" /> <button onclick="changeRange()">↺</button>
+            	<input id="start" type="date" /> - <input id="end" type="date" /> <button onclick="changeRange()">↺</button> <button onclick="resetRange()">✖</button>
             	<canvas width="600" height="300" id='graph'>
             	</canvas>
         	</div>
@@ -93,23 +93,7 @@ $(document).ready( function ()
 	swapDataSet(sets[0]);
 
 });
-function swapDataSet()
-{
-	var to = sets[$('#data-changer').val()];
 
-	myChart.options.scales.yAxes[0].scaleLabel.labelString = to.yLabel;
-	myChart.data.datasets[0] = to.dataset;
-	myChart.update();
-}
-
-function changeRange()
-{
-	var start = $('#start');
-	var end = $('#end');
-	myChart.options.scales.xAxes[0].time.min = start.val();
-	myChart.options.scales.xAxes[0].time.max = end.val();
-	myChart.update();
-}
 </script>
 
 @endsection

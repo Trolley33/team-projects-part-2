@@ -51,10 +51,5 @@ $(document).ready(function () {
         }
     });
 });
-// Zero padding function for YYYY-MM-DD
-// *(https://stackoverflow.com/a/7379989)
-function zfill(num, len) {
-    return (Array(len).join("0") + num).slice(-len);
-}
 </script>
 @endsection

@@ -201,11 +201,11 @@ class ReviewController extends Controller
     {
         if (PagesController::hasAccess(3))
         {
-            $specialists = User::join('jobs', 'users.job_id', '=', 'jobs.id')->where('jobs.access_level', '=', '2')->select('users.*')->get();
+            $specialists = User::join('jobs', 'users.job_id', '=', 'jobs.id')->where('jobs.access_level', '=', '2')->orWhere('jobs.access_level', '=', '1')->select('users.*')->get();
 
             $data = array(
-                'title'=>'Review Specialist',
-                'desc'=>'Select a Specialist to Review',
+                'title'=>'Review Helper',
+                'desc'=>'Select a Helper to Review',
                 'specialists'=>$specialists,
                 'links'=>PagesController::getAnalystLinks(),
                 'active'=>'Review'
@@ -279,7 +279,7 @@ class ReviewController extends Controller
     {
         if (PagesController::hasAccess(3))
         {
-            $problem_type_table = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('problem_types.*, IFNULL(parents.description,0) as parent_description')->get();
+            $problem_type_table = ProblemType::where('parent', '-1')->get();
 
             $data = array(
                 'title'=>'Review Problem Types',
@@ -323,9 +323,19 @@ class ReviewController extends Controller
                         ORDER BY yw;
                     "));
 
+                $ra = DB::select(DB::raw("
+                        SELECT YEARWEEK(reassignments.created_at) AS 'yw', COUNT(*) AS 'count' FROM reassignments
+                        WHERE reassignments.specialist_id = '". $id ."' 
+                        GROUP BY 
+                        yw
+                        ORDER BY yw;
+                    "));
+
                 array_push($datasets, array('data' => $this->sql_to_json($rp, 0), 'yLabel' => "Problems Solved Per Week", 'color' => 'rgb(30,128,128)'));
 
                 array_push($datasets, array('data' => $this->sql_to_json($tts, 0), 'yLabel' => "AVG Time to Solve Problems (Minutes)", 'color' => 'rgb(191, 53, 84)'));
+
+                array_push($datasets, array('data' => $this->sql_to_json($ra, 0), 'yLabel' => "Number of Reassignments", 'color' => 'rgb(90, 120, 50)'));
 
                 $data = array(
                     'title'=>'Review Specialist',
@@ -473,8 +483,10 @@ class ReviewController extends Controller
                  // Get all info about software, for graphing.
                 $datasets = array();
                 $i = DB::select(DB::raw("
-                        SELECT YEARWEEK(problems.created_at) AS 'yw', COUNT(*) AS 'count' FROM problems
-                        WHERE problems.problem_type = '". $id ."' 
+                        SELECT YEARWEEK(problems.created_at) AS 'yw', COUNT(*) AS 'count' FROM problems 
+                        JOIN problem_types
+                        ON problems.problem_type = problem_types.id
+                        WHERE problem_types.id = '$id' OR problem_types.parent = '$id'
                         GROUP BY 
                         yw
                         ORDER BY yw;

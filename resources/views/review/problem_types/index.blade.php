@@ -13,9 +13,6 @@
 			<tr>
 				<td style="text-align: right;">{{sprintf("%04d", $pt->id)}}</td>
 				<td>
-				@if ($pt->parent_description != '0')
-					({{$pt->parent_description}})
-				@endif
 				{{$pt->description}}
 				</td>
 				<td class="editbutton" onclick="window.location.href = '/review/problem_types/{{$pt->id}}';" style="text-align: center;">
