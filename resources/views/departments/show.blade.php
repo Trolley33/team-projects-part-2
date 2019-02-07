@@ -26,34 +26,29 @@
 		</tbody>
 	</table>
 
-	<!-- Form submitted when the View/Edit button is selected for an employee, that provides information about the relvant employee in the next page -->
-	<div style="text-align: center;">
-        {!!Form::open(['id'=>'createForm']) !!}
+	<!-- If the department ID is 1, that means it is the Tech Support Department, this is a special department with special jobs so this department can't be edited-->
+	@if ($department->id != 1)
+		<!-- Form for creating, editing, and deleting departments. -->
+		<div style="text-align: center;">
+	        {!!Form::open(['id'=>'createForm']) !!}
 
-		{{Form::submit('Create New Job Title', ['class'=> "bigbutton w3-card 	w3-button w3-row"])}}
-		{!!Form::close() !!}
-        {!!Form::open(['id'=>'editForm']) !!}
+			{{Form::submit('Create New Job Title', ['class'=> "bigbutton w3-card 	w3-button w3-row"])}}
+			{!!Form::close() !!}
+	        {!!Form::open(['id'=>'editForm']) !!}
 
-		{{Form::submit('Edit Department', ['class'=> "bigbutton w3-card 	w3-button w3-row"])}}
-		{!!Form::close() !!}
-        {!!Form::open(['action' => ['DepartmentController@destroy', $department->id], 'method' => 'POST', 'onsubmit'=>"return confirmDelete()", 'id'=>'deleteForm']) !!}
+			{{Form::submit('Edit Department', ['class'=> "bigbutton w3-card 	w3-button w3-row"])}}
+			{!!Form::close() !!}
+	        {!!Form::open(['action' => ['DepartmentController@destroy', $department->id], 'method' => 'POST', 'onsubmit'=>"return confirmDelete()", 'id'=>'deleteForm']) !!}
 
-		{{Form::hidden('_method', 'DELETE')}}
+			{{Form::hidden('_method', 'DELETE')}}
 
-		{{Form::submit('Delete Department', ['class'=> "bigbutton w3-card 	w3-button w3-row w3-red"])}}
+			{{Form::submit('Delete Department', ['class'=> "bigbutton w3-card 	w3-button w3-row w3-red"])}}
 
-		{!!Form::close() !!}
-    <br />
-	</div>
+			{!!Form::close() !!}
+	    <br />
+		</div>
+	@endif
 </div>
-
-<style>
-.editbutton:hover
-{
-	background-color: #BBBBBB !important;
-	cursor: pointer;
-}
-</style>
 
 <script>
 
@@ -69,19 +64,8 @@ $(document).ready( function ()
 
     department = <?php echo json_encode($department); ?>;
 
-		//If the department ID is 1, that is it's the Technical Support, then new roles cant be created, the name can't be changed and the department can't be deleted
-    if (department.id == 1)
-    {
-    	$('#createForm :input').prop('disabled', true);
-    	$('#editForm :input').prop('disabled', true);
-    	$('#deleteForm :input').prop('disabled', true);
-
-    	$('#createForm :input').hide();
-    	$('#editForm :input').hide();
-    	$('#deleteForm :input').hide();
-    }
-		//If department ID isn't 1, that is it's not Technical Support , then the user is directed to the relvant page with the department ID
-    else
+	// If department ID isn't 1, that is it's not Technical Support , then the user is directed to the relvant page with the department ID.
+    if (department.id != 1)
     {
     	$('#createForm').submit(function () {
     		window.location.href = "/jobs/create?department={{$department->id}}";
@@ -92,9 +76,10 @@ $(document).ready( function ()
     		return false;
     	});
     }
+		
 
 });
-//Pop up to confirm that the user wants to delete the department
+// Pop up to confirm that the user wants to delete the department.
 function confirmDelete()
 {
 	if (department.id == 1)

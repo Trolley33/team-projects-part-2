@@ -27,7 +27,7 @@ class CallsController extends Controller
         // If user is allowed to view this page.
         if (PagesController::hasAccess(1))
         {
-            // Retrieve all ongoing problems, where calls can be appended.
+            // Get all problems that are not solved, and all relevant information for displaying in table.
             $ongoing = DB::select(DB::raw(
                 'SELECT problems.id as pID, problems.created_at, problem_types.description as problemType, problems.description, IFNULL(parents.description,0) as pDesc, problem_types.id as ptID, problems.importance, users.forename, users.surname, users.id as uID,calls.id as cID, importance.text, importance.class, importance.level
                 FROM problems

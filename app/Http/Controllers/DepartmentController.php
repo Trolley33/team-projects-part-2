@@ -234,8 +234,13 @@ class DepartmentController extends Controller
             $department = Department::find($id);
             $department->delete();
 
-            // Get all jobs related to department, and delete them.
-            $jobs = Job::join('users', 'users.job_id', '=', 'jobs.id')->where('jobs.department_id', $id)->delete();
+            // Get all jobs related to department, and remove their department ID.
+            $jobs = Job::join('users', 'users.job_id', '=', 'jobs.id')->where('jobs.department_id', $id)->get();
+
+            foreach ($jobs as $j) {
+                $j->department_id = 0;
+                $j->save();
+            }
 
             return redirect('/departments')->with('success', 'Department Deleted');
         }

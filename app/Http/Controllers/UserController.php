@@ -340,7 +340,11 @@ class UserController extends Controller
         {
             $user = User::find($id);
 
-            $info = DB::table('jobs')->join('users', 'jobs.id', '=', 'users.job_id')->join('departments' , 'jobs.department_id', '=', 'departments.id')->select( 'jobs.id as jID', 'jobs.title', 'jobs.access_level', 'departments.id as dID', 'departments.name')->where('users.id', '=', $id)->get()->first();
+            if (is_null($user))
+            {
+                return redirect()->back();
+            }
+
 
             $problem_type = Speciality::join('problem_types', 'problem_types.id', '=', 'speciality.problem_type_id')->where('speciality.specialist_id', '=', $id)->get()->first();
             $parent = null;
@@ -348,8 +352,9 @@ class UserController extends Controller
             {
                 $parent = ProblemType::find($problem_type->parent);
             }
-
-            if (!is_null($user) && !is_null($info))
+            $info = Job::join('users', 'jobs.id', '=', 'users.job_id')->join('departments' , 'jobs.department_id', '=', 'departments.id')->select( 'jobs.id as jID', 'jobs.title', 'jobs.access_level', 'departments.id as dID', 'departments.name')->where('users.id', $user->id)->first();
+            
+            if (!is_null($info))
             {
                 $timeoff = TimeOff::where('user_id', '=', $id)->whereRaw('DATE_ADD(DATE(NOW()), INTERVAL 7 DAY) >= timeoff.startDate AND DATE(NOW()) <= timeoff.endDate')->orderBy('created_at', 'desc')->first();
 

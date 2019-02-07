@@ -33,22 +33,25 @@
 
 		</tbody>
 	</table>
-
 	<div style="text-align: center;">
-        {!!Form::open(['id'=>'createForm']) !!}
-		{{Form::submit('Create User with Job Title', ['class'=> "bigbutton w3-card 	w3-button w3-row"])}}
-		{!!Form::close() !!}
+    {!!Form::open(['id'=>'createForm']) !!}
+	{{Form::submit('Create User with Job Title', ['class'=> "bigbutton w3-card 	w3-button w3-row"])}}
+	{!!Form::close() !!}
+	<!-- If the department ID is 1, that means the jobs is tech support, so it can't be edited or deleted, but it can have new users made for it as above.-->
+	@if ($department->id != 1)
+		<!-- Form for creating, editing, and deleting departments. -->
 
-        {!!Form::open(['id'=>'editForm']) !!}
-		{{Form::submit('Edit Job Title', ['class'=> "bigbutton w3-card 	w3-button w3-row"])}}
-		{!!Form::close() !!}
+	        {!!Form::open(['id'=>'editForm']) !!}
+			{{Form::submit('Edit Job Title', ['class'=> "bigbutton w3-card 	w3-button w3-row"])}}
+			{!!Form::close() !!}
 
-        {!!Form::open(['action' => ['JobController@destroy', $job->id], 'method' => 'POST', 'onsubmit'=>"return confirmDelete()", 'id'=>'deleteForm']) !!}
+	        {!!Form::open(['action' => ['JobController@destroy', $job->id], 'method' => 'POST', 'onsubmit'=>"return confirmDelete()", 'id'=>'deleteForm']) !!}
 
-		{{Form::hidden('_method', 'DELETE')}}
+			{{Form::hidden('_method', 'DELETE')}}
 
-		{{Form::submit('Delete Job Title', ['class'=> "bigbutton w3-card 	w3-button w3-row w3-red"])}}
-		{!!Form::close() !!}
+			{{Form::submit('Delete Job Title', ['class'=> "bigbutton w3-card 	w3-button w3-row w3-red"])}}
+			{!!Form::close() !!}
+	@endif
 	</div>
 </div>
 <script>
@@ -67,15 +70,15 @@ $(document).ready( function ()
     department = <?php echo json_encode($department); ?>;
     job = <?php echo json_encode($job); ?>;
 
+    // If department ID isn 1, it is tech support, so change  URL to match this and don't try to initialise the editForm as it doesn't exist.
 	if (department.id == 1)
     {
     	$('#createForm').submit(function () {
     		window.location.href = '/users/create/tech-support?department='+department.id+'&job='+job.id;
     		return false;
     	});
-    	$('#editForm :input').prop('disabled', true);
-    	$('#deleteForm :input').prop('disabled', true);
     }
+    // Initialise form URLs for normal caller departments.
     else
     {
     	$('#createForm').submit(function () {
