@@ -27,9 +27,10 @@ class ProblemController extends Controller
      */
     public function index()
     {
+        // If user is operator.
         if (PagesController::hasAccess(1))
         {
-            // Get intial caller for problem.
+            // Get a list of unresolved problems, with a range of related information about each problem; for displaying in table.
             $ongoing = DB::select(DB::raw(
                 'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problem_types.id as ptID, problems.description, IFNULL(parents.description,0) as pDesc, problems.importance, users.forename, users.surname, users.id as uID, calls.id as cID, IFNULL(specialists.forename,0) as sForename, IFNULL(specialists.surname,0) as sSurname, IFNULL(specialists.id,0) as sID, importance.text, importance.class, importance.level
                 FROM problems
@@ -55,7 +56,8 @@ class ProblemController extends Controller
                 LEFT JOIN resolved_problems rp ON rp.problem_id = problems.id
                 WHERE rp.problem_id IS NULL'
             ));
-                
+
+            // Get a list of resolved problems, with a range of related information about each problem; for displaying in table.
             $resolved = DB::select(DB::raw(
                 'SELECT problems.id as pID, problems.created_at, problem_types.description as ptDesc, problem_types.id as ptID, problems.description, IFNULL(parents.description,0) as pDesc, problems.importance, users.forename, users.surname, users.surname, users.id as uID, calls.id as cID, IFNULL(specialists.forename,0) as sForename, IFNULL(specialists.surname,0) as sSurname, IFNULL(specialists.id,0) as sID, rp.created_at as solved_at
                 FROM problems
@@ -78,7 +80,7 @@ class ProblemController extends Controller
                 ON problem_types.parent = parents.id
                 JOIN resolved_problems rp ON rp.problem_id = problems.id'
             ));
-
+            // Supply data to view.
             $data = array(
                 'title' => "Problem Viewer",
                 'desc' => "Displays all problems.",
@@ -87,14 +89,16 @@ class ProblemController extends Controller
                 'links' => PagesController::getOperatorLinks(),
                 'active' => 'Problems'
             );
-
+            // Show view.
             return view('problems.index')->with($data);
         }
-        elseif (PagesController::hasAccess(2)) {
+        // Otherwise, if user is specialist.
+        elseif (PagesController::hasAccess(2)) 
+        {
             // Get the currently logged in specialist's account information.
             $specialist = PagesController::getCurrentUser();
 
-            // Get all problem information for problems assigned to this specialist.
+            // Get all information on problems assigned to this specialist, which haven't been solved yet.
             $ongoing = DB::select(DB::raw(
                 "SELECT problems.id as id, problems.created_at, problem_types.description as ptDesc, problems.description, problems.assigned_to, problems.importance, IFNULL(parents.description,0) as pDesc, users.forename, users.surname, users.id as uID, calls.id as cID, importance.text, importance.class, importance.level
                 FROM problems
@@ -120,7 +124,7 @@ class ProblemController extends Controller
                 WHERE resolved_problems.id IS NULL AND problems.assigned_to = ".$specialist->id.";"
             ));
 
-            // Get all problem information for problems assigned to this specialist.
+            // Get all information on problems assigned to this specialist, which have already been solved.
             $resolved = DB::select(DB::raw(
                 "SELECT problems.id as id, problems.created_at, problems.updated_at, problem_types.description as ptDesc, problems.description, problems.assigned_to, problems.importance, IFNULL(parents.description,0) as pDesc, users.forename, users.surname, users.id as uID, calls.id as cID
                 FROM problems
@@ -167,10 +171,12 @@ class ProblemController extends Controller
      */
     public function create()
     {
+        // If user has operator access.
         if (PagesController::hasAccess(1))
         {
+            // Get list of all users, who could potentially be creating a call.
             $users = User::join('jobs', 'users.job_id', '=', 'jobs.id')->join('departments', 'jobs.department_id', '=', 'departments.id')->select('users.*', 'jobs.title', 'departments.name')->get();
-
+            // Supply data to view.
             $data = array(
                 'title' => "Problem Creator",
                 'desc' => "Create a New Problem",
@@ -181,6 +187,7 @@ class ProblemController extends Controller
 
             return view('problems.select_user_for_problem')->with($data);
         }
+        // No access redirects to login page.
         return redirect('login')->with('error', 'Please log in first.');
     }
 
@@ -190,25 +197,29 @@ class ProblemController extends Controller
      */
     public function select_problem_type($user_id)
     {
+        // If user has operator access.
         if (PagesController::hasAccess(1))
         {
+            // Get list of all problem types, including their parents (if applicable), for selection.
             $problem_types = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('problem_types.*, IFNULL(parents.description,0) as parent_description')->get();
             
+            // User ID previously supplied from @create must be valid.
             $user = User::find($user_id);
-	    if (!is_null($user))
-	    {
-            $data = array(
-                'title' => "Create Problem",
-                'desc' => " ",
-                'user'=>$user,
-                'problem_types'=>$problem_types,
-                'links' => PagesController::getOperatorLinks(),
-                'active' => 'Problems'
-            );
+            if (!is_null($user))
+            {
+                // Supply data to view.
+                $data = array(
+                    'title' => "Create Problem",
+                    'desc' => " ",
+                    'user'=>$user,
+                    'problem_types'=>$problem_types,
+                    'links' => PagesController::getOperatorLinks(),
+                    'active' => 'Problems'
+                );
 
-            return view('problems.select_problem_type_for_problem')->with($data);
-	    }
-	    return redirect('/problems/create')->with('error', 'Invalid User selected.');
+                return view('problems.select_problem_type_for_problem')->with($data);
+    	    }
+    	    return redirect('/problems/create')->with('error', 'Invalid user selected.');
         }
         return redirect('login')->with('error', 'Please log in first.'); 
     }
@@ -219,15 +230,17 @@ class ProblemController extends Controller
      */
     public function add_problem_details($user_id, $problem_type_id)
     {
-        // 
+        // If user has operator access.
         if (PagesController::hasAccess(1))
         {
+            // Get all supplied info as eloquent objects (easier to use, and checks if they're in the database).
             $pt = ProblemType::find($problem_type_id);
             $parent = ProblemType::find($pt->parent);
             $user = User::find($user_id);
             $importance = Importance::orderBy('level')->get();
             if (!is_null($pt) && !is_null($user) && !is_null($importance))
             {
+                // Supply data to view.
                 $data = array(
                     'title' => "Create Problem",
                     'desc' => " ",
@@ -253,19 +266,25 @@ class ProblemController extends Controller
      */
     public function select_specialist_for_problem(Request $request, $user_id, $problem_type_id)
     {
+        // If user has operator access.
         if (PagesController::hasAccess(1))
         {
+            // Check required data has been supplied.
             $this->validate($request, [
                 'desc' => 'required',
                 'notes' => 'required',
                 'importance' => 'required',
             ]);
 
+             // Get all supplied info as eloquent objects (easier to use, and checks if they're in the database).
             $user = User::find($user_id);
             $problem_type = ProblemType::find($problem_type_id);
             $parent = ProblemType::find($problem_type->parent);
             
-            $specialists = DB::select(DB::raw(
+            if (!is_null($user) && !is_null($problem_type))
+            {
+                // Get all information about specialists, raw query used due to complexity.
+                $specialists = DB::select(DB::raw(
                     "SELECT speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id) - COUNT(resolved_problems.id), 0) as jobs, timeoff.startDate, users.*,
                         GROUP_CONCAT(skill_types.description) as skills_list
                     FROM users
@@ -296,9 +315,7 @@ class ProblemController extends Controller
                     GROUP BY users.id, speciality.id, timeoff.startDate
                         "
                 ));
-
-            if (!is_null($user) && !is_null($problem_type))
-            {
+                // Supply data to view.
                 $data = array(
                     'title' => "Edit Assigned Specialist",
                     'desc' => "",
@@ -312,7 +329,6 @@ class ProblemController extends Controller
                     'links' => PagesController::getOperatorLinks(),
                     'active' => 'Problems'
                 );
-
                 return view('problems.select_specialist_for_problem')->with($data);
             }
 
@@ -331,6 +347,7 @@ class ProblemController extends Controller
     {
         if (PagesController::hasAccess(1))
         {
+            // Check all required data is supplied.
             $this->validate($request, [
                 'desc' => 'required',
                 'notes' => 'required',
@@ -340,8 +357,10 @@ class ProblemController extends Controller
                 'submit' =>'required'
             ]);
 
+            // Get operator logging this problem.
             $operator = PagesController::getCurrentUser();
 
+            // Get objects from inputs, an validate their existence.
             $pt = ProblemType::find($request->input('problem_type_id'));
             $user = User::find($request->input('user_id'));
             $importance = Importance::where('level', $request->input('importance'))->first();
@@ -357,6 +376,7 @@ class ProblemController extends Controller
             $problem->problem_type = $pt->id;
             $problem->logged_by = $operator->id;
             $problem->importance = $importance->level;
+
             // Assign Problem to Current Operator.
             if ($request->input('submit') == "Assign Problem to You")
             {
@@ -366,6 +386,7 @@ class ProblemController extends Controller
             // Assign Problem to Selected Specialist.
             else if ($request->input('submit') == "Assign Specialist")
             {
+                // Check a specialist was chosen, and that the specialist is valid.
                 $this->validate($request, [
                     'specialist' => 'required'
                 ]);
@@ -377,9 +398,14 @@ class ProblemController extends Controller
                 }
                 $problem->assigned_to = $specialist->id;
             }
+            else
+            {
+                return redirect('/problems/')->with('error', 'Invalid form data supplied.');
+            }
 
             $problem->save();
 
+            // Create a default call for problem.
             $call = new Call();
             $call->problem_id = $problem->id;
             $call->caller_id = $user->id;
@@ -398,11 +424,14 @@ class ProblemController extends Controller
      */
     public function show($id)
     {
+        // If problem in URL exists.
         $problem = Problem::find($id);
         if (!is_null($problem))
         {
+            // If viewer is operator or specialist.
             if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
             {
+                // Set links for navbar depending on person viewing page.
                 if (PagesController::hasAccess(1))
                 {
                     $links = PagesController::getOperatorLinks();
@@ -411,9 +440,12 @@ class ProblemController extends Controller
                 {
                     $links = PagesController::getSpecialistLinks();
                 }
+                // Get problem type information
                 $type = ProblemType::find($problem->problem_type);
+
                 $parent = ProblemType::find($type->parent);
 
+                /* -- Grab all other relevant problem information -- */
                 $callers = DB::table('problems')->join('calls', 'problems.id', '=', 'calls.problem_id')->join('users', 'users.id', '=', 'calls.caller_id')->select('calls.id as cID', 'calls.notes', 'calls.created_at as cAT', 'users.*')->where('problems.id', '=', $id)->get();
 
                 $assigned = User::join('problems', 'problems.assigned_to', '=', 'users.id')->where('problems.id', '=', $id)->select('users.*')->first();
@@ -432,6 +464,7 @@ class ProblemController extends Controller
 
                 if (!is_null($callers))
                 {
+                    // Supply data to view.
                     $data = array(
                         'title' => "Problem Viewer.",
                         'desc' => "Shows information on a problem.",
@@ -449,6 +482,7 @@ class ProblemController extends Controller
                         'links' => $links,
                         'active' => 'Problems'
                     );
+                    // Change view based on viewer account.
                     if (PagesController::hasAccess(1))
                     {
                         return view('problems.show')->with($data);
@@ -458,6 +492,7 @@ class ProblemController extends Controller
                         return view('problems.show_specialist')->with($data);
                     }
                 }
+                // Redirect to allowed page depending on viewer.
                 if (PagesController::hasAccess(1))
                 {
                     return redirect('/problems')->with('error', 'Invalid/corrupted problem selected.');
@@ -478,13 +513,18 @@ class ProblemController extends Controller
      */
     public function select_user_for_call($id)
     {
+        // If user has operator access.
         if (PagesController::hasAccess(1))
         {
+            // Get problem object from URL.
             $problem = Problem::find($id);
+            // Get list of users to choose from.
             $users = User::join('jobs', 'users.job_id', '=', 'jobs.id')->join('departments', 'jobs.department_id', '=', 'departments.id')->select('users.*', 'jobs.title', 'departments.name')->get();
 
+            // If problem exists.
             if (!is_null($problem))
             {
+                // Get initial caller for reference.
                 $caller = DB::select(DB::raw('
                     SELECT users.* FROM users
                     JOIN calls
@@ -493,7 +533,7 @@ class ProblemController extends Controller
                         FROM calls
                         WHERE problem_id = '.$problem->id.'
                     );'))[0];
-
+                // Supply data to view.
                 $data = array(
                     'title' => "Add Call to Problem.",
                     'desc' => "Select a user to create a call for.",
@@ -516,13 +556,17 @@ class ProblemController extends Controller
      */
     public function add_call($id, $caller_id)
     {
+        // If user has operator access.
         if (PagesController::hasAccess(1))
         {
+            // Get problem & user object.
             $problem = Problem::find($id);
             $user = User::find($caller_id);
 
+            // Check both exist.
             if (!is_null($problem) && !is_null($user))
             {
+                // Supply data to view.
                 $data = array(
                     'title' => "Create Call for Problem.",
                     'desc' => "Add a call from a user to a problem.",
@@ -544,8 +588,10 @@ class ProblemController extends Controller
      */
     public function select_equipment_to_add($id)
     {
+        // If user has operator/specialist access.
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {
+            // Set links for navbar based on viewer's access.
             if (PagesController::hasAccess(1))
             {
                 $links = PagesController::getOperatorLinks();
@@ -555,14 +601,16 @@ class ProblemController extends Controller
                 $links = PagesController::getSpecialistLinks();
             }
 
+            // Get problem object from id.
             $problem = Problem::find($id);
-
-
+            // Check exists.
             if (!is_null($problem))
             {
+                // Get all currently affected hardware, and list of all equipment.
                 $affected_hardware = AffectedHardware::where('problem_id', '=', $id)->get();
                 $equipment = Equipment::all();
 
+                // Supply data to view.
                 $data = array(
                     'title' => "Add Affected Equipment to Problem.",
                     'desc' => "Select equipment affected by problem.",
@@ -574,6 +622,7 @@ class ProblemController extends Controller
                 );
                 return view('problems.select_equipment_to_add')->with($data);
             }
+            // Redirect to allowed page based on viewer access.
             if (PagesController::hasAccess(1))
             {
                 return redirect('/problems')->with('error', 'Invalid problem selected.');
@@ -591,23 +640,28 @@ class ProblemController extends Controller
      */
     public function append_equipment(Request $request)
     {
+        // If user has operator/specialist access.
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {            
-
+            // If all required data is supplied.
             $this->validate($request, [
                 'problem-id' => 'required',
                 'equipment' => 'required',
             ]);
 
+            // Using information supplied as iterable, make affected_hardware entries.
             $equipments = $request->input('equipment');
             $problem_id = $request->input('problem-id');
-
             foreach ($equipments as $e)
             {
-                $a_h = new AffectedHardware();
-                $a_h->problem_id = $problem_id;
-                $a_h->equipment_id = $e;
-                $a_h->save();
+                // Check equipment is correct.
+                if (!is_null(Equipment::find($e)))
+                {
+                    $a_h = new AffectedHardware();
+                    $a_h->problem_id = $problem_id;
+                    $a_h->equipment_id = $e;
+                    $a_h->save();
+                }
             }
 
             return redirect('/problems/'.$request->input('problem-id'))->with('success', 'Equipment Added');
@@ -620,8 +674,10 @@ class ProblemController extends Controller
      */
     public function select_equipment_to_remove($id)
     {
+        // If user has operator/specialist access.
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {
+            // Set links based on viewer access.
             if (PagesController::hasAccess(1))
             {
                 $links = PagesController::getOperatorLinks();
@@ -630,13 +686,14 @@ class ProblemController extends Controller
             {
                 $links = PagesController::getSpecialistLinks();
             }
+            // Get problem object from ID.
             $problem = Problem::find($id);
-
+            // Gget list of all currently affected hardware.
             $equipment = Equipment::join('affected_hardware', 'equipment.id', '=', 'affected_hardware.equipment_id')->where('affected_hardware.problem_id', '=', $id)->get();
-
 
             if (!is_null($problem))
             {
+                // Supply data to view.
                 $data = array(
                     'title' => "Remove Equipment from Problem.",
                     'desc' => "Select a user to create a call for.",
@@ -648,6 +705,7 @@ class ProblemController extends Controller
 
                 return view('problems.select_equipment_to_remove')->with($data);
             }
+            // Redirect to allowed page based on viewer.
             if (PagesController::hasAccess(1))
             {
                 return redirect('/problems')->with('error', 'Invalid problem selected.');
@@ -665,19 +723,21 @@ class ProblemController extends Controller
      */
     public function delete_equipment(Request $request)
     {
+        // If user has operator/specialist access.
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
-        {            
+        {           
+            // If all required data is supplied. 
             $this->validate($request, [
                 'problem-id' => 'required',
                 'equipment' => 'required',
             ]);
 
-            $equipments = $request->input('equipment');
+            // Using information supplied as iterable, delete affected_hardware entries.
+            $affected = $request->input('equipment');
             $problem_id = $request->input('problem-id');
-
-            foreach ($equipments as $e)
+            foreach ($affected as $ah)
             {
-                $a_h = AffectedHardware::find($e);
+                $a_h = AffectedHardware::find($ah);
                 $a_h->delete();
             }
 
@@ -692,8 +752,10 @@ class ProblemController extends Controller
      */
     public function select_software_to_add($id)
     {
+        // If user has operator/specialist access.
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {
+            // Set links for navbar based on viewer's access.
             if (PagesController::hasAccess(1))
             {
                 $links = PagesController::getOperatorLinks();
@@ -702,13 +764,17 @@ class ProblemController extends Controller
             {
                 $links = PagesController::getSpecialistLinks();
             }
+            // Get problem object from id.
             $problem = Problem::find($id);
 
-            $software = Software::all();
-            $affected_software = AffectedSoftware::where('problem_id', '=', $id)->get();
 
             if (!is_null($problem))
             {
+                // Get all currently affected software, and list of all software.
+                $affected_software = AffectedSoftware::where('problem_id', '=', $id)->get();
+                $software = Software::all();
+                
+                // Supply data to view.
                 $data = array(
                     'title' => "Add Software to Problem.",
                     'desc' => "",
@@ -720,6 +786,7 @@ class ProblemController extends Controller
                 );
                 return view('problems.select_software_to_add')->with($data);
             }
+            // Redirect to allowed page based on viewer access.
             if (PagesController::hasAccess(1))
             {
                 return redirect('/problems')->with('error', 'Invalid problem selected.');
@@ -737,22 +804,29 @@ class ProblemController extends Controller
      */
     public function append_software(Request $request)
     {
+        // If user has operator/specialist access.
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {            
+            // If all required data is supplied.
             $this->validate($request, [
                 'problem-id' => 'required',
                 'software' => 'required',
             ]);
 
+            // Using information supplied as iterable, make affected_software entries.
             $softwares = $request->input('software');
             $problem_id = $request->input('problem-id');
 
             foreach ($softwares as $s)
             {
-                $a_s = new AffectedSoftware();
-                $a_s->problem_id = $problem_id;
-                $a_s->software_id = $s;
-                $a_s->save();
+                // Check software is correct.
+                if (!is_null(Equipment::find($e)))
+                {
+                    $a_s = new AffectedSoftware();
+                    $a_s->problem_id = $problem_id;
+                    $a_s->software_id = $s;
+                    $a_s->save();
+                }
             }
 
             return redirect('/problems/'.$request->input('problem-id'))->with('success', 'Software Added');
@@ -765,8 +839,10 @@ class ProblemController extends Controller
      */
     public function select_software_to_remove($id)
     {
+        // If user has operator/specialist access.
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {
+            // Set links based on viewer access.
             if (PagesController::hasAccess(1))
             {
                 $links = PagesController::getOperatorLinks();
@@ -775,12 +851,14 @@ class ProblemController extends Controller
             {
                 $links = PagesController::getSpecialistLinks();
             }
+            // Get problem object from ID.
             $problem = Problem::find($id);
-
+            // Get list of all currently affected software.
             $software = Software::join('affected_software', 'software.id', '=', 'affected_software.software_id')->where('affected_software.problem_id', '=', $id)->get();
 
             if (!is_null($problem))
             {
+                // Supply data to view.
                 $data = array(
                     'title' => "Remove Software from Problem.",
                     'desc' => "",
@@ -792,6 +870,7 @@ class ProblemController extends Controller
 
                 return view('problems.select_software_to_remove')->with($data);
             }
+            // Redirect to allowed page based on viewer.
             if (PagesController::hasAccess(1))
             {
                 return redirect('/problems')->with('error', 'Invalid problem selected.');
@@ -809,13 +888,16 @@ class ProblemController extends Controller
      */
     public function delete_software(Request $request)
     {
+        // If user has operator/specialist access.
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
-        {            
+        {          
+            // If all required data is supplied.   
             $this->validate($request, [
                 'problem-id' => 'required',
                 'software' => 'required',
             ]);
 
+            // Using information supplied as iterable, delete affected_software entries.
             $softwares = $request->input('software');
             $problem_id = $request->input('problem-id');
 
@@ -838,8 +920,10 @@ class ProblemController extends Controller
      */
     public function edit($id)
     {
+        // If user has operator/specialist access.
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {
+            // Set links based on viewer access.
             if (PagesController::hasAccess(1))
             {
                 $links = PagesController::getOperatorLinks();
@@ -848,17 +932,20 @@ class ProblemController extends Controller
             {
                 $links = PagesController::getSpecialistLinks();
             }
+            // Get problem object from ID.
             $problem = Problem::find($id);
-            $type = ProblemType::find($problem->problem_type);
-            $parent = ProblemType::find($type->parent);
             if (!is_null($problem))
             {
+                // Get information about problem that can be edited.
+                $type = ProblemType::find($problem->problem_type);
+                $parent = ProblemType::find($type->parent);
+
                 $assigned = DB::table('problems')->join('users', 'problems.assigned_to', '=', 'users.id')->select('users.*')->where('problems.id', '=', $id)->select('users.*')->first();
 
                 $resolved = DB::table('problems')->join('resolved_problems', 'problems.id', '=', 'resolved_problems.problem_id')->select('resolved_problems.solution_notes', 'resolved_problems.created_at')->where('problems.id', '=', $id)->get()->first();
 
                 $importance = Importance::orderBy('level')->get();
-
+                // Supply data to view.
                 $data = array(
                     'title' => "Edit Existing Problem",
                     'desc' => "For editing a problem.",
@@ -874,6 +961,7 @@ class ProblemController extends Controller
 
                 return view('problems.edit')->with($data);
             }
+            // Redirect to allowed page based on viewer.
             if (PagesController::hasAccess(1))
             {
                 return redirect('/problems')->with('error', 'Invalid problem selected.');
@@ -891,8 +979,10 @@ class ProblemController extends Controller
      */
     public function edit_problem_type ($id)
     {
-       if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
+        // If user has operator/specialist access.
+        if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {
+            // Set links based on viewer access.
             if (PagesController::hasAccess(1))
             {
                 $links = PagesController::getOperatorLinks();
@@ -901,11 +991,13 @@ class ProblemController extends Controller
             {
                 $links = PagesController::getSpecialistLinks();
             }
+            // Get problem object from ID.
             $problem = Problem::find($id);
             if (!is_null($problem))
             {
+                // Get list of problem types.
                 $problem_types = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('problem_types.*, IFNULL(parents.description,0) as parent_description')->get();
-                
+                // Supply data to view.
                 $data = array(
                     'title' => "Edit Problem Type",
                     'desc' => " ",
@@ -917,6 +1009,7 @@ class ProblemController extends Controller
 
                 return view('problems.edit_problem_type')->with($data);
             }
+            // Redirect to allowed page based on viewer access.
             if (PagesController::hasAccess(1))
             {
                 return redirect('/problems')->with('error', 'Invalid problem selected.');
@@ -934,11 +1027,14 @@ class ProblemController extends Controller
      */
     public function add_problem_type ($problem_id, $type_id)
     {
+        // If user has operator/specialist access.
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {
+            // Get problem & problem type object from ID.
             $problem = Problem::find($problem_id);
             $pt = ProblemType::find($type_id);
             if (!is_null($problem) && !is_null($pt))
+
             {
                 $problem->problem_type = $pt->id;
                 $problem->save();
