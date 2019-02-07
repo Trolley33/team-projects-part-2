@@ -30,13 +30,12 @@
                 ({{$s->parent_description}})
             @endif
             {{$s->description}}</td>
-        <td title="" class="editbutton modalOpener visisbleColumn" id='{{$s->id}}' value='/users/{{$s->id}}/compact'>
+        <td title="" class="editbutton modalOpener visisbleColumn" id='{{$s->id}}' value='/skills/{{$s->id}}/compact'>
             View
         </td>
         <td>
-            @if ($s->id == 2)
-                Login
-            @endif
+            <!-- Remove duplicate skills, do rest of comma separated -->
+            {{implode(',', array_unique(explode(',', $s->skills_list)))}}
         </td>
         <td style="text-align: right;">{{$s->jobs}}</td>
 				<td title="Select" class="selectBox editbutton" style="text-align: center;">
@@ -146,7 +145,6 @@ $(document).ready( function ()
     // Highlight cells with (?)
     skillCells.each(function (i) {
         var d = table.row(i).data();
-        console.log(i + "," + d);
         if (d[4].toLowerCase().includes(search.toLowerCase()))
         {
             $(this).html("Match Found <span class='w3-text-green'>(?)</span>");

@@ -38,7 +38,8 @@ class PagesController extends Controller
             ['href'=>'back','text'=>'back'],
             ['href'=>'specialist','text'=>'Home'],
             ['href'=>'problems', 'text'=>'Problems'],
-            ['href'=>'specialist/timeoff', 'text'=>'Time Off']
+            ['href'=>'specialist/timeoff', 'text'=>'Time Off'],
+            ['href'=>'skills', 'text'=>'Skills']
         ];
     }
 

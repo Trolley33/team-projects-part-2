@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.compact')
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <h2>Listed Skills For: {{$user->forename}} {{$user->surname}}</h2>
@@ -10,7 +10,7 @@
         </thead>
         <tbody>
             @foreach ($skills as $skill)
-            <tr>
+            <tr class="row" value='{{$skill->problem_type_id}}'>
                 <td>
                 @if (!is_null($skill->parentID))
                     ({{$skill->parentDesc}})

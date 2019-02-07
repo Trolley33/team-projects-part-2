@@ -253,7 +253,8 @@ class ProblemController extends Controller
             $parent = ProblemType::find($problem_type->parent);
             
             $specialists = DB::select(DB::raw(
-                    "SELECT speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id) - COUNT(resolved_problems.id), 0) as jobs, timeoff.startDate, users.*
+                    "SELECT speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id) - COUNT(resolved_problems.id), 0) as jobs, timeoff.startDate, users.*,
+                        GROUP_CONCAT(skill_types.description) as skills_list
                     FROM users
                     JOIN speciality
                     ON users.id = speciality.specialist_id
@@ -272,6 +273,10 @@ class ProblemController extends Controller
                             ORDER BY timeoff.created_at desc
                             LIMIT 1)
                         )
+                    LEFT JOIN skills
+                    ON users.id = skills.specialist_id
+                    LEFT JOIN problem_types as skill_types
+                    ON skills.problem_type_id = skill_types.id
                     WHERE
                         (DATE(NOW()) NOT BETWEEN timeoff.startDate AND timeoff.endDate)
                         OR timeoff.id IS NULL
@@ -891,7 +896,8 @@ class ProblemController extends Controller
                 $parent = ProblemType::find($problem_type->parent);
 
                 $specialists = DB::select(DB::raw(
-                    "SELECT speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id) - COUNT(resolved_problems.id), 0) as jobs, timeoff.startDate, users.*
+                    "SELECT speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id) - COUNT(resolved_problems.id), 0) as jobs, timeoff.startDate, users.*,
+                        GROUP_CONCAT(skill_types.description) as skills_list
                     FROM users
                     JOIN speciality
                     ON users.id = speciality.specialist_id
@@ -910,6 +916,10 @@ class ProblemController extends Controller
                             ORDER BY timeoff.created_at desc
                             LIMIT 1)
                         )
+                    LEFT JOIN skills
+                    ON users.id = skills.specialist_id
+                    LEFT JOIN problem_types as skill_types
+                    ON skills.problem_type_id = skill_types.id
                     WHERE
                         (DATE(NOW()) NOT BETWEEN timeoff.startDate AND timeoff.endDate)
                         OR timeoff.id IS NULL

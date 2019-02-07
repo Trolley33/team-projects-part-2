@@ -38,8 +38,10 @@ Route::put('/specialist/timeoff/{id}', 'PagesController@update_absence');
 Route::delete('/specialist/timeoff/{id}/delete', 'PagesController@delete_absence');
 
 // These use specialist ID.
-Route::get('/skills/create', 'SkillController@create');
-Route::post('/skills/create', 'SkillController@store');
+Route::get('/skills/{id}/create', 'SkillController@create');
+Route::get('/skills/{id}/create/{ptID}', 'SkillController@add_ability');
+Route::post('/skills/{id}/create', 'SkillController@store');
+Route::get('/skills/', 'SkillController@index');
 Route::get('/skills/{id}', 'SkillController@show');
 Route::get('/skills/{id}/compact', 'SkillController@show_compact');
 Route::get('/skills/{id}/{skill_id}/edit', 'SkillController@edit');
