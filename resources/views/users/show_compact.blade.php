@@ -82,6 +82,12 @@
                             </td>
                             @endif
                         </tr>
+                        <tr class="w3-hover-light-grey">
+                            <th>Other Skills</th>
+                            <td class="editbutton" onclick="window.location.href = '/skills/{{$user->id}}';">
+                            Click to View
+                            </td>
+                        </tr>
                     @endif
                     @if (!is_null($timeoff))
                         <tr class="w3-text-deep-orange">

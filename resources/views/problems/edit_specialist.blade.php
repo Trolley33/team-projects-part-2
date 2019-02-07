@@ -33,8 +33,8 @@
         <td title="" class="editbutton modalOpener visisbleColumn" id='{{$s->id}}' value='/skills/{{$s->id}}/compact'>
             View
         </td>
+        <!-- Remove duplicate skills, do rest of comma separated -->
         <td>
-            <!-- Remove duplicate skills, do rest of comma separated -->
             {{implode(',', array_unique(explode(',', $s->skills_list)))}}
         </td>
         <td style="text-align: right;">{{$s->jobs}}</td>
@@ -121,15 +121,14 @@ $(document).ready( function ()
         var text = $(this).val();
         skillCells.each(function (i) {
             var d = table.row(i).data();
-            if (text == '')
+            if (d[4].toLowerCase().includes(text.toLowerCase()) && text != '')
+            {
+                $(this).html("Match Found <span class='w3-text-green'>(?)</span>");
+            }
+            else
             {
                 $(this).html("View");
                 return;
-            }
-
-            if (d[4].toLowerCase().includes(text.toLowerCase()))
-            {
-                $(this).html("Match Found <span class='w3-text-green'>(?)</span>");
             }
         });
     });
@@ -145,13 +144,14 @@ $(document).ready( function ()
     // Highlight cells with (?)
     skillCells.each(function (i) {
         var d = table.row(i).data();
-        if (d[4].toLowerCase().includes(search.toLowerCase()))
+        if (d[4].toLowerCase().includes(search.toLowerCase()) && search != '')
         {
             $(this).html("Match Found <span class='w3-text-green'>(?)</span>");
         }
         else
         {
             $(this).html("View");
+            return;
         }
     });
 

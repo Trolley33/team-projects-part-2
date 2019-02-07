@@ -17,7 +17,7 @@
                 @endif
                 {{$skill->ptDesc}}
                 </td>
-                <td>{{$skill->ability}}/10</td>
+                <td style="text-align: right;">{{$skill->ability}}/10</td>
                 <td class="editbutton" style="text-align: center;" onclick="window.location.href = '/skills/{{$user->id}}/{{$skill->id}}/edit'">
                     Edit
                 </td>

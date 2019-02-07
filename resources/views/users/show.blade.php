@@ -56,6 +56,12 @@
                             </td>
                             @endif
                         </tr>
+                        <tr class="w3-hover-light-grey">
+                            <th>Other Skills</th>
+                            <td class="editbutton modalOpener" value="/skills/{{$user->id}}/compact">
+                            Click to View
+                            </td>
+                        </tr>
                     @endif
                     @if (!is_null($timeoff))
                         <tr class="w3-text-deep-orange">

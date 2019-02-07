@@ -29,7 +29,7 @@ class SkillController extends Controller
 		$viewer = PagesController::getCurrentUser();
 		return redirect("/skills/".$viewer->id);
 	}
-	
+
     public function create ($id)
     {
     	if (!(PagesController::hasAccess(2) || PagesController::hasAccess(1)))
@@ -62,7 +62,7 @@ class SkillController extends Controller
 	    $problem_types = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->select('problem_types.*','parents.id as pID', 'parents.description as pDesc')->get();
 
     	$data = array(
-    	    'title'=> "View Skills",
+    	    'title'=> "Create Skill",
     	    'desc'=>"View & Modify Specialist Skills",
     	    'user'=>$user,
     	    'problem_types'=>$problem_types,
@@ -119,6 +119,55 @@ class SkillController extends Controller
     	return view('skills.add_ability')->with($data);
     }
 
+     public function edit_ability ($id, $skillID, $ptID)
+    {
+    	if (!(PagesController::hasAccess(2) || PagesController::hasAccess(1)))
+    	{
+    		return redirect('/login')->with('error', 'Please log in first.');
+    	}
+    	$viewer = PagesController::getCurrentUser();
+
+    	$user = User::find($id);
+    	$problem_type = ProblemType::find($ptID);
+    	$skill = Skill::find($skillID);
+
+    	if (is_null($user) || is_null($problem_type) || is_null($skill))
+    	{
+    		return redirect()->back();
+    	}
+    	$parent = ProblemType::find($problem_type->parent);
+
+    	if (PagesController::hasAccess(2))
+    	{
+    		if ($user->id != $viewer->id)
+    		{
+	    		return redirect()->back();
+	    	}
+	    	$links = PagesController::getSpecialistLinks();
+	    	$active = "Skills";
+    	}
+    	else
+    	{
+	    	$links = PagesController::getOperatorLinks();
+	    	$active = "Users";
+	    }
+
+
+
+    	$data = array(
+    	    'title'=> "View Skills",
+    	    'desc'=>"View & Modify Specialist Skills",
+    	    'user'=>$user,
+    	    'problem_type'=>$problem_type,
+    	    'parent'=>$parent,
+    	    'skill'=>$skill,
+    	    'links'=>$links,
+    	    'active'=>$active
+    	);
+
+    	return view('skills.edit_ability')->with($data);
+    }
+
     public function store (Request $request, $id)
     {
     	if (!(PagesController::hasAccess(2) || PagesController::hasAccess(1)))
@@ -157,10 +206,17 @@ class SkillController extends Controller
 	    	return redirect("/skills/$id")->with('error', 'Skill Already Exists for this Problem Type.');
 	    }
 
+	    $ability = $request->input('ability');
+
+	    if ($ability > 10 || $ability < 0)
+    	{
+			return redirect("/skills/$id")->with('error', 'Invalid Ability Supplied.');
+    	}
+
 	    $skill = new Skill();
 	    $skill->specialist_id = $id;
 	    $skill->problem_type_id = $ptID;
-	    $skill->ability = $request->input('ability');
+	    $skill->ability = $ability;
 	    $skill->save();
 
     	return redirect("/skills/$id")->with('success', 'Skill Added.');
@@ -251,12 +307,94 @@ class SkillController extends Controller
 
     public function edit ($id, $skill_id)
     {
+    	if (!(PagesController::hasAccess(2) || PagesController::hasAccess(1)))
+    	{
+    		return redirect('/login')->with('error', 'Please log in first.');
+    	}
+    	$viewer = PagesController::getCurrentUser();
 
+    	$user = User::find($id);
+    	if (is_null($user))
+    	{
+    		return redirect()->back();
+    	}
+
+    	if (PagesController::hasAccess(2))
+    	{
+    		if ($user->id != $viewer->id)
+    		{
+	    		return redirect()->back();
+	    	}
+	    	$links = PagesController::getSpecialistLinks();
+	    	$active = "Skills";
+    	}
+    	else
+    	{
+	    	$links = PagesController::getOperatorLinks();
+	    	$active = "Users";
+	    }
+
+	    $problem_types = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->select('problem_types.*','parents.id as pID', 'parents.description as pDesc')->get();
+
+	    $skill = Skill::find($skill_id);
+
+    	$data = array(
+    	    'title'=> "Edit Skill",
+    	    'desc'=>"View & Modify Specialist Skills",
+    	    'user'=>$user,
+    	    'problem_types'=>$problem_types,
+    	    'skill'=>$skill,
+    	    'links'=>$links,
+    	    'active'=>$active
+    	);
+
+    	return view('skills.edit')->with($data);
     }
 
-    public function update (Request $request, $id, $skill_id)
+    public function update (Request $request, $skill_id)
     {
+    	if (!(PagesController::hasAccess(2) || PagesController::hasAccess(1)))
+    	{
+    		return redirect('/login')->with('error', 'Please log in first.');
+    	}
 
+    	$skill = Skill::find($skill_id);
+    	if (is_null($skill))
+    	{
+    		return redirect()->back();
+    	}
+
+    	$user = User::find($skill->specialist_id);
+    	$viewer = PagesController::getCurrentUser();
+
+    	if (PagesController::hasAccess(2))
+    	{
+    		if ($user->id != $viewer->id)
+    		{
+	    		return redirect()->back();
+	    	}
+	    }
+
+    	$ptID = $request->input('problem_type') ?? $skill->problem_type_id;
+    	$ability = $request->input('ability') ?? $skill->ability;
+
+    	if ($ability > 10 || $ability < 0)
+    	{
+    		return redirect("/skills/".$user->id)->with('error', 'Invalid Ability Supplied.');
+    	}
+
+	    $result = Skill::where('specialist_id', $user->id)->where('problem_type_id', $ptID)->where('id', '!=', $skill->id)->get();
+
+	    if (count($result) > 0)
+	    {
+	    	return redirect("/skills/".$user->id)->with('error', 'Skill Already Exists for this Problem Type.');
+	    }
+
+	    $skill->problem_type_id = $ptID;
+	    $skill->ability = $request->input('ability');
+	    $skill->save();
+
+    	return redirect("/skills/".$user->id)->with('success', 'Skill Updated.');
     }
 
     public function delete ($skill_id)

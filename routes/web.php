@@ -45,6 +45,7 @@ Route::get('/skills/', 'SkillController@index');
 Route::get('/skills/{id}', 'SkillController@show');
 Route::get('/skills/{id}/compact', 'SkillController@show_compact');
 Route::get('/skills/{id}/{skill_id}/edit', 'SkillController@edit');
+Route::get('/skills/{id}/{skill_id}/edit/{ptID}', 'SkillController@edit_ability');
 // These two use skill ID only.
 Route::put('/skills/{id}', 'SkillController@update');
 Route::delete('/skills/{id}/delete', 'SkillController@delete');
