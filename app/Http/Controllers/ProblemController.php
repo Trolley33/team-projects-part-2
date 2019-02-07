@@ -430,7 +430,7 @@ class ProblemController extends Controller
 
                 $operator = User::find($problem->logged_by);
 
-                if (!is_null($problem) && !is_null($callers))
+                if (!is_null($callers))
                 {
                     $data = array(
                         'title' => "Problem Viewer.",
