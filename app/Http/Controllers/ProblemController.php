@@ -354,7 +354,7 @@ class ProblemController extends Controller
             $problem = new Problem();
             $problem->description = $request->input('desc');
             $problem->notes = $request->input('notes');
-            $problem->problem_type = $pt->id
+            $problem->problem_type = $pt->id;
             $problem->logged_by = $operator->id;
             $problem->importance = $importance->level;
             // Assign Problem to Current Operator.
