@@ -342,13 +342,21 @@ class ProblemController extends Controller
 
             $operator = PagesController::getCurrentUser();
 
+            $pt = ProblemType::find($request->input('problem_type_id'));
+            $user = User::find($request->input('user_id'));
+            $importance = Importance::where('level', $request->input('importance'))->first();
+            if (is_null($pt) || is_null($user) || is_null($importance))
+            {
+                return redirect('/problems/')->with('error', 'Invalid problem type, user, or importance level supplied.');
+            }
 
+            // Create new problem object and append info.
             $problem = new Problem();
             $problem->description = $request->input('desc');
             $problem->notes = $request->input('notes');
-            $problem->problem_type = $request->input('problem_type_id');
+            $problem->problem_type = $pt->id
             $problem->logged_by = $operator->id;
-            $problem->importance = $request->input('importance');
+            $problem->importance = $importance->level;
             // Assign Problem to Current Operator.
             if ($request->input('submit') == "Assign Problem to You")
             {
@@ -361,14 +369,20 @@ class ProblemController extends Controller
                 $this->validate($request, [
                     'specialist' => 'required'
                 ]);
-                $problem->assigned_to = $request->input('specialist');
+
+                $specialist = User::find($request->input('specialist'));
+                if (!is_null($specialist))
+                {
+                    return redirect('/problems/')->with('error', 'Invalid specialist selected.');
+                }
+                $problem->assigned_to = $specialist->id;
             }
 
             $problem->save();
 
             $call = new Call();
             $call->problem_id = $problem->id;
-            $call->caller_id = $request->input('user_id');
+            $call->caller_id = $user->id;
             $call->notes = "Initial call.";
             $call->save();
 
