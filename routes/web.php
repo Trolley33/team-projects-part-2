@@ -12,10 +12,9 @@
 */
 
 // Main pages routes. ==================================
-Route::get('/', 'PagesController@index');
+Route::get('/', 'PagesController@login');
 Route::get('/login', 'PagesController@login')->name('login');
 Route::get('/logout', 'PagesController@logout');
-Route::get('/FAQ', 'PagesController@FAQ');
 
 Route::get('/verify', function()
 {
