@@ -184,6 +184,10 @@ class ProblemController extends Controller
         return redirect('login')->with('error', 'Please log in first.');
     }
 
+    /** 
+     * Selects problem type for problem.
+     * Follows from @create.
+     */
     public function select_problem_type($user_id)
     {
         if (PagesController::hasAccess(1))
@@ -209,8 +213,13 @@ class ProblemController extends Controller
         return redirect('login')->with('error', 'Please log in first.'); 
     }
 
+    /** 
+     * Adds notes & details to problem.
+     * Follows from @select_problem_type.
+     */
     public function add_problem_details($user_id, $problem_type_id)
     {
+        // 
         if (PagesController::hasAccess(1))
         {
             $pt = ProblemType::find($problem_type_id);
@@ -238,6 +247,10 @@ class ProblemController extends Controller
         return redirect('login')->with('error', 'Please log in first.'); 
     }
 
+    /** 
+     * Selects specialist/operator to assign to problem.
+     * Follows from @add_problem_details.
+     */
     public function select_specialist_for_problem(Request $request, $user_id, $problem_type_id)
     {
         if (PagesController::hasAccess(1))
@@ -445,6 +458,10 @@ class ProblemController extends Controller
         return redirect('/problems/')->with('error', 'Sorry, something went wrong.');
     }
 
+    /** 
+     * Selects user for new call, on previous problem.
+     * Follows from Calls@create & Problems@show->append call.
+     */
     public function select_user_for_call($id)
     {
         if (PagesController::hasAccess(1))
@@ -479,6 +496,10 @@ class ProblemController extends Controller
         return redirect('login')->with('error', 'Please log in first.');
     }
 
+    /** 
+     * Adds call information for new call.
+     * Follows from Calls@select_user_for_call.
+     */
     public function add_call($id, $caller_id)
     {
         if (PagesController::hasAccess(1))
@@ -503,6 +524,10 @@ class ProblemController extends Controller
         return redirect('login')->with('error', 'Please log in first.');
     }
 
+    /** 
+     * Selects which equipment to append to problem.
+     * Follows from Problem@show->append equipment.
+     */
     public function select_equipment_to_add($id)
     {
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
@@ -546,7 +571,10 @@ class ProblemController extends Controller
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
-
+    /** 
+     * Adds database entry(s) for affected_hardware.
+     * Follows from ProblemController@select_equipment_to_add.
+     */
     public function append_equipment(Request $request)
     {
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
@@ -572,7 +600,10 @@ class ProblemController extends Controller
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
-
+    /** 
+     * Selects which equipment to remove from problem.
+     * Follows from Problem@show->remove equipment.
+     */
     public function select_equipment_to_remove($id)
     {
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
@@ -614,7 +645,10 @@ class ProblemController extends Controller
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
-
+    /** 
+     * Removes database entry(s) for affected_hardware
+     * Follows from ProblemController@show->select_equipment_to_remove.
+     */
     public function delete_equipment(Request $request)
     {
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
@@ -638,7 +672,10 @@ class ProblemController extends Controller
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
-
+    /** 
+     * Selects which software to append to problem.
+     * Follows from Problem@show->append software.
+     */
     public function select_software_to_add($id)
     {
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
@@ -680,7 +717,10 @@ class ProblemController extends Controller
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
-
+    /** 
+     * Adds database entry(s) for affected_software.
+     * Follows from ProblemController@select_software_to_add.
+     */
     public function append_software(Request $request)
     {
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
@@ -705,7 +745,10 @@ class ProblemController extends Controller
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
-
+    /** 
+     * Selects which software to remove from problem.
+     * Follows from Problem@show->remove software.
+     */
     public function select_software_to_remove($id)
     {
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
@@ -746,7 +789,10 @@ class ProblemController extends Controller
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
-
+    /** 
+     * Removes database entry(s) for affected_software
+     * Follows from ProblemController@show->select_software_to_remove.
+     */
     public function delete_software(Request $request)
     {
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
@@ -825,7 +871,10 @@ class ProblemController extends Controller
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
-
+    /** 
+     * Selects which equipment to append to problem.
+     * Follows from Problem@show->append equipment.
+     */
     public function edit_problem_type ($id)
     {
        if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
@@ -865,7 +914,10 @@ class ProblemController extends Controller
         }
         return redirect('login')->with('error', 'Please log in first.'); 
     }
-
+    /** 
+     * Selects which equipment to append to problem.
+     * Follows from Problem@show->append equipment.
+     */
     public function add_problem_type ($problem_id, $type_id)
     {
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
@@ -883,7 +935,10 @@ class ProblemController extends Controller
 
         return redirect('/login')->with('error', 'Please log in first.');
     }
-
+    /** 
+     * Selects which equipment to append to problem.
+     * Follows from Problem@show->append equipment.
+     */
     public function edit_specialist ($id)
     {
         $problem = Problem::find($id);
@@ -962,7 +1017,10 @@ class ProblemController extends Controller
         }
         return redirect('/problems/'.$id)->with('error', 'Sorry, something went wrong.');
     }
-
+    /** 
+     * Selects which equipment to append to problem.
+     * Follows from Problem@show->append equipment.
+     */
     public function solve_compact ($id)
     {
         $problem = Problem::find($id);
@@ -978,9 +1036,11 @@ class ProblemController extends Controller
             }
             return redirect('login')->with('error', 'Please log in first.'); 
         }
-        
     }
-
+    /** 
+     * Selects which equipment to append to problem.
+     * Follows from Problem@show->append equipment.
+     */
     public function solve_problem (Request $request, $id)
     {
         $problem = Problem::find($id);
@@ -1010,9 +1070,11 @@ class ProblemController extends Controller
         }
 
         return redirect('/problems/'.$id)->with('error', 'Sorry, something went wrong.');
-
     }
-
+    /** 
+     * Selects which equipment to append to problem.
+     * Follows from Problem@show->append equipment.
+     */
     public function add_specialist($id, $specialist_id)
     {
         $problem = Problem::find($id);
@@ -1038,7 +1100,10 @@ class ProblemController extends Controller
         }
         return redirect('/problems/'.$id)->with('error', 'Sorry, something went wrong.');
     }
-
+    /** 
+     * Selects which equipment to append to problem.
+     * Follows from Problem@show->append equipment.
+     */
     public function add_operator($id)
     {
         $problem = Problem::find($id);
