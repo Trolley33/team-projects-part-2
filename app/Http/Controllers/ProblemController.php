@@ -937,9 +937,10 @@ class ProblemController extends Controller
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
         {
             $problem = Problem::find($problem_id);
-            if (!is_null($problem))
+            $pt = ProblemType::find($type_id);
+            if (!is_null($problem) && !is_null($pt))
             {
-                $problem->problem_type = $type_id;
+                $problem->problem_type = $pt->id;
                 $problem->save();
 
                 return redirect('/problems/'.$problem_id.'/edit')->with('success', 'Problem Type Changed');
