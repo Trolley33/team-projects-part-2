@@ -207,7 +207,7 @@ class SkillController extends Controller
         // Check that required fields have been supplied.
     	$this->validate($request, [
     		'problem_type'=>'required',
-    		'ability'=>'required'
+    		'ability'=>'required|numeric'
     	]);
 
         // Validate the fields/ID.
@@ -375,12 +375,17 @@ class SkillController extends Controller
     	{
 	    	$links = PagesController::getOperatorLinks();
 	    	$active = "Users";
-	    }
-        // Get list of problem types.
-	    $problem_types = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->select('problem_types.*','parents.id as pID', 'parents.description as pDesc')->get();
-
+        }
         // Get current skill.
 	    $skill = Skill::find($skill_id);
+
+        // Get all problem types to choose from, excluding ones that are already skills.
+        $problem_types = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->select('problem_types.*','parents.id as pID', 'parents.description as pDesc')
+            ->leftJoin('skills', function ($join) use($user) {
+                $join->on('skills.problem_type_id', '=', 'problem_types.id')->where('skills.specialist_id', '=', $user->id);
+            })
+            ->whereNull('skills.id')->orWhere('skills.id', $skill->id)->get();
+
 
     	$data = array(
     	    'title'=> "Edit Skill",
