@@ -165,6 +165,9 @@ class ProblemTypeController extends Controller
         return redirect('login')->with('error', 'Please log in first.');
     }
 
+    /**
+     * Display compacted, modal friendly version of resource.
+     */
     public function show_compact($id)
     {
         if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
