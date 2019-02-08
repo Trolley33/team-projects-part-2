@@ -1052,15 +1052,18 @@ class ProblemController extends Controller
      */
     public function edit_specialist ($id)
     {
+        // Get problem object from ID, and check it exists.
         $problem = Problem::find($id);
         if (!is_null($problem))
         {
+            // If user has operator access.
             if (PagesController::hasAccess(1))
             {
+                // Find who the problem is currently assigned to, and other relevant info about problem.
                 $assigned = User::find($problem->assigned_to);
                 $problem_type = ProblemType::find($problem->problem_type);
                 $parent = ProblemType::find($problem_type->parent);
-
+                // Grab all information about specialists, taking care to avoid specialists who are on holiday.
                 $specialists = DB::select(DB::raw(
                     "SELECT speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id) - COUNT(resolved_problems.id), 0) as jobs, timeoff.startDate, users.*,
                         GROUP_CONCAT(skill_types.description) as skills_list
@@ -1097,7 +1100,7 @@ class ProblemController extends Controller
                 {
                     $parent = $problem_type;
                 }
-
+                // Supply data to view.
                 $data = array(
                     'title' => "Edit Assigned Specialist",
                     'desc' => "",
@@ -1112,6 +1115,7 @@ class ProblemController extends Controller
 
                 return view('problems.edit_specialist')->with($data);
             }
+            // If specialist access, can only ask to be reassigned, not choose who.
             if (PagesController::hasAccess(2))
             {
                     $data = array(
@@ -1134,11 +1138,14 @@ class ProblemController extends Controller
      */
     public function solve_compact ($id)
     {
+        // Get problem object from ID, and check it exists.
         $problem = Problem::find($id);
         if (!is_null($problem))
         {
+            // If either operator or specialist is accessing page.
             if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
             {
+                // Supply limited data to view.
                 $data = array(
                     'problem'=>$problem
                 );
@@ -1154,17 +1161,22 @@ class ProblemController extends Controller
      */
     public function solve_problem (Request $request, $id)
     {
+        // Get problem object from ID, and check it exists.
         $problem = Problem::find($id);
         if (!is_null($problem))
         {
+            // Check that solution notes were supplied.
             $this->validate($request, [
                 'notes' => 'required'
             ]);
 
+            // If user is either operator or specialist.
             if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
             {
+                // Get the user who solved problem.
                 $solver = PagesController::getCurrentUser();
 
+                // Make new "resolved problem" entry to indicate a problem was resolved.
                 $resolved = new ResolvedProblem();
                 $resolved->problem_id = $problem->id;
                 $resolved->solved_by = $solver->id;
@@ -1184,11 +1196,14 @@ class ProblemController extends Controller
      */
     public function add_specialist($id, $specialist_id)
     {
+        // Get problem and user info from IDs, check they exists.
         $problem = Problem::find($id);
         $user = User::find($specialist_id);
         if (!is_null($problem) && !is_null($user)) {
+            // Only operator can assign specialists.
             if (PagesController::hasAccess(1))
             {
+                // Change info in database.
                 $problem->assigned_to = $user->id;
                 // If this was a reassigning, chain new specialist onto row.
                 $r = Reassignments::where('problem_id', '=', $problem->id)->where('reassigned_to', '=', '0')->orderBy('created_at', 'desc')->first();
@@ -1213,11 +1228,14 @@ class ProblemController extends Controller
      */
     public function add_operator($id)
     {
+        // Get problem type from ID, check it exists.
         $problem = Problem::find($id);
         if (!is_null($problem))
         {
+            // Only operator can assign user to problem.
             if (PagesController::hasAccess(1))
             {
+                // Get the logged in operator, and modify database entry.
                 $user = PagesController::getCurrentUser();
                 $problem->assigned_to = $user->id;
                 // If this was a reassigning, chain new specialist onto row.
@@ -1247,44 +1265,54 @@ class ProblemController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Get problem object from ID, check it exists.
         $problem = Problem::find($id);
         if (!is_null($problem))
         {
+            // Only operators and specialists can edit problems.
             if (PagesController::hasAccess(1) || PagesController::hasAccess(2))
             {            
+                // Check that solved boolean is supplied.
                 $this->validate($request, [
                     'solved' => 'required',
                 ]);
+                // Other inputs optional, as blank is assumed to mean the same. ?? accomplishes this cleanly.
+
                 $desc = $request->input('desc') ?? $problem->description;
                 $notes = $request->input('notes') ?? $problem->notes;
                 $importance = $request->input('importance') ?? $problem->importance;
-                // Find current problem, and change the fields.
+
+                // Change the fields of problem.
                 $problem->description = $desc;
                 $problem->notes = $notes;
                 $problem->importance = $importance;
                 $problem->save();
 
-                
+                // If problem is unsolved, delete any existing entry for it being solved.
                 if ($request->input('solved') == 'false')
                 {
                     $resolved = ResolvedProblem::where('problem_id', '=', $id);
                     $resolved->delete();
                 }
+                // If problem is solved, then notes are required for solution.
                 else if ($request->input('solved') == 'true')
                 {
                     $user = PagesController::getCurrentUser();
                     $this->validate($request, [
                         'solution_notes'=>'required'
                     ]);
+                    // Look for previously entered solution.
                     $resolved = ResolvedProblem::where('problem_id', '=', $id)->get()->first();
 
                     if (!is_null($user))
                     {
+                        // If there was no previous solution, make a new one.
                         if (is_null($resolved))
                         {
                             $resolved = new ResolvedProblem();
                             $resolved->problem_id = $id;
                         }
+                        // Edit data of solution.
                         $resolved->solution_notes=$request->input('solution_notes');
                         $resolved->solved_by=$user->id;
                         $resolved->save();
@@ -1306,20 +1334,24 @@ class ProblemController extends Controller
      */
     public function destroy($id)
     {
+        // Only operator can delete records.
         if (PagesController::hasAccess(1))
         {
+            // Find problem object, delete it.
             $problem = Problem::find($id);
             $problem->delete();
 
+            // Find all affected hardware for problem, delete them.
             $affected_hardware = AffectedHardware::where('problem_id', '=', $id);
             $affected_hardware->delete();
-
+            // Find all affected hardware for problem, delete them.
             $affected_software = AffectedSoftware::where('problem_id', '=', $id);
             $affected_software->delete();
-
+            // Find all calls for problem, delete them.
             $calls = Call::where('problem_id', '=', $id);
             $calls->delete();
 
+            // Find solution for problem, delete it.
             $resolved = ResolvedProblem::where('problem_id', '=', $id);
             $resolved->delete();
 
