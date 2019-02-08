@@ -281,6 +281,7 @@ class ProblemTypeController extends Controller
                 $desc = $request->input('desc') ?? $problem_type->description;
 
                 // Find duplicate types with the provided the description.
+
                 $result = ProblemType::where('description', $desc)->where('id', '!=', $id)->get();
 
                 if (count($result) == 0)
@@ -288,15 +289,14 @@ class ProblemTypeController extends Controller
                     // These fields are required, as otherwise the dropdown was modified in some way.
                     $this->validate($request, [
                         'isParent' => 'required',
-                        'parent-select' => 'required',
-                        'desc' => 'required'
+                        'parent-select' => 'required'
                     ]);
 
 
                     // Parent problem.
                     if ($request->input('isParent') == 'true')
                     {
-                        $problem_type->description = $request->input('desc');
+                        $problem_type->description = $desc;
                         $problem_type->save();
                     }
 
@@ -304,7 +304,7 @@ class ProblemTypeController extends Controller
                     elseif ($request->input('isParent') == 'false')
                     {
                         $problem_type->parent = $request->input('parent-select');
-                        $problem_type->description = $request->input('desc');
+                        $problem_type->description = $desc;
                         $problem_type->save();
                     }
 
