@@ -292,7 +292,6 @@ class ProblemTypeController extends Controller
                         'parent-select' => 'required'
                     ]);
 
-
                     // Parent problem.
                     if ($request->input('isParent') == 'true')
                     {
@@ -330,15 +329,20 @@ class ProblemTypeController extends Controller
      */
     public function destroy($id)
     {
+        // Get type object, check if it exists.
         $problem_type = ProblemType::find($id);
         if (!is_null($problem_type))
         {
+            // If user has operator access.
             if (PagesController::hasAccess(1))
             {
+                // Delete problem type.
                 $problem_type->delete();
                 
+                // If parent.
                 if ($problem_type->parent == '-1')
                 {
+                    // Delete all sub-problem types as well.
                     $sub_problems = ProblemType::where('problem_types.parent', '=', $id)->delete();
                     return redirect('/problem_types')->with('success', 'Problem Type Deleted');
                 }
