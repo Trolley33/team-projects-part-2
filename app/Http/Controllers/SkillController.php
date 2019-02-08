@@ -71,8 +71,12 @@ class SkillController extends Controller
 	    	$active = "Users";
 	    }
 
-        // Get all problem types to choose from.
-	    $problem_types = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->select('problem_types.*','parents.id as pID', 'parents.description as pDesc')->get();
+        // Get all problem types to choose from, excluding ones that are already skills.
+	    $problem_types = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->select('problem_types.*','parents.id as pID', 'parents.description as pDesc')
+            ->leftJoin('skills', function ($join) use($user) {
+                $join->on('skills.problem_type_id', '=', 'problem_types.id')->where('skills.specialist_id', '=', $user->id);
+            })
+            ->whereNull('skills.id')->get();
 
     	$data = array(
     	    'title'=> "Create Skill",
