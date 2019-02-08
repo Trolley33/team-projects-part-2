@@ -40,14 +40,20 @@
                         <tr class="w3-hover-light-grey">
                             <th>Assigned Helper</th>
                             @if (!is_null($specialist))
-                            <td title="Edit" class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}/edit_specialist';">
-                                {{$specialist->forename}} {{$specialist->surname}}<span class="icon">Edit</span></td>
-                            </tr>
+                                @if ($specialist->id != 0)
+                                <td title="Edit" class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}/edit_specialist';">
+                                    {{$specialist->forename}} {{$specialist->surname}}<span class="icon">Edit</span></td>
+                                @else
+                                    <td>
+                                        None
+                                    </td>
+                                @endif
                             @else
                                 <td>
                                     None
                                 </td>
                             @endif
+                        </tr>
                         @if (is_null($resolved))
                         <tr class="w3-hover-light-grey">
                             <th>Importance</th>

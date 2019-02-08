@@ -12,6 +12,11 @@ use App\Department;
 use App\Speciality;
 use App\ProblemType;
 use App\TimeOff;
+use App\Problem;
+use App\ResolvedProblem;
+use App\Call;
+use App\Reassignments;
+use App\Skill;
 
 class UserController extends Controller
 {
@@ -24,7 +29,7 @@ class UserController extends Controller
     {
         if (PagesController::hasAccess(1))
         {
-            $info = DB::table('users')->join('jobs', 'users.job_id', '=', 'jobs.id')->join('departments', 'jobs.department_id', '=', 'departments.id')->select('users.*', 'jobs.access_level', 'departments.name')->get();
+            $info = DB::table('users')->join('jobs', 'users.job_id', '=', 'jobs.id')->join('departments', 'jobs.department_id', '=', 'departments.id')->select('users.*', 'jobs.access_level', 'departments.name')->where('users.id', '!=', '0')->get();
 
             $data = array(
                 'title' => "User information page.",
@@ -591,11 +596,46 @@ class UserController extends Controller
     {
         if (PagesController::hasAccess(1))
         {
+            // Remove information only specific to this user.
             $user = User::find($id);
             $user->delete();
 
             $speciality = Speciality::where('specialist_id', '=', $id)->delete();
-            
+            $skills = Skill::where('specialist_id', $id)->delete();
+
+            // For information where this user is related, replace with 0, indicating no user has been set for this task; rather than causing an error or having the join fail.
+            $calls = Call::where('caller_id', $id)->get();
+            foreach ($calls as $call) {
+                $call->caller_id = 0;
+                $call->save();
+            }
+
+            $problem_logged = Problem::where('logged_by', $id)->get();
+            foreach ($problem_logged as $problem) {
+                $problem->logged_by = 0;
+                $problem->save();
+            }
+            $problem_assigned = Problem::where('assigned_to', $id)->get();
+            foreach ($problem_assigned as $problem) {
+                $problem->assigned_to = 0;
+                $problem->save();
+            }
+            $solved = ResolvedProblem::where('solved_by', $id)->get();
+            foreach ($solved as $problem) {
+                $problem->solved_by = 0;
+                $problem->save();
+            }
+            $reassignments = Reassignments::where('specialist_id', $id)->get();
+            foreach ($reassignments as $re) {
+                $re->specialist_id = 0;
+                $re->save();
+            }
+            $reassignments2 = Reassignments::where('reassigned_to', $id)->get();
+            foreach ($reassignments2 as $re) {
+                $re->reassigned_to = 0;
+                $re->save();
+            }
+
             return redirect('/users')->with('success', 'Account Deleted');
         }
         return redirect('login')->with('error', 'Please log in first.');

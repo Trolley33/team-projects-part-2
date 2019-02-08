@@ -214,46 +214,50 @@ class JobController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // If user can access page
-        if (PagesController::hasAccess(1))
-        {            
-            // Validate that the required fields have been supplied.
-            $this->validate($request, [
-                'jobTitle' => 'required',
-                'department-select' => 'required'
-            ]);
+        $job = Job::find($id);
+        if (!is_null($job))
+        {
+            // If user can access page
+            if (PagesController::hasAccess(1))
+            {            
+                // Validate that the required fields have been supplied.
+                $this->validate($request, [
+                    'jobTitle' => 'required',
+                    'department-select' => 'required'
+                ]);
 
-            // Find matching jobs that already have same title as one supplied.
-            $job = Job::where('title', '=', $request->input('jobTitle'))->where('id', '!=', $id)->get();
-            // No matches found.
-            if (count($job) == 0)
-            {
-                // Find job that needs to be edited.
-                $job = Job::find($id);
-                $department = Department::find($request->input('department-select'));
-                // If job/department ID doesn't exist, redirect.
-                if (is_null($job) || is_null($department))
+                // Find matching jobs that already have same title as one supplied.
+                $result = Job::where('title', '=', $request->input('jobTitle'))->where('id', '!=', $id)->get();
+                // No matches found.
+                if (count($result) == 0)
                 {
-                    return redirect('/jobs')->with('error', 'Invalid data supplied.');
+                    // Find job that needs to be edited.
+                    $department = Department::find($request->input('department-select'));
+                    // If job/department ID doesn't exist, redirect.
+                    if (is_null($job) || is_null($department))
+                    {
+                        return redirect('/jobs')->with('error', 'Invalid data supplied.');
+                    }
+                    // Update info for title and save to database.
+                    $job->title = $request->input('jobTitle');
+                    $job->department_id = $department->id;
+                    $job->save();
+
+                    return redirect('/jobs')->with('success', 'Job Updated');
                 }
-                // Update info for title and save to database.
-                $job->title = $request->input('jobTitle');
-                $job->department_id = $department;
-                $job->save();
 
-                return redirect('/jobs')->with('success', 'Job Updated');
+                // Supply data to view.
+                $data = array(
+                    'error'=>'Duplicate Job Name',
+                    'search'=>$request->input('jobTitle')
+                );
+
+                return redirect('/jobs')->with($data);
             }
-
-            // Supply data to view.
-            $data = array(
-                'error'=>'Duplicate Job Name',
-                'search'=>$request->input('jobTitle')
-            );
-
-            return redirect('/jobs')->with($data);
+            // No access redirects to login.
+            return redirect('login')->with('error', 'Please log in first.');
         }
-        // No access redirects to login.
-        return redirect('login')->with('error', 'Please log in first.');
+        return redirect('/jobs')->with('error', 'Sorry, something went wrong.');
     }
 
     /**
