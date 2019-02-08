@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="">
-        <div class="call_menu w3-center w3-padding" style='text-align:center'>
+        <div  class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto; text-align: center;">
             <a class="blank" href="calls/create">
                 <div class="bigbutton w3-card w3-button w3-row">
                     <h3>Log New Call</h3>
