@@ -107,7 +107,7 @@
         // No data to show.
         if (solved != 0 || unsolved != 0)
         {
-            $('noData').hide();
+            $('#noData').hide();
             chart.width = 600;
             chart.height = 300;
             pie = new Chart(chart, {
