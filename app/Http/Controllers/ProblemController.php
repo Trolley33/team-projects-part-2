@@ -973,9 +973,8 @@ class ProblemController extends Controller
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
-    /** 
-     * Selects which equipment to append to problem.
-     * Follows from Problem@show->append equipment.
+    /**
+     * Selects new problem type for problem.
      */
     public function edit_problem_type ($id)
     {
@@ -1022,8 +1021,7 @@ class ProblemController extends Controller
         return redirect('login')->with('error', 'Please log in first.'); 
     }
     /** 
-     * Selects which equipment to append to problem.
-     * Follows from Problem@show->append equipment.
+     * Modifies database entry for problem.
      */
     public function add_problem_type ($problem_id, $type_id)
     {
@@ -1047,8 +1045,7 @@ class ProblemController extends Controller
         return redirect('/login')->with('error', 'Please log in first.');
     }
     /** 
-     * Selects which equipment to append to problem.
-     * Follows from Problem@show->append equipment.
+     * Selects new specialist for problem.
      */
     public function edit_specialist ($id)
     {
@@ -1133,8 +1130,8 @@ class ProblemController extends Controller
         return redirect('/problems/'.$id)->with('error', 'Sorry, something went wrong.');
     }
     /** 
-     * Selects which equipment to append to problem.
-     * Follows from Problem@show->append equipment.
+     * Provides compacted, modal friendly popup to solve problem.
+     * Not meant to be viewed normally.
      */
     public function solve_compact ($id)
     {
@@ -1156,8 +1153,8 @@ class ProblemController extends Controller
         }
     }
     /** 
-     * Selects which equipment to append to problem.
-     * Follows from Problem@show->append equipment.
+     * Modifies database to mark problem as solved.
+     * Follows from @solve_compact.
      */
     public function solve_problem (Request $request, $id)
     {
@@ -1191,8 +1188,7 @@ class ProblemController extends Controller
         return redirect('/problems/'.$id)->with('error', 'Sorry, something went wrong.');
     }
     /** 
-     * Selects which equipment to append to problem.
-     * Follows from Problem@show->append equipment.
+     * If specialist chosen in @edit_specialist, modifies database to have chosen specialist as helper.
      */
     public function add_specialist($id, $specialist_id)
     {
@@ -1223,8 +1219,7 @@ class ProblemController extends Controller
         return redirect('/problems/'.$id)->with('error', 'Sorry, something went wrong.');
     }
     /** 
-     * Selects which equipment to append to problem.
-     * Follows from Problem@show->append equipment.
+     * If 'assign to self' chosen in @edit_specialist, modifies database to have current user as helper.
      */
     public function add_operator($id)
     {
