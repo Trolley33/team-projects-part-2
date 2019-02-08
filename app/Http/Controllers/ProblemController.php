@@ -1173,10 +1173,6 @@ class ProblemController extends Controller
 
                 return redirect('/problems/'.$problem->id)->with('success', 'Problem marked as solved.');
             }
-            if (PagesController::hasAccess(2))
-            {
-
-            }
             return redirect('/login')->with('error', 'Please log in first.');
         }
 
