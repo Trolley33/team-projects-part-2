@@ -14,6 +14,9 @@ use App\Reassignments;
 
 class ReviewController extends Controller
 {
+    /**
+     * Converts SQL result into graph friendly array, which is converted to json in view.
+    */
     public static function sql_to_json ($result, $mode)
     {
     	$points = array();
@@ -35,7 +38,9 @@ class ReviewController extends Controller
 
     	return $points;
     }
-
+    /**
+     * Displays all database tables, future tables must be added manually.
+    */
     public function show_tables ()
     {
         if (!PagesController::hasAccess(3))
@@ -77,9 +82,11 @@ class ReviewController extends Controller
             );
 
         return view('pages.analyst.export')->with($data);
-
-
     }
+
+    /**
+     * Exports data on selected tables to CSV file, and downloads it.
+    */
     public function export (Request $request)
     {
         if (!PagesController::hasAccess(3))
@@ -136,6 +143,9 @@ class ReviewController extends Controller
         return "";        
     }
 
+    /**
+     * Shows 2 graphs, 1 with modifiable data on all information, 1 with data on most common problem type.
+    */
     public function review ()
     {
         if (PagesController::hasAccess(3))
@@ -197,6 +207,9 @@ class ReviewController extends Controller
         return redirect('/login')->with('error','Please log in first.');
     }
 
+    /**
+     * Shows list of specialists (and operators) who can be reviewed.
+    */
     public function review_specialists ()
     {
         if (PagesController::hasAccess(3))
@@ -216,7 +229,9 @@ class ReviewController extends Controller
 
         return redirect('/login')->with('error', 'Please log in first.');
     }
-
+    /**
+     * Shows list of callers who can be reviewed. 
+    */
     public function review_callers ()
     {
         if (PagesController::hasAccess(3))
@@ -235,6 +250,9 @@ class ReviewController extends Controller
         return redirect('/login')->with('error', 'Please log in first.');
     }
 
+    /**
+     * Shows list of equipment that can be reviewed.
+    */
     public function review_equipment ()
     {
         if (PagesController::hasAccess(3))
@@ -255,6 +273,9 @@ class ReviewController extends Controller
         return redirect('/login')->with('error', 'Please log in first.');
     }
 
+    /**
+     * Shows list of software that can be reviewed.
+    */
     public function review_software ()
     {
         if (PagesController::hasAccess(3))
@@ -274,7 +295,9 @@ class ReviewController extends Controller
 
         return redirect('/login')->with('error', 'Please log in first.');
     }
-
+    /**
+     * Shows list of problem types that can be reviewed. 
+    */
     public function review_problem_types ()
     {
         if (PagesController::hasAccess(3))
@@ -295,6 +318,9 @@ class ReviewController extends Controller
         return redirect('/login')->with('error', 'Please log in first.');
     }
 
+    /**
+     * Shows graph with data about specialist.
+    */
     public function review_specialist ($id)
     {
         $specialist = User::find($id);
@@ -355,7 +381,9 @@ class ReviewController extends Controller
 
         return redirect('/review/specialists')->with('error', 'Sorry, something went wrong.');
     }
-
+    /**
+     * Shows graph with data about caller.
+    */
     public function review_caller ($id)
     {
         $caller = User::find($id);
@@ -396,7 +424,9 @@ class ReviewController extends Controller
 
         return redirect('/review/callers')->with('error', 'Sorry, something went wrong.');
     }
-
+    /**
+     * Shows graph with data about equipment.
+    */
     public function review_equipment_single ($id)
     {
         $equip = Equipment::find($id);
@@ -434,7 +464,9 @@ class ReviewController extends Controller
 
         return redirect('/review/equipment')->with('error', 'Sorry, something went wrong.');
     }
-
+    /**
+     * Shows graph with data about software.
+    */
     public function review_software_single ($id)
     {
         $soft = Software::find($id);
@@ -472,7 +504,9 @@ class ReviewController extends Controller
 
         return redirect('/review/software')->with('error', 'Sorry, something went wrong.');
     }
-
+    /**
+     * Shows graph with data about problem type.
+    */
     public function review_problem_type ($id)
     {
         $pt = ProblemType::find($id);
