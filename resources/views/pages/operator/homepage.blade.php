@@ -48,7 +48,7 @@
                 </tbody>
             </table>
         </div>
-
+        <!-- removed 
         <div class="call_menu w3-center w3-padding" style='text-align:center'>
             <h3>Database Management Options</h3><hr />
             <a class="blank" href="/problems/">
@@ -87,12 +87,44 @@
                 </div>
             </a><br />
           </div>
+          -->
+          <div  class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto; text-align: center;">
+                <h2>Current Problems Overview</h2>
+                <div id='noData'>No data to show.</div>
+                <canvas width="0" height="0" id='graph'>
+                </canvas>
+          </div>
+
         <br />
     </div>
 
     <script>
     $(document).ready( function () 
     {
+        var chart = document.getElementById('graph');
+        var solved = <?php echo $solved ?? 0;?>;
+        var unsolved = <?php echo $unsolved ?? 0;?>;
+        // No data to show.
+        if (solved != 0 || unsolved != 0)
+        {
+            $('noData').hide();
+            chart.width = 600;
+            chart.height = 300;
+            pie = new Chart(chart, {
+                type: 'pie',
+                data: {
+                    datasets : [{
+                        data: [solved, unsolved],
+                        backgroundColor: ["#50dd50", '#dd5050']
+                    }],
+                    labels: ["Solved", "Unsolved"]
+                },
+                options: {
+                    cutoutPercentage: 50
+                }
+            });
+        }
+
         var table = $('#reassign-table').dataTable({
             order: [[5, 'desc'], [0, 'desc']],
             "aoColumnDefs": [

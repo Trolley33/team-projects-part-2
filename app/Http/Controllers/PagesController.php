@@ -6,13 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cookie;
 use App\User;
+use App\Problem;
 use App\Job;
 use App\Reassignments;
 use App\TimeOff;
 
 class PagesController extends Controller
 {
-
     // Function that returns array of 'links' and their corrosponding display text. By using a public static function we get around using a global variable which caused problems. Can be accessed from any other controllers.
     public static function getOperatorLinks ()
     {
@@ -249,11 +249,18 @@ class PagesController extends Controller
                 WHERE reassignments.reassigned_to = 0 AND problems.logged_by = "'.$me->id.'";'
             ));
 
+            // Get number of problems that were solved today.
+            $solved = Problem::join('resolved_problems', 'resolved_problems.problem_id', '=', 'problems.id')->whereDate('resolved_problems.created_at', date('Y-m-d'))->count();
+            // Get number of problems which are not currently solved (any day).
+            $unsolved = Problem::leftJoin('resolved_problems', 'resolved_problems.problem_id', '=', 'problems.id')->whereNull('resolved_problems.id')->count();
+
             // Supply data to view.
             $data = array(
                 'title' => "Operator Homepage",
                 'desc' => "Please select a task.",
                 'unassigned'=>$reassignments,
+                'solved'=>$solved,
+                'unsolved'=>$unsolved,
                 'links'=>PagesController::getOperatorLinks(),
                 'active'=>'Home'
             );
