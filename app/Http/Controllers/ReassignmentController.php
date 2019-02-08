@@ -20,7 +20,6 @@ use App\Reassignments;
 
 class ReassignmentController extends Controller
 {
-
     public function request_reassignment(Request $request, $id)
     {
         if (PagesController::hasAccess(2))
@@ -30,6 +29,11 @@ class ReassignmentController extends Controller
             ]);
 
             $problem = Problem::find($id);
+            
+            if (is_null($problem))
+            {
+                return redirect('/specialist')->with('success', 'Sorry, something went wrong.');
+            }
 
             $assign = new Reassignments();
             $assign->problem_id = $problem->id;
