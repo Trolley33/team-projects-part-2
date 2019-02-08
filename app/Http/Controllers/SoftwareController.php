@@ -13,7 +13,6 @@ use App\Software;
 
 class SoftwareController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -21,9 +20,10 @@ class SoftwareController extends Controller
      */
     public function index()
     {
-
+        // If user is operator.
         if (PagesController::hasAccess(1))
         {
+            // Get list of all software.
             $software = Software::all();
 
             $data = array(
@@ -36,7 +36,6 @@ class SoftwareController extends Controller
 
             return view('software.index')->with($data);
         }
-
         return redirect('login')->with('error', 'Please log in first.');
     }
 
@@ -47,8 +46,10 @@ class SoftwareController extends Controller
      */
     public function create()
     {
+        // If user is operator.
         if (PagesController::hasAccess(1))
         {
+            // Display form for creating new software.
             $data = array(
                 'title' => "Register New Software",
                 'desc' => "For registering new software.",
@@ -69,17 +70,21 @@ class SoftwareController extends Controller
      */
     public function store(Request $request)
     {
+        // If user is operator.
         if (PagesController::hasAccess(1))
         {            
+            // Check required fields supplied.
             $this->validate($request, [
                 'name' => 'required',
                 'desc' => 'required'
             ]);
 
+            // Check no software with given name already exists.
             $result = Software::where('name', $request->input('name'))->get();
 
             if (count($result) == 0)
             {
+                // Create new piece of software.
                 $software = new Software();
                 $software->name = $request->input('name');
                 $software->description = $request->input('desc');
@@ -106,10 +111,11 @@ class SoftwareController extends Controller
      */
     public function show($id)
     {
+        // If user is operator.
         if (PagesController::hasAccess(1))
         {
+            // Get software from ID, check it exists.
             $result = Software::find($id);
-
             if (!is_null($result))
             {
                 $data = array(
@@ -135,15 +141,17 @@ class SoftwareController extends Controller
      */
     public function edit($id)
     {
+        // If user is operator.
         if (PagesController::hasAccess(1))
         {
-            $result = Software::find($id);
-            if (!is_null($result))
+            // Get software from ID, check it exists.
+            $soft = Software::find($id);
+            if (!is_null($soft))
             {
                 $data = array(
                     'title' => "Edit Existing Software",
                     'desc' => "For editing existing Software.",
-                    'software'=>$result,
+                    'software'=>$soft,
                     'links' => PagesController::getOperatorLinks(),
                     'active' => 'Software'
                 );
@@ -177,7 +185,7 @@ class SoftwareController extends Controller
                 $name = $request->input('name') ?? $software->name;
                 $desc = $request->input('desc') ?? $software->description;
 
-                // Check for software with the same serial number inputted (not including this piece of software).
+                // Check for software with the same name inputted (not including this piece of software).
                 $result = Software::where('name', $name)->where('id', '!=', $id)->get();
                 if (count($result) == 0)
                 {
@@ -188,7 +196,7 @@ class SoftwareController extends Controller
                     return redirect('/software')->with('success', 'Software Updated');
                 }
 
-                // If duplicate serial no. show user the existing entry using 'search'.
+                // If duplicate name show user the existing entry using 'search'.
                 $data = array(
                     'error'=>'Duplicate Name',
                     'search'=>$request->input('name')
@@ -210,8 +218,10 @@ class SoftwareController extends Controller
      */
     public function destroy($id)
     {
+        // If user has operator access.
         if (PagesController::hasAccess(1))
         {
+            // Delete entry, and any affected software entries from problems.
             $software = Software::find($id);
             $software->delete();
 
