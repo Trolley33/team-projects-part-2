@@ -160,9 +160,8 @@ class ProblemTypeController extends Controller
                     return view('problem_types.show_child')->with($data);
                 }
             }
-            return "Something else";
+            return redirect('/problem_types')->with('error', 'Sorry, something went wrong.');
         }
-
         return redirect('login')->with('error', 'Please log in first.');
     }
 
@@ -193,9 +192,8 @@ class ProblemTypeController extends Controller
 
                 return view('problem_types.show_compact')->with($data);
             }
-            return "Something else";
+            return redirect('/problem_types')->with('error', 'Sorry, something went wrong.');
         }
-
         return redirect('login')->with('error', 'Please log in first.');
     }
 
@@ -232,7 +230,7 @@ class ProblemTypeController extends Controller
                 }
 
             }
-            return redirect('/problem_types');
+            return redirect('/problem_types')->with('error', 'Sorry, something went wrong.');
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
@@ -246,46 +244,50 @@ class ProblemTypeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (PagesController::hasAccess(1))
+        $problem_type = ProblemType::find($id);
+        if (!is_null($problem_type))
         {
-            $result = ProblemType::where('description', $request->input('desc'))->where('id', '!=', $id)->get();
-
-            if (count($result) == 0)
+            if (PagesController::hasAccess(1))
             {
-                $this->validate($request, [
-                    'isParent' => 'required',
-                    'parent-select' => 'required',
-                    'desc' => 'required'
-                ]);
+                $result = ProblemType::where('description', $request->input('desc'))->where('id', '!=', $id)->get();
 
-                $problem_type = ProblemType::find($id);
-
-                // Caller account.
-                if ($request->input('isParent') == 'true')
+                if (count($result) == 0)
                 {
-                    $problem_type->description = $request->input('desc');
-                    $problem_type->save();
+                    $this->validate($request, [
+                        'isParent' => 'required',
+                        'parent-select' => 'required',
+                        'desc' => 'required'
+                    ]);
+
+
+                    // Caller account.
+                    if ($request->input('isParent') == 'true')
+                    {
+                        $problem_type->description = $request->input('desc');
+                        $problem_type->save();
+                    }
+
+                    // System account.
+                    elseif ($request->input('isParent') == 'false')
+                    {
+                        $problem_type->parent = $request->input('parent-select');
+                        $problem_type->description = $request->input('desc');
+                        $problem_type->save();
+                    }
+
+                    return redirect("/problem_types/$id")->with('success', 'Problem Type Info Updated');
                 }
 
-                // System account.
-                elseif ($request->input('isParent') == 'false')
-                {
-                    $problem_type->parent = $request->input('parent-select');
-                    $problem_type->description = $request->input('desc');
-                    $problem_type->save();
-                }
+                $data = array(
+                    'error'=>'Duplicate Problem Type Description'
+                );
 
-                return redirect("/problem_types/$id")->with('success', 'Problem Type Info Updated');
+                return redirect('/problem_types')->with($data);
             }
-
-            $data = array(
-                'error'=>'Duplicate Problem Type Description'
-            );
-
-            return redirect('/problem_types')->with($data);
-
+            return redirect('login')->with('error', 'Please log in first.');
         }
-        return redirect('login')->with('error', 'Please log in first.');
+
+        return redirect('/problem_types')->with('error', 'Sorry, something went wrong.');
     }
 
     /**
@@ -296,24 +298,25 @@ class ProblemTypeController extends Controller
      */
     public function destroy($id)
     {
-        if (PagesController::hasAccess(1))
+        $problem_type = ProblemType::find($id);
+        if (!is_null($problem_type))
         {
-            $problem_type = ProblemType::find($id);
-            $problem_type->delete();
-            
-            if ($problem_type->parent == '-1')
+            if (PagesController::hasAccess(1))
             {
-                $sub_problems = ProblemType::where('problem_types.parent', '=', $id)->delete();
-                return redirect('/problem_types')->with('success', 'Problem Type Deleted');
+                $problem_type->delete();
+                
+                if ($problem_type->parent == '-1')
+                {
+                    $sub_problems = ProblemType::where('problem_types.parent', '=', $id)->delete();
+                    return redirect('/problem_types')->with('success', 'Problem Type Deleted');
+                }
+                else
+                {
+                    return redirect('/problem_types/'.$problem_type->parent)->with('success', 'Problem Type Deleted');
+                }
             }
-            else
-            {
-                return redirect('/problem_types/'.$problem_type->parent)->with('success', 'Problem Type Deleted');
-            }
-
-
-            
+            return redirect('login')->with('error', 'Please log in first.');
         }
-        return redirect('login')->with('error', 'Please log in first.');
+        return redirect('/problem_types')->with('error', 'Sorry, something went wrong.');
     }
 }
