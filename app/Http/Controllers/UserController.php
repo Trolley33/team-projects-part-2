@@ -38,10 +38,8 @@ class UserController extends Controller
                 'links' => PagesController::getOperatorLinks(),
                 'active' => 'Users'
             );
-
             return view('users.index')->with($data);
         }
-
         return redirect('login')->with('error', 'Please log in first.');
     }
 
@@ -55,7 +53,6 @@ class UserController extends Controller
     {
         if (PagesController::hasAccess(1))
         {
-
             $departments = DB::table('departments')->select('departments.*')->where('departments.id', '!=', '1')->get();
 
             $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '=', '0')->get();
@@ -110,8 +107,6 @@ class UserController extends Controller
     {
         if (PagesController::hasAccess(1))
         {
-
-
             $jobs = DB::table('jobs')->select('jobs.*')->where('jobs.access_level', '!=', '0')->get();
 
             $job = $jobs->first();
@@ -158,7 +153,6 @@ class UserController extends Controller
                 'job-select' => 'required',
                 'phone' => 'required'
             ]);
-
 
             // Caller account.
             if ($request->input('isCaller') == 'true')
@@ -250,7 +244,6 @@ class UserController extends Controller
                 $pt_id = $specialism->problem_type_id;
             }
 
-
             if (PagesController::hasAccess(1))
             {
                 $problem_types = ProblemType::leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->selectRaw('problem_types.*, IFNULL(parents.description,0) as parent_description')->get();
@@ -341,16 +334,14 @@ class UserController extends Controller
      */
     public function show($id)
     {
+        $user = User::find($id);
+        if (is_null($user))
+        {
+            return redirect()->back();
+        }
+
         if (PagesController::hasAccess(1))
         {
-            $user = User::find($id);
-
-            if (is_null($user))
-            {
-                return redirect()->back();
-            }
-
-
             $problem_type = Speciality::join('problem_types', 'problem_types.id', '=', 'speciality.problem_type_id')->where('speciality.specialist_id', '=', $id)->get()->first();
             $parent = null;
             if (!is_null($problem_type))
@@ -377,27 +368,31 @@ class UserController extends Controller
 
                 return view('users.show')->with($data);
             }
-            return "Error completing that request.";
+            return redirect()->back();
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
 
     public function show_compact($id)
     {
+        $user = User::find($id);
+        if (is_null($user))
+        {
+            return redirect()->back();
+        }
         if (PagesController::hasAccess(1)||PagesController::hasAccess(2))
         {
-            $user = User::find($id);
 
-            $info = DB::table('jobs')->join('users', 'jobs.id', '=', 'users.job_id')->join('departments' , 'jobs.department_id', '=', 'departments.id')->select( 'jobs.id as jID', 'jobs.title', 'jobs.access_level', 'departments.id as dID', 'departments.name')->where('users.id', '=', $id)->get()->first();
+            $info = DB::table('jobs')->join('users', 'jobs.id', '=', 'users.job_id')->join('departments' , 'jobs.department_id', '=', 'departments.id')->select( 'jobs.id as jID', 'jobs.title', 'jobs.access_level', 'departments.id as dID', 'departments.name')->where('users.id', '=', $id)->first();
 
-            $problem_type = Speciality::join('problem_types', 'problem_types.id', '=', 'speciality.problem_type_id')->where('speciality.specialist_id', '=', $id)->get()->first();
+            $problem_type = Speciality::join('problem_types', 'problem_types.id', '=', 'speciality.problem_type_id')->where('speciality.specialist_id', '=', $id)->first();
 
             $parent = null;
             if (!is_null($problem_type))
             {
                 $parent = ProblemType::find($problem_type->parent);
             }
-            if (!is_null($user) && !is_null($info))
+            if (!is_null($info))
             {
                 $timeoff = TimeOff::where('user_id', '=', $id)->whereRaw('DATE_ADD(DATE(NOW()), INTERVAL 7 DAY) >= timeoff.startDate AND DATE(NOW()) <= timeoff.endDate')->orderBy('created_at', 'desc')->first();
 
@@ -416,10 +411,9 @@ class UserController extends Controller
                     'links' => PagesController::getOperatorLinks(),
                     'active' => 'Users'
                 );
-
                 return view('users.show_compact')->with($data);
             }
-            return "Error completing that request.";
+            return redirect()->back();
         }
         return redirect('login')->with('error', 'Please log in first.');
     }
@@ -435,10 +429,9 @@ class UserController extends Controller
         if (PagesController::hasAccess(1))
         {
             $user = User::find($id);
-            $job = Job::find($user->job_id);
-
             if (!is_null($user))
             {
+                $job = Job::find($user->job_id);
                 if ($job->access_level == 0)
                 {
 
