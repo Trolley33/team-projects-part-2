@@ -20,6 +20,9 @@ use App\Skill;
 
 class SkillController extends Controller
 {
+    /**
+     * Redirects user to their skill page, if applicable.
+     */
 	public function index ()
 	{
 		if (!(PagesController::hasAccess(2)))
@@ -30,6 +33,9 @@ class SkillController extends Controller
 		return redirect("/skills/".$viewer->id);
 	}
 
+    /**
+     * Selects problem type to create skill for.
+     */
     public function create ($id)
     {
     	if (!(PagesController::hasAccess(2) || PagesController::hasAccess(1)))
@@ -73,6 +79,9 @@ class SkillController extends Controller
     	return view('skills.create')->with($data);
     }
 
+    /**
+     * Chooses ability level for skill.
+     */
     public function add_ability ($id, $ptID)
     {
     	if (!(PagesController::hasAccess(2) || PagesController::hasAccess(1)))
@@ -119,7 +128,10 @@ class SkillController extends Controller
     	return view('skills.add_ability')->with($data);
     }
 
-     public function edit_ability ($id, $skillID, $ptID)
+    /**
+     * Chooses new ability level for skill.
+     */
+    public function edit_ability ($id, $skillID, $ptID)
     {
     	if (!(PagesController::hasAccess(2) || PagesController::hasAccess(1)))
     	{
@@ -168,6 +180,9 @@ class SkillController extends Controller
     	return view('skills.edit_ability')->with($data);
     }
 
+    /**
+     * Adds skill to database.
+     */
     public function store (Request $request, $id)
     {
     	if (!(PagesController::hasAccess(2) || PagesController::hasAccess(1)))
@@ -222,6 +237,9 @@ class SkillController extends Controller
     	return redirect("/skills/$id")->with('success', 'Skill Added.');
     }
 
+    /**
+     * Shows all skills for user.
+     */
     public function show ($id)
     {
     	if (!(PagesController::hasAccess(2) || PagesController::hasAccess(1)))
@@ -269,6 +287,9 @@ class SkillController extends Controller
     	return view('skills.show')->with($data);
     }
 
+    /**
+     * Shows all skills for user, in compacted modal friendly view.
+     */
     public function show_compact ($id)
     {
     	if (!(PagesController::hasAccess(2) || PagesController::hasAccess(1)))
@@ -305,6 +326,9 @@ class SkillController extends Controller
     	return view('skills.show_compact')->with($data);
     }
 
+    /**
+     * Selects new problem type for skill.
+     */
     public function edit ($id, $skill_id)
     {
     	if (!(PagesController::hasAccess(2) || PagesController::hasAccess(1)))
@@ -351,6 +375,9 @@ class SkillController extends Controller
     	return view('skills.edit')->with($data);
     }
 
+    /**
+     * Modifies database entry for skill.
+     */
     public function update (Request $request, $skill_id)
     {
     	if (!(PagesController::hasAccess(2) || PagesController::hasAccess(1)))
@@ -397,6 +424,9 @@ class SkillController extends Controller
     	return redirect("/skills/".$user->id)->with('success', 'Skill Updated.');
     }
 
+    /**
+     * Removes skill from specialist.
+     */
     public function delete ($skill_id)
     {
     	if (!(PagesController::hasAccess(2) || PagesController::hasAccess(1)))
