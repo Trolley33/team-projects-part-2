@@ -139,7 +139,6 @@
         if (typeof myChart != 'undefined')
         {
             $('#data-changer').select2();
-            
             // Find any non-empty dataset.
             var flag = -1;
             for (var i = sets.length - 1; i >= 0; i--) 
@@ -154,6 +153,7 @@
             if (flag == -1)
             {
                 $('#graph').replaceWith("<div><h2>No Data to Show</h2></div>");
+                return;
             }
             
             // Select first graph that has valid data.

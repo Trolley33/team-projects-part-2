@@ -17,7 +17,7 @@
             			<option value="{{$i}}">{{$d['yLabel']}}</option>
             		@endforeach
             	</select>
-            	<br />
+            	<br /><br />
             	<input id="start" type="date" /> - <input id="end" type="date" /> <button onclick="changeRange()">↺</button> <button onclick="resetRange()">✖</button>
             	<canvas width="600" height="300" id='graph'>
             	</canvas>
