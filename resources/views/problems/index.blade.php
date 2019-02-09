@@ -53,7 +53,7 @@
     <table id='resolved-table' class="display cell-border stripe hover">
         <thead>
             <tr>
-                <th>Time Logged</th><th>Solved At</th><th>Assigned Helper</th><th>Problem Type</th><th>Description</th><th>Initial Caller</th><th>---</th>
+                <th>Time Logged</th><th>Solved At</th><th>Solved By</th><th>Problem Type</th><th>Description</th><th>Initial Caller</th><th>---</th>
             </tr>
         </thead>
         <tbody>

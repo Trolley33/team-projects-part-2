@@ -74,11 +74,13 @@ class ProblemController extends Controller
                 ON users.id = calls.caller_id
                 JOIN problem_types
                 ON problem_types.id = problems.problem_type
-                LEFT JOIN users specialists
-                ON specialists.id = problems.assigned_to
                 LEFT JOIN problem_types parents
                 ON problem_types.parent = parents.id
-                JOIN resolved_problems rp ON rp.problem_id = problems.id'
+                JOIN resolved_problems rp 
+                ON rp.problem_id = problems.id
+                LEFT JOIN users specialists
+                ON specialists.id = rp.solved_by
+                '
             ));
             // Supply data to view.
             $data = array(
@@ -450,7 +452,7 @@ class ProblemController extends Controller
 
                 $assigned = User::join('problems', 'problems.assigned_to', '=', 'users.id')->where('problems.id', '=', $id)->select('users.*')->first();
 
-                $resolved = Problem::join('resolved_problems', 'resolved_problems.problem_id', '=', 'problems.id')->select('resolved_problems.solution_notes', 'resolved_problems.created_at')->where('problems.id', '=', $id)->get()->first();
+                $resolved = Problem::join('resolved_problems', 'resolved_problems.problem_id', '=', 'problems.id')->join('users', 'users.id', '=', 'resolved_problems.solved_by')->select('resolved_problems.solution_notes', 'resolved_problems.created_at', 'users.id as uID', 'users.forename as fname', 'users.surname as sname')->where('problems.id', '=', $id)->first();
 
                 $hardware = Equipment::join('affected_hardware', 'affected_hardware.equipment_id', '=', 'equipment.id')->join('problems', 'problems.id', '=', 'affected_hardware.problem_id')->where('problems.id', '=', $id)->select('equipment.*')->get();
 

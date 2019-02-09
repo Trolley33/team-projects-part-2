@@ -37,42 +37,45 @@
                             <th>Notes</th>
                             <td> {{$problem->notes}} </td>
                         </tr>
-                        <tr class="w3-hover-light-grey">
+                        @if (is_null($resolved))
+                            <tr class="w3-hover-light-grey">
                             <th>Assigned Helper</th>
                             @if (!is_null($specialist))
                                 @if ($specialist->id != 0)
-                                <td title="Edit" class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}/edit_specialist';">
-                                    {{$specialist->forename}} {{$specialist->surname}}<span class="icon">Edit</span></td>
+                                <td class="editbutton" onclick="window.location.href = '/problems/{{$problem->id}}/edit_specialist';">
+                                        {{$specialist->forename}} {{$specialist->surname}}
+                                    <span class="icon">Edit</span></td>
                                 @else
-                                    <td>
-                                        None
-                                    </td>
+                                <td>
+                                    None
+                                </td>
                                 @endif
                             @else
                                 <td>
                                     None
                                 </td>
                             @endif
-                        </tr>
-                        @if (is_null($resolved))
-                        <tr class="w3-hover-light-grey">
-                            <th>Importance</th>
-                            <td class="{{$importance->class}}">{{$importance->text}}</td>
-                        </tr>
-                        @endif
-                        <tr class="w3-hover-light-grey">
-                            <th>Status</th>
-                            @if (!is_null($resolved))
-
+                            </tr>
+                            <tr class="w3-hover-light-grey">
+                                <th>Importance</th>
+                                <td class="{{$importance->class}}">{{$importance->text}}</td>
+                            </tr>
+                            <tr class="w3-hover-light-grey">
+                                <th>Status</th>
+                                <td class="w3-red editbutton modalOpener"value='/problems/{{$problem->id}}/solve/compact'>Unsolved</td>
+                            </tr>
+                        @else
+                            <th>Solved By</th>
+                            <td>
+                                {{$resolved->fname}} {{$resolved->sname}}
+                            </td>
+                            </tr>
+                            <tr class="w3-hover-light-grey">
+                                <th>Status</th>
                                 <td class="w3-green"> Solved ({{$resolved->created_at}})
                                 </td>
-                            @else
-                                <td class="w3-red editbutton modalOpener"value='/problems/{{$problem->id}}/solve/compact'> Unsolved</td>
-                            @endif
-                        </tr>
-                        @if (!is_null($resolved))
-
-                            <tr id = "8" class="w3-hover-light-grey">
+                            </tr>
+                            <tr class="w3-hover-light-grey">
                                 <th>Solution Notes</th>
                                 <td>
                                     {{$resolved->solution_notes}}
