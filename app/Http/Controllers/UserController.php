@@ -572,7 +572,7 @@ class UserController extends Controller
                         $user->employee_id = $empID;
                         $user->forename = $forename;
                         $user->surname = $surname;
-                        $user->job_id = $job;
+                        $user->job_id = $job->id;
                         $user->phone_number = $phone;
                         $user->save();
 
@@ -602,7 +602,7 @@ class UserController extends Controller
                          $user->employee_id = $empID;
                         $user->forename = $forename;
                         $user->surname = $surname;
-                        $user->job_id = $job;
+                        $user->job_id = $job->id;
                         $user->phone_number = $phone;
                         $user->save();
 
