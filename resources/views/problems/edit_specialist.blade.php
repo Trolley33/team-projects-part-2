@@ -21,7 +21,7 @@
                     @if (!is_null($s->startDate))
                         <!-- Check if time off within next week, only give warning (!) if so.-->
                         @if (time() + (60*60*24*7) >= strtotime($s->startDate))
-                            <span class="w3-text-deep-orange editbutton modalOpener" value='/users/{{$s->id}}/compact'>(!)</span>
+                            <span title="Click for info" class="w3-text-deep-orange editbutton modalOpener" value='/users/{{$s->id}}/compact'>(!)</span>
                         @endif
                     @endif
                 </td>
@@ -123,7 +123,7 @@ $(document).ready( function ()
             var d = table.row(i).data();
             if (d[4].toLowerCase().includes(text.toLowerCase()) && text != '')
             {
-                $(this).html("Match Found <span class='w3-text-green'>(?)</span>");
+                $(this).html("Match Found <span title='Click for info' class='w3-text-green'>(?)</span>");
             }
             else
             {
@@ -146,7 +146,7 @@ $(document).ready( function ()
         var d = table.row(i).data();
         if (d[4].toLowerCase().includes(search.toLowerCase()) && search != '')
         {
-            $(this).html("Match Found <span class='w3-text-green'>(?)</span>");
+            $(this).html("Match Found <span title='Click for info' class='w3-text-green'>(?)</span>");
         }
         else
         {
