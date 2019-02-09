@@ -8,12 +8,12 @@
             <hr />
             <div style="width: 600px; margin: auto;">
             	<h2>Overview</h2>
-            	<select id="data-changer" onchange="swapDataSet()">
+            	<select id="data-changer" onchange="swapDataSet()" style="width: 50%">
             		@foreach ($datasets as $i=>$d)
             			<option value="{{$i}}">{{$d['yLabel']}}</option>
             		@endforeach
             	</select>
-            	<br />
+            	<br /><br />
             	<input id="start" type="date" /> - <input id="end" type="date" /> <button onclick="changeRange()">↺</button> <button onclick="resetRange()">✖</button>
             	<canvas width="600" height="300" id='graph'>
             	</canvas>

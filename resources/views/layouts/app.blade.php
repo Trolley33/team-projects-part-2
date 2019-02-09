@@ -138,6 +138,27 @@
         // On pages with a chart object.
         if (typeof myChart != 'undefined')
         {
+            $('#data-changer').select2();
+            
+            // Find any non-empty dataset.
+            var flag = -1;
+            for (var i = sets.length - 1; i >= 0; i--) 
+            {
+                if (sets[i].dataset.data.length != 0)
+                {
+                    flag = i;
+                }
+            }
+
+            // If all datasets empty, remove graph.
+            if (flag == -1)
+            {
+                $('#graph').replaceWith("<div><h2>No Data to Show</h2></div>");
+            }
+            
+            // Select first graph that has valid data.
+            $('#data-changer').val(flag).trigger('change');
+
             // Perform date manipulation, in order to get start -> end = 1 quarter, with current month in center.
             var startDate = new Date();
             // Shift back 1 month

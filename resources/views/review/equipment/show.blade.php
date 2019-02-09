@@ -7,7 +7,7 @@
             <h2>Reviewing Equipment {{$equipment->description}}: {{$equipment->model}}</h2>
             <hr />
             <div style="width: 600px; margin: auto;">
-            	<select id="data-changer" onchange="swapDataSet()">
+            	<select id="data-changer" onchange="swapDataSet()" style="width: 50%">
             		@foreach ($datasets as $i=>$d)
             			<option value="{{$i}}">{{$d['yLabel']}}</option>
             		@endforeach
