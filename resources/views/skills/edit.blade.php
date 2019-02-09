@@ -73,7 +73,6 @@ $(document).ready( function ()
     var search = "<?php if (session('search')) echo session('search'); ?>";
     // table.search(search).draw();
     table.page(Math.floor(page)).draw('page');
-    console.log(page);
 });
 
 </script>

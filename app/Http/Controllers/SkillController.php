@@ -384,7 +384,7 @@ class SkillController extends Controller
             ->leftJoin('skills', function ($join) use($user) {
                 $join->on('skills.problem_type_id', '=', 'problem_types.id')->where('skills.specialist_id', '=', $user->id);
             })
-            ->whereNull('skills.id')->orWhere('skills.id', $skill->id)->get();
+            ->whereNull('skills.id')->orWhere('skills.id', $skill->id)->orderBy('problem_types.id')->get();
 
 
     	$data = array(
