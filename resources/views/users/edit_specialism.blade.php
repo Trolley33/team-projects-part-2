@@ -41,7 +41,7 @@ var modal;
 $(document).ready( function () 
 {
     var user = <?php echo json_encode($user); ?>;
-    var pt = <?php echo $pt_id; ?>;
+    var pt = <?php echo ($pt_id ?? -1); ?>;
     var page = 0;
 
     $('.selectBox').click(function ()
