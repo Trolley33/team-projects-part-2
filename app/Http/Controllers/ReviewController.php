@@ -149,8 +149,6 @@ class ReviewController extends Controller
             }
         }
         fclose($output);
-        // Redirect to previous page after download.
-        return redirect('/export')->with('success', 'Data exported.');        
     }
 
     /**
