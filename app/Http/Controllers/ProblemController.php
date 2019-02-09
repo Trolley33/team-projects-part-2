@@ -177,7 +177,7 @@ class ProblemController extends Controller
         if (PagesController::hasAccess(1))
         {
             // Get list of all users, who could potentially be creating a call.
-            $users = User::join('jobs', 'users.job_id', '=', 'jobs.id')->join('departments', 'jobs.department_id', '=', 'departments.id')->select('users.*', 'jobs.title', 'departments.name')->get();
+            $users = User::join('jobs', 'users.job_id', '=', 'jobs.id')->join('departments', 'jobs.department_id', '=', 'departments.id')->select('users.*', 'jobs.title', 'departments.name')->where('users.id', '!=', '0')->get();
             // Supply data to view.
             $data = array(
                 'title' => "Problem Creator",
@@ -521,7 +521,7 @@ class ProblemController extends Controller
             // Get problem object from URL.
             $problem = Problem::find($id);
             // Get list of users to choose from.
-            $users = User::join('jobs', 'users.job_id', '=', 'jobs.id')->join('departments', 'jobs.department_id', '=', 'departments.id')->select('users.*', 'jobs.title', 'departments.name')->get();
+            $users = User::join('jobs', 'users.job_id', '=', 'jobs.id')->join('departments', 'jobs.department_id', '=', 'departments.id')->select('users.*', 'jobs.title', 'departments.name')->where('users.id', '!=', '0')->get();
 
             // If problem exists.
             if (!is_null($problem))
