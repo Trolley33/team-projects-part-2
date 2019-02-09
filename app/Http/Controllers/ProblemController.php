@@ -153,8 +153,8 @@ class ProblemController extends Controller
             ));
             // Supply data to view.
             $data = array(
-                'title' => "Specialist Homepage",
-                'desc' => "Please select a task.",
+                'title' => "Problem Viewer",
+                'desc' => "Please select a problem to view.",
                 'user' => $specialist,
                 'ongoing' => $ongoing,
                 'resolved' => $resolved,
