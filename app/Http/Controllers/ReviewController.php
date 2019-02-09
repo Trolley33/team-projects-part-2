@@ -252,7 +252,7 @@ class ReviewController extends Controller
         if (PagesController::hasAccess(3))
         {
             // Get all callers, including operators/specialists/analyst, as they can call up too.
-            $callers = User::all();
+            $callers = User::where('id', '!=', '0')->get();
 
             $data = array(
                 'title'=>'Review Caller',
