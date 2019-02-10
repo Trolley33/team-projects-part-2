@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="">
+        <!-- Analyst home page with links to relevant pages -->
         <div class="call_menu w3-center w3-padding" style='text-align:center'>
             <h3>Data Reviews</h3><hr />
             <a class="blank" href="/review/specialists">
@@ -39,7 +40,7 @@
     </div>
 
     <script>
-    $(document).ready( function () 
+    $(document).ready( function ()
     {
     });
     </script>

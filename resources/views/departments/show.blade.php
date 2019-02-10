@@ -76,7 +76,7 @@ $(document).ready( function ()
     		return false;
     	});
     }
-		
+
 
 });
 // Pop up to confirm that the user wants to delete the department.
