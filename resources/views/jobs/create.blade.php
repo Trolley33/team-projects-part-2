@@ -5,9 +5,11 @@
     <div>
         <div class="w3-padding-large w3-white">
             <h2>Create New Job Title</h2>
+            <!-- Form to create new Job title -->
             {!! Form::open(['action' => 'JobController@store', 'method' => 'POST']) !!}
             <table>
                 <tbody>
+                    <!-- Dropdown to select the Department for which the role is for -->
                     <tr class="w3-hover-light-grey">
                         <th>{{Form::label('department-select', 'Department')}}</th>
                         <td><select id='department-select' name='department-select' class="w3-input" required style="width: 100% !important;">
@@ -16,7 +18,7 @@
                     <tr class="w3-hover-light-grey">
                         <th>{{Form::label('jobTitle', 'Job Title')}}</th>
                         <td>{{Form::text('jobTitle', '', ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Job Title'])}}</td>
-                    </tr>                
+                    </tr>
                 </tbody>
             </table>
             {{Form::submit('Submit', ['class'=> "bigbutton w3-card w3-button w3-row w3-teal"])}}
@@ -26,7 +28,7 @@
 </div>
 
 <script>
-    $(document).ready(function () 
+    $(document).ready(function ()
     {
         $('#department-select').select2();
 
@@ -34,6 +36,7 @@
 
         var currentDept = <?php echo json_encode($dept);?>;
 
+        //Append role to database for the Department the role is for
         departments.forEach(function (department)
         {
             var o = new Option(department.name, department.id, false, currentDept.id == department.id);

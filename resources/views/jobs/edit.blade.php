@@ -21,15 +21,16 @@
                             {{Form::label('', 'Previous Title')}}</th>
                         <td>{{Form::text('', $job->title, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'Previous Title', 'disabled'])}}</td>
                     </tr>
+                    <!-- New information, the user will input -->
                     <tr class="w3-hover-light-grey">
                         <th>{{Form::label('department-select', 'New Department')}}</th>
                         <td><select id='department-select' name='department-select' class="w3-input" required  style="width: 100% !important;">
-                </select></td>
-                    </tr>  
+                        </select></td>
+                    </tr>
                     <tr class="w3-hover-light-grey">
                         <th>{{Form::label('jobTitle', 'Job Title')}}</th>
                         <td>{{Form::text('jobTitle', $job->title, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>'New Title'])}}</td>
-                    </tr>                
+                    </tr>
                 </tbody>
             </table>
             {{Form::hidden('_method', 'PUT')}}
@@ -37,7 +38,7 @@
             {!! Form::close() !!}
         </div>
     </div>
-</div>  
+</div>
 
 <script>
     $(document).ready(function () {
@@ -48,6 +49,7 @@
 
         var currentDepartment = <?php echo json_encode($dept);?>
 
+        //If the department ID is 1, that means it is the Technical Support Department, this is a special department with special job titles in this department can't be edited or deleted
         departments.forEach(function (department)
         {
             var o = new Option(department.name, department.id, false, currentDepartment.id == department.id);

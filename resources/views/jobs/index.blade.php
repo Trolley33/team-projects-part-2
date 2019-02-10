@@ -4,6 +4,7 @@
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
 	<table id='job-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
+			<!-- Table with list of Jobs and information about them -->
 			<tr>
 				<th>Job ID</th><th>Job Name</th><th>Department Name</th>
 				<th>No. of Employees</th><th>---</th>
@@ -23,6 +24,7 @@
 		</tbody>
 	</table>
 
+	<!-- Button to create new Job Titles -->
 	<div style="text-align: center;">
         <a class="blank" href="/jobs/create">
             <div class="bigbutton w3-card w3-button w3-row">
@@ -33,7 +35,7 @@
 </div>
 
 <script>
-$(document).ready( function () 
+$(document).ready( function ()
 {
     var table = $('#job-table').DataTable();
 

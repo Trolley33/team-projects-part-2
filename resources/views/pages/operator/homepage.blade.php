@@ -12,6 +12,7 @@
 
         <div  class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
             <h3>Problems Without Specialists</h3><hr />
+            <!-- Table of unassigned problems -->
             <table id='reassign-table' class="display cell-border stripe hover" style="width:100%;">
                 <thead>
                     <tr>
@@ -31,9 +32,9 @@
                         </td>
                         <td>{{$problem->reason}}</td>
                         <td class="editbutton modalOpener" value='/problem_types/{{$problem->ptID}}/compact'>
-                        @if ($problem->pDesc != '0') 
-                            ({{$problem->pDesc}}) 
-                        @endif 
+                        @if ($problem->pDesc != '0')
+                            ({{$problem->pDesc}})
+                        @endif
                         {{$problem->ptDesc}}</td>
                         <td class="editbutton modalOpener" value='/users/{{$problem->uID}}/compact'>
                         {{$problem->forename}} {{$problem->surname}}</td>
@@ -48,7 +49,7 @@
                 </tbody>
             </table>
         </div>
-        <!-- removed 
+        <!-- removed
         <div class="call_menu w3-center w3-padding" style='text-align:center'>
             <h3>Database Management Options</h3><hr />
             <a class="blank" href="/problems/">
@@ -99,7 +100,7 @@
     </div>
 
     <script>
-    $(document).ready( function () 
+    $(document).ready( function ()
     {
         var chart = document.getElementById('graph');
         var solved = <?php echo $solved ?? 0;?>;
@@ -130,7 +131,7 @@
             "aoColumnDefs": [
                 {
                     "iDataSort": 6,
-                    "aTargets": [5] 
+                    "aTargets": [5]
                 },
                 {
                     "targets": [6],

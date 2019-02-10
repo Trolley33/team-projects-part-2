@@ -10,7 +10,7 @@
 
     <!-- fancy dropdown code -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <title>{{config('app.name')}}</title>
 
     <!-- nice tables -->
@@ -41,7 +41,7 @@
                 var target = $(event.target);
 
                 if (!target.hasClass('modalOpener'))
-                { 
+                {
                   if (target.closest('.modal div').length == 0)
                   {
                     closeModal();
@@ -59,7 +59,7 @@
             modal.html('');
             modal.hide();
         }
-        
+
         // Graphing helper functions
         function swapDataSet()
         {
@@ -76,7 +76,7 @@
             var end = $('#end');
             var startDate = new Date(start.val());
             var endDate = new Date(end.val());
-            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) 
+            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime()))
             {
                 resetRange();
                 return;
@@ -107,6 +107,7 @@
     </script>
 </head>
 <body>
+  <!-- Basic layout of of page for all pages -->
     <div id="myModal" class="modal" value=''>
     </div>
     <div class="header w3-container w3-dark-grey">
@@ -132,7 +133,7 @@
     </ul>
     @include('messages')
     @yield('content')
-    
+
 <script>
     $(document).ready (function () {
         // On pages with a chart object.
@@ -141,7 +142,7 @@
             $('#data-changer').select2();
             // Find any non-empty dataset.
             var flag = -1;
-            for (var i = sets.length - 1; i >= 0; i--) 
+            for (var i = sets.length - 1; i >= 0; i--)
             {
                 if (sets[i].dataset.data.length != 0)
                 {
@@ -155,7 +156,7 @@
                 $('#graph').replaceWith("<div><h2>No Data to Show</h2></div>");
                 return;
             }
-            
+
             // Select first graph that has valid data.
             $('#data-changer').val(flag).trigger('change');
 
