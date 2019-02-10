@@ -21,7 +21,7 @@
                     @if (!is_null($s->startDate))
                         <!-- Check if time off within next week, only give warning (!) if so.-->
                         @if (time() + (60*60*24*7) >= strtotime($s->startDate))
-                            <span title="Click for info" class="w3-text-deep-orange editbutton modalOpener" value='/users/{{$s->id}}/compact'>(!)</span>
+                            <span class="w3-text-deep-orange editbutton modalOpener" value='/users/{{$s->id}}/compact'>(!)</span>
                         @endif
                     @endif
                 </td>
@@ -30,7 +30,7 @@
                 ({{$s->parent_description}})
             @endif
             {{$s->description}}</td>
-        <td title="" class="editbutton modalOpener visisbleColumn" id='{{$s->id}}' value='/skills/{{$s->id}}/compact'>
+        <td title="" class="editbutton modalOpener visibleColumn" id='{{$s->id}}' value='/skills/{{$s->id}}/compact'>
             View
         </td>
         <!-- Remove duplicate skills, do rest of comma separated -->
@@ -102,7 +102,7 @@ $(document).ready( function ()
         return false;
     });
 
-    skillCells = $('.visisbleColumn');
+    skillCells = $('.visibleColumn');
 
     var table = $('#problem-table').DataTable({
         order: [
@@ -123,7 +123,9 @@ $(document).ready( function ()
             var d = table.row(i).data();
             if (d[4].toLowerCase().includes(text.toLowerCase()) && text != '')
             {
-                $(this).html("Match Found <span title='Click for info' class='w3-text-green'>(?)</span>");
+                $(this).html("Match Found <span class='w3-text-green'>(?)</span>");
+                var dir = $(this).attr('value').split('/');
+                $(this).attr('value', "/skills/"+dir[2]+"/compact?skill="+parent.id);
             }
             else
             {
@@ -146,7 +148,9 @@ $(document).ready( function ()
         var d = table.row(i).data();
         if (d[4].toLowerCase().includes(search.toLowerCase()) && search != '')
         {
-            $(this).html("Match Found <span title='Click for info' class='w3-text-green'>(?)</span>");
+            $(this).html("Match Found <span class='w3-text-green'>(?)</span>");
+            var dir = $(this).attr('value').split('/');
+            $(this).attr('value', "/skills/"+dir[2]+"/compact?skill="+parent.id);
         }
         else
         {

@@ -1,5 +1,10 @@
 @extends('layouts.compact')
 @section('content')
+
+<?php
+$highlight = $_GET['skill'] ?? -1;
+?>
+
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <h2>Listed Skills For: {{$user->forename}} {{$user->surname}}</h2>
     <table id='skill-table' class="display cell-border stripe hover" style="width:100%;">
@@ -11,7 +16,11 @@
         <tbody>
             @foreach ($skills as $skill)
             <tr class="row" value='{{$skill->problem_type_id}}'>
+                @if ($skill->problem_type_id == $highlight || $skill->parentID == $highlight)
+                <td class="w3-text-green">
+                @else
                 <td>
+                @endif
                 @if (!is_null($skill->parentID))
                     ({{$skill->parentDesc}})
                 @endif
