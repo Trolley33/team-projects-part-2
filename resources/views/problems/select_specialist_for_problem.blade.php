@@ -20,11 +20,11 @@
       @foreach ($specialists as $s)
       <tr>
         <td style="text-align: right;">{{sprintf('%04d', $s->employee_id)}}</td>
-        <td title="View" class="editbutton modalOpener" value='/users/{{$s->id}}/compact'>{{$s->forename}} {{$s->surname}}  
+        <td title="View" class="editbutton modalOpener tooltip" value='/users/{{$s->id}}/compact'>{{$s->forename}} {{$s->surname}}  
           @if (!is_null($s->startDate))
             <!-- Check if time off within next week, only give warning (!) if so.-->
             @if (time() + (60*60*24*7) >= strtotime($s->startDate))
-                <span class="w3-text-deep-orange editbutton modalOpener" value='/users/{{$s->id}}/compact'>(!)</span>
+                <span class="w3-text-deep-orange editbutton modalOpener" value='/users/{{$s->id}}/compact'>(!)</span><span class='tooltiptext'>Click for more info</span>
             @endif
           @endif
         </td>
@@ -34,7 +34,7 @@
             @endif
             {{$s->description}}
         </td>
-        <td title="" class="editbutton modalOpener visisbleColumn" id='{{$s->id}}' value='/skills/{{$s->id}}/compact'>
+        <td class="editbutton modalOpener visisbleColumn tooltip" id='{{$s->id}}' value='/skills/{{$s->id}}/compact'>
             View
         </td>
         <!-- Remove duplicate skills; print skills comma separated. -->
@@ -126,7 +126,7 @@ $(document).ready( function ()
             var d = table.row(i).data();
             if (d[4].toLowerCase().includes(text.toLowerCase()) && text != '')
             {
-                $(this).html("Match Found <span class='w3-text-green'>(?)</span>");
+                $(this).html("Match Found <span class='w3-text-green'>(?)</span><span class='tooltiptext'>Click for more info</span>");
                 var dir = $(this).attr('value').split('/');
                 $(this).attr('value', "/skills/"+dir[2]+"/compact?skill="+parent.id);
             }
@@ -150,7 +150,7 @@ $(document).ready( function ()
         var d = table.row(i).data();
         if (d[4].toLowerCase().includes(search.toLowerCase()) && search != '')
         {
-            $(this).html("Match Found <span class='w3-text-green'>(?)</span>");
+            $(this).html("Match Found <span class='w3-text-green'>(?)</span><span class='tooltiptext'>Click for more info</span>");
             var dir = $(this).attr('value').split('/');
             $(this).attr('value', "/skills/"+dir[2]+"/compact?skill="+parent.id);
         }
