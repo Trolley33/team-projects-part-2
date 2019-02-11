@@ -394,7 +394,7 @@ class ProblemController extends Controller
                 ]);
 
                 $specialist = User::find($request->input('specialist'));
-                if (!is_null($specialist))
+                if (is_null($specialist))
                 {
                     return redirect('/problems/')->with('error', 'Invalid specialist selected.');
                 }
