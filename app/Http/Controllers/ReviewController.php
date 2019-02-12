@@ -557,7 +557,6 @@ class ReviewController extends Controller
                     'title'=>'Review Problem Type',
                     'desc'=>'Currently Reviewing Problem Type',
                     'pt'=>$pt,
-                    'parent'=>$parent,
                     'datasets'=>$datasets,
                     'links'=>PagesController::getAnalystLinks(),
                     'active'=>'Review'

@@ -5,9 +5,6 @@
     <div>
         <div class="w3-padding-large w3-white">
             <h2>Reviewing Problem Type:
-            @if (!is_null($parent))
-				({{$parent->description}})
-			@endif
 			{{$pt->description}}
 			</h2>
             <hr />
