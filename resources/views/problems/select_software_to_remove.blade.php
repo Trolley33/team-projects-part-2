@@ -71,7 +71,7 @@ $(document).ready( function ()
     {
         $(this).prop('checked', !$(this).prop('checked'));
     });
-    var table = $('#software-table').DataTable();
+    var table = $('#software-table').DataTable();    
 });
 </script>
 

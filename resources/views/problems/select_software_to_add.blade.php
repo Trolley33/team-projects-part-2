@@ -82,7 +82,22 @@ $(document).ready( function ()
         $(this).prop('checked', !$(this).prop('checked'));
     });
     var table = $('#software-table').DataTable();
-
+	/* Ignore? Causes more problems than it solves
+	$('#addSoftwareForm').submit(function (event) {
+			event.preventDefault();
+			var data = table.$('input, select').serializeArray();
+			data.push({name:'_token', value: "{{ csrf_token() }}"});
+			data.push({name:'problem-id', value: problem.id});
+			console.log(data);
+			$.ajax({
+				method: "POST",
+				data: data,
+				url: "/problems/"+problem.id+"/software",
+				success: function (data) {window.location.href = '/problems/'+problem.id}
+			});
+	});
+	*/
+	
 });
 </script>
 

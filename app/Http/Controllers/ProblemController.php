@@ -822,7 +822,7 @@ class ProblemController extends Controller
             foreach ($softwares as $s)
             {
                 // Check software is correct.
-                if (!is_null(Equipment::find($e)))
+                if (!is_null(Software::find($s)))
                 {
                     $a_s = new AffectedSoftware();
                     $a_s->problem_id = $problem_id;
