@@ -89,6 +89,7 @@ Route::get   ('/problems/{id}/edit_specialist', 'ProblemController@edit_speciali
 Route::get   ('/problems/{id}/solve/compact', 'ProblemController@solve_compact')->name('problems.solve_compact');
 
 Route::post ('/problems/{id}/solve', 'ProblemController@solve_problem')->name('problems.solve_problem');
+Route::get   ('/problems/{id}/make_new', 'ProblemController@make_new_prompt')->name('problems.make_new');
 
 // Add calls to problem
 Route::get   ('/problems/{id}/add_call', 'ProblemController@select_user_for_call')->name('problems.select_user_for_call');

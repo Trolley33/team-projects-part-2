@@ -414,8 +414,37 @@ class ProblemController extends Controller
             $call->notes = "Initial call.";
             $call->save();
 
-            return redirect('/problems/'.$problem->id)->with('success', 'Problem Created');
+            return redirect('/problems/'.$problem->id.'/make_new')->with('success', 'Problem Created');
         }
+    }
+
+    public function make_new_prompt ($id)
+    {
+		if (!PagesController::hasAccess(1))
+		{
+			return redirect('/login')->with('error', 'Please log in first.');
+		}
+
+		$problem = Problem::find($id);
+		
+		if (is_null($problem))
+		{
+			return redirect('/problems')->with('error', 'Problem not found.');
+		}
+		
+		$call = Call::where('problem_id', $id)->first();
+		$caller = User::find($call->caller_id);
+		
+		$data = array(
+		 	'title' => "Create Another Problem for Caller?",
+		    'desc' => "Please select a choice.",
+		    'problem' => $problem,
+		    'caller' => $caller,
+		    'links' => PagesController::getOperatorLinks(),
+		    'active' => 'Problems'
+		);
+
+		return view('problems.make_new_prompt')->with($data);
     }
 
     /**
