@@ -52,7 +52,7 @@ Route::delete('/skills/{id}/delete', 'SkillController@delete');
 // Analyst pages.
 Route::get('/analyst/', 'PagesController@analyst_homepage');
 Route::get('/analyst/export', 'ReviewController@show_tables');
-Route::post('/analyst/export', 'ReviewController@export');
+Route::get('/analyst/export/download', 'ReviewController@export');
 
 Route::get('/review', 'ReviewController@review');
 Route::get('/review/specialists', 'ReviewController@review_specialists');

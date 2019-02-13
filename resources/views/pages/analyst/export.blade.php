@@ -1,7 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
+	<div id='errors'>
+	</div>
     <h2>Select Tables to Export</h2>
     {!! Form::open(['action' => ['ReviewController@export'], 'method' => 'POST', 'id'=>'addTableForm']) !!}
     <table id='table-table' class="display cell-border stripe hover">
@@ -68,6 +71,12 @@ $(document).ready( function ()
 
     var table = $('#table-table').DataTable({
         order: [[1, 'desc']]
+    });
+    // Redirect to URL to properly submit inputs from checkboxes.
+    $('#addTableForm').submit(function (event) {
+	var data = table.$('input, select').serialize();
+	window.location = '/analyst/export/download?'+data;
+	event.preventDefault();
     });
 
 });
