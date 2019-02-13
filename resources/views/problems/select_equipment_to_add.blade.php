@@ -3,7 +3,7 @@
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <h2>Problem ID: {{$problem->id}}</h2>
-    {!! Form::open(['action' => ['ProblemController@append_equipment', $problem->id], 'method' => 'POST', 'id'=>'addEquipmentForm']) !!}
+    {!! Form::open(['action' => ['ProblemController@append_equipment', $problem->id], 'method' => 'GET', 'id'=>'addEquipmentForm']) !!}
 
     {{Form::hidden('problem-id', $problem->id)}}
     <table id='equipment-table' class="display cell-border stripe hover">
@@ -81,7 +81,11 @@ $(document).ready( function ()
         $(this).prop('checked', !$(this).prop('checked'));
     });
     var table = $('#equipment-table').DataTable();
-
+    $('#addEquipmentForm').submit(function (event) {
+   		event.preventDefault();
+   		var data = table.$('input, select').serialize() + "&problem-id="+problem.id;
+       	window.location.href = "/problems/"+problem.id+'/equipment/add?'+data;
+   	});	 
 });
 </script>
 

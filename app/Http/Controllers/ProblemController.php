@@ -740,7 +740,10 @@ class ProblemController extends Controller
             foreach ($affected as $ah)
             {
                 $a_h = AffectedHardware::find($ah);
-                $a_h->delete();
+                if (!is_null($a_h))
+                {
+                	$a_h->delete();
+                }
             }
 
             return redirect('/problems/'.$request->input('problem-id'))->with('success', 'Equipment Removed');
@@ -906,7 +909,10 @@ class ProblemController extends Controller
             foreach ($softwares as $s)
             {
                 $a_s = AffectedSoftware::find($s);
-                $a_s->delete();
+  	         	if (!is_null($a_s))
+  	         	{   
+                	$a_s->delete();
+        	    }
             }
 
             return redirect('/problems/'.$request->input('problem-id'))->with('success', 'Software Removed');

@@ -3,7 +3,7 @@
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <h2>Problem ID: {{$problem->id}}</h2>
-    {!! Form::open(['action' => ['ProblemController@append_software', $problem->id], 'method' => 'POST', 'id'=>'addSoftwareForm']) !!}
+    {!! Form::open(['action' => ['ProblemController@append_software', $problem->id], 'method' => 'GET', 'id'=>'addSoftwareForm']) !!}
 
     {{Form::hidden('problem-id', $problem->id)}}
     <table id='software-table' class="display cell-border stripe hover">
@@ -82,22 +82,11 @@ $(document).ready( function ()
         $(this).prop('checked', !$(this).prop('checked'));
     });
     var table = $('#software-table').DataTable();
-	/* Ignore? Causes more problems than it solves
 	$('#addSoftwareForm').submit(function (event) {
 			event.preventDefault();
-			var data = table.$('input, select').serializeArray();
-			data.push({name:'_token', value: "{{ csrf_token() }}"});
-			data.push({name:'problem-id', value: problem.id});
-			console.log(data);
-			$.ajax({
-				method: "POST",
-				data: data,
-				url: "/problems/"+problem.id+"/software",
-				success: function (data) {window.location.href = '/problems/'+problem.id}
-			});
-	});
-	*/
-	
+			var data = table.$('input, select').serialize() + "&problem-id="+problem.id;
+			window.location.href = "/problems/"+problem.id+'/software/add?'+data;
+	});	
 });
 </script>
 

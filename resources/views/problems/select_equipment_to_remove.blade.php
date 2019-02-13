@@ -3,7 +3,7 @@
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <h2>Problem ID: {{$problem->id}}</h2>
-    {!! Form::open(['action' => ['ProblemController@delete_equipment', $problem->id], 'method' => 'POST', 'id'=>'removeEquipmentForm']) !!}
+    {!! Form::open(['action' => ['ProblemController@delete_equipment', $problem->id], 'method' => 'GET', 'id'=>'removeEquipmentForm']) !!}
 
     {{Form::hidden('problem-id', $problem->id)}}
     {{Form::hidden('_method', 'DELETE')}}
@@ -72,7 +72,11 @@ $(document).ready( function ()
         $(this).prop('checked', !$(this).prop('checked'));
     });
     var table = $('#equipment-table').DataTable();
-
+	$('#removeEquipmentForm').submit(function (event) {
+		event.preventDefault();
+		var data = table.$('input, select').serialize() + "&problem-id="+problem.id;
+	   	window.location.href = "/problems/"+problem.id+'/equipment/remove?'+data;
+	});
 });
 </script>
 
