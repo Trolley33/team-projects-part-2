@@ -6,6 +6,7 @@
 	<div id='errors'>
 	</div>
     <h2>Select Tables to Export</h2>
+		<!-- List of tables that the analyst can export -->
     {!! Form::open(['action' => ['ReviewController@export'], 'method' => 'POST', 'id'=>'addTableForm']) !!}
     <table id='table-table' class="display cell-border stripe hover">
         <thead>
@@ -25,7 +26,7 @@
             @endforeach
         </tbody>
 
-        
+
     </table>
     <div style="text-align: center;">
         <input id="addTable" class="bigbutton w3-card w3-button w3-row" type="submit" value="Export Tables" disabled/>
@@ -35,8 +36,9 @@
 
 
 <script>
-$(document).ready( function () 
+$(document).ready( function ()
 {
+		//Enable Export Tables button if 1 or more table is selected
     $('input:checkbox[name="table[]"]').change(
     function(){
         if ($('input:checkbox[name="table[]"]:checked').length > 0)
@@ -48,12 +50,12 @@ $(document).ready( function ()
             $('#addTable').prop('disabled', true);
         }
     });
-
+		//Everytime a select box is checked or unchecked this function is run, Enable Export Tables button if 1 or more table is selected
     $('.selectBox').click(function ()
     {
         var child = $(this).children('.selectChecked');
         child.prop('checked', !child.prop('checked'));
-        
+
         if ($('input:checkbox[name="table[]"]:checked').length > 0)
         {
             $('#addTable').prop('disabled', false);

@@ -4,6 +4,7 @@
         <div>
             <div class="w3-padding-large w3-white">
                 <h2>Problem Type Viewer</h2>
+                <!-- Information about the Problem type -->
                 <table>
                     <tbody>
                         <tr class="w3-hover-light-grey">
@@ -21,7 +22,7 @@
                         <tr class="w3-hover-light-grey">
                             <th>Description</th>
                             <td>
-                                {{$problem_type->description}}  
+                                {{$problem_type->description}}
                             </td>
                         </tr>
                     </tbody>
@@ -49,6 +50,7 @@
                     </table>
                 </div>
                 <hr />
+                <!-- Edit problem type button -->
                 <div style="text-align: center;">
                     <a class="blank" href="/problem_types/{{$problem_type->id}}/edit">
                         <div class="bigbutton w3-card w3-button w3-row">
@@ -56,13 +58,13 @@
                         </div>
                     </a><br />
                 </div>
-                    
+                <!-- Delete problem type button -->
                 {!!Form::open(['action' => ['ProblemTypeController@destroy', $problem_type->id], 'method' => 'POST', 'onsubmit'=>"return confirm('Delete Problem Type? This action cannot be undone.');"]) !!}
 
                 {{Form::hidden('_method', 'DELETE')}}
-                
+
                 {{Form::submit('Delete Problem Type', ['class'=> "bigbutton w3-card w3-button w3-row w3-red"])}}
-                
+
                 {!!Form::close() !!}
                 <br />
             </div>

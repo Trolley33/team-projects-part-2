@@ -3,6 +3,7 @@
 <div class="call_menu w3-center w3-padding w3-light-grey">
         <div>
             <div class="w3-padding-large w3-white">
+              <!-- Information about the Problem with text box to edit, or link to list of selectable properties -->
                 <h2>Problem Viewer</h2>
                 {!! Form::open(['action' => ['ProblemController@update', $problem->id], 'method' => 'POST']) !!}
                 <table>
@@ -69,7 +70,7 @@
                         <tr id='solutionNotes' class="w3-hover-light-grey">
                             <th>Solution Notes</th>
                             <td>
-                                
+
                             {{Form::text('solution_notes', $sol_notes, ['class'=>'w3-input w3-border w3-round', 'placeholder'=>'Solution Notes'])}}
                             </td>
                         </tr>

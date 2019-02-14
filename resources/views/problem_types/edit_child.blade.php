@@ -4,6 +4,7 @@
         <div>
             <div class="w3-padding-large w3-white">
                 <h2>Problem Type Editor</h2>
+                <!-- Form to edit problem type -->
                 {!! Form::open(['action' => ['ProblemTypeController@update', $problem_type->id], 'method' => 'POST']) !!}
                 <table>
                     <tbody>
@@ -15,7 +16,7 @@
                         <tr class="w3-hover-light-grey">
                             <th>Description</th>
                             <td>
-                                {{Form::text('desc', $problem_type->description, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$problem_type->description])}} 
+                                {{Form::text('desc', $problem_type->description, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$problem_type->description])}}
                             </td>
                         </tr>
                     </tbody>
@@ -36,6 +37,7 @@
         var types = <?php echo json_encode($types) ;?>;
 
         var selected = <?php echo json_encode($problem_type);?>;
+        //List of Exisiting problem types added to drop down
         types.forEach(function (type)
         {
             var o;

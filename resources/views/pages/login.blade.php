@@ -2,6 +2,7 @@
 
 @section('content')
     <div class="">
+        <!-- Login in form -->
         <form class="w3-container w3-white login w3-mobile" method="post">
             @csrf
             <input type='hidden' name='tok' value = '<?php echo base64_encode(openssl_random_pseudo_bytes(16)); ?>' />

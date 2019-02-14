@@ -6,15 +6,17 @@
             <div class="w3-padding-large w3-white">
                 <h2>Problem Creator</h2>
                 <hr />
+                <!-- Name of person the problem is being logged for, gotten from previous page -->
                 <h3>Creating problem for: <span class="editbutton modalOpener" value="/users/{{$user->id}}/compact">{{$user->forename}} {{$user->surname}}</span></h3>
                 {!! Form::open(['action' => ['ProblemController@select_specialist_for_problem', $user->id, $problem_type->id], 'method' => 'POST']) !!}
                 <table id="info-table">
+                  <!-- Feilds where information about the problem can be added -->
                     <tbody>
                         <tr class="w3-hover-light-grey">
                             <th>Problem Type</th>
                             <td title="Edit" class="editbutton" onclick="window.location.href = '/problems/create/{{$user->id}}';">
                                 @if (!is_null($parent))
-                                    ({{$parent->description}}) 
+                                    ({{$parent->description}})
                                 @endif
                                 {{$problem_type->description}}
                                 <span class="icon">Edit</span>

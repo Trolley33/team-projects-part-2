@@ -4,6 +4,7 @@
 <div class="">
         <div  class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto; text-align: center;">
             <a class="blank" href="calls/create">
+                <!-- Button to log new calla -->
                 <div class="bigbutton w3-card w3-button w3-row">
                     <h3>Log New Call</h3>
                 </div>

@@ -3,6 +3,7 @@
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
 	<h2>{{$parent->description}} | Sub Problems</h2>
+	<!-- List of ub problems and Information about them -->
 	<table id='problem-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
 			<tr>
@@ -24,23 +25,26 @@
         </tbody>
     </table>
 	<div style="text-align: center;">
+				<!-- Button to create new problem type -->
         <a class="blank" href="/problem_types/create?type={{$parent->id}}">
             <div class="bigbutton w3-card w3-button w3-row">
                 Create New Problem Type
             </div>
         </a><br />
+				<!-- Button to edit problem type -->
         <a class="blank" href="/problem_types/{{$parent->id}}/edit">
             <div class="bigbutton w3-card w3-button w3-row">
                 Edit Information
             </div>
         </a><br />
 
+				<!-- Button to Delete problem type -->
         {!!Form::open(['action' => ['ProblemTypeController@destroy', $parent->id], 'method' => 'POST', 'onsubmit'=>"return confirm('Delete problem type? This action cannot be undone.');"]) !!}
 
         {{Form::hidden('_method', 'DELETE')}}
-        
+
         {{Form::submit('Delete Problem Type', ['class'=> "bigbutton w3-card w3-button w3-row w3-red"])}}
-        
+
         {!!Form::close() !!}
         <br />
 	</div>
@@ -70,7 +74,7 @@
 </div>
 
 <script>
-$(document).ready( function () 
+$(document).ready( function ()
 {
     var table = $('#problem-table').DataTable();
     var table2 = $('#specialist-table').DataTable();

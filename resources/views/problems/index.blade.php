@@ -3,6 +3,7 @@
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <h2>Ongoing Problems</h2>
+    <!-- List of ongoing Problems -->
     <table id='ongoing-table' class="display cell-border stripe hover" style="width:100%;">
         <thead>
             <tr>
@@ -15,7 +16,7 @@
                 <td>{{$problem->created_at}}</td>
                 @if ($problem->sID != 0)
                 <td class="editbutton modalOpener" value='/users/{{$problem->sID}}/compact'>
-                    
+
                     {{$problem->sForename}} {{$problem->sSurname}}
                 </td>
                 @else
@@ -24,9 +25,9 @@
                 </td>
                 @endif
                 <td class="editbutton modalOpener" value='/problem_types/{{$problem->ptID}}/compact'>
-                @if ($problem->pDesc != '0') 
-                    ({{$problem->pDesc}}) 
-                @endif 
+                @if ($problem->pDesc != '0')
+                    ({{$problem->pDesc}})
+                @endif
                 {{$problem->ptDesc}}</td>
                 <td>{{$problem->description}}</td>
                 <td class="editbutton modalOpener" value='/users/{{$problem->uID}}/compact'>
@@ -49,6 +50,7 @@
         </a><br />
     </div>
     <hr />
+    <!-- List of resolved Problems -->
     <h2>Resolved Problems</h2>
     <table id='resolved-table' class="display cell-border stripe hover">
         <thead>
@@ -62,7 +64,7 @@
                 <td>{{$problem->created_at}}</td><td>{{$problem->solved_at}}</td>
                 @if ($problem->sID != 0)
                 <td class="editbutton modalOpener" value='/users/{{$problem->sID}}/compact'>
-                    
+
                     {{$problem->sForename}} {{$problem->sSurname}}
                 </td>
                 @else
@@ -84,14 +86,14 @@
 
 
 <script>
-$(document).ready( function () 
+$(document).ready( function ()
 {
     var table = $('#ongoing-table').dataTable({
         order: [[5, 'desc'], [0, 'desc']],
         "aoColumnDefs": [
             {
                 "iDataSort": 6,
-                "aTargets": [5] 
+                "aTargets": [5]
             },
             {
                 "targets": [6],

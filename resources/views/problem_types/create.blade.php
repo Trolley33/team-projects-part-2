@@ -4,11 +4,13 @@
         <div>
             <div class="w3-padding-large w3-white">
                 <h2>Problem Type Creator</h2>
+                <!-- Form to create new problem type -->
                 {!! Form::open(['action' => 'ProblemTypeController@store', 'method' => 'POST']) !!}
                 <table>
                     <tbody>
                         <tr class="w3-hover-light-grey">
                             <th>Parent Problem Type</th>
+                            <!-- Select Parent problem, if this is a sub-problem -->
                             <td><select id='parent-select' name='parent-select' class="w3-input" required  style="width: 100% !important;"></select></td>
                         </tr>
                         <tr class="w3-hover-light-grey">
@@ -31,7 +33,7 @@
         var types = <?php echo json_encode($types) ;?>;
 
         var selected = <?php echo json_encode($selected);?>;
-
+        //List of Exisiting problem types added to drop down, that can be selected as a parent Problem to the new problem type
         $("#parent-select").append(new Option("None", '-1'));
         types.forEach(function (type)
         {

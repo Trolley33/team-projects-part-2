@@ -4,8 +4,10 @@
         <div class="compact">
             <div class="w3-padding-large w3-white">
                 <h2>Problem Type Viewer</h2>
+                <!-- Information about the Problem type -->
                 <table>
                     <tbody>
+                      <!-- Information about the Parent Problem if it exists -->
                         @if (!is_null($parent))
                             <tr class="w3-hover-light-grey">
                                 <th>Parent Problem ID</th>
@@ -23,7 +25,7 @@
                         <tr class="w3-hover-light-grey">
                             <th>Description</th>
                             <td class="editbutton" onclick="window.location.href = '/problem_types/{{$type->id}}';">
-                                {{$type->description}}<span class="icon">View</span> 
+                                {{$type->description}}<span class="icon">View</span>
                             </td>
                         </tr>
                     </tbody>

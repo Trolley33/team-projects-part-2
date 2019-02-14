@@ -5,12 +5,14 @@
 	<h2>Edit Problem Type For Problem: <span class="editbutton" onclick="window.location.href='/problems/{{$problem->id}}'">{{sprintf('%04d', $problem->id)}}</span></h2>
 	<form id="addProblemTypeForm">
 	<table id='problem-table' class="display cell-border stripe hover" style="width:100%;">
+		<!-- List of Problem types -->
 		<thead>
 			<tr>
 				<th>Problem Type ID</th><th>Problem Type Name</th><th>Select</th>
 			</tr>
 		</thead>
 		<tbody>
+			<!-- Display problem types that have the same parent problem, or all problems if it has no parent problem -->
 			@foreach ($problem_types as $pt)
 			<tr>
 				<td style="text-align: right;">{{sprintf('%04d', $pt->id)}}</td>
@@ -34,10 +36,11 @@
 </div>
 
 <script>
-$(document).ready( function () 
+$(document).ready( function ()
 {
     var problem = <?php echo json_encode($problem); ?>;
     var page = 0;
+		
     $('.selectBox').click(function ()
     {
       $(this).children('.selectRadio').prop('checked', true);
@@ -66,7 +69,7 @@ $(document).ready( function ()
 
         return false;
     });
-    
+
     var table = $('#problem-table').DataTable();
     // If we provide some sort of search term through the redirect, search it here.
     var search = "<?php if (session('search')) echo session('search'); ?>";

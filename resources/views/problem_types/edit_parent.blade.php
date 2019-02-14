@@ -4,10 +4,12 @@
         <div>
             <div class="w3-padding-large w3-white">
                 <h2>Problem Type Editor</h2>
+                  <!-- Form to edit problem type -->
                 {!! Form::open(['action' => ['ProblemTypeController@update', $problem_type->id], 'method' => 'POST']) !!}
                 <table>
                     <tbody>
                         <tr class="w3-hover-light-grey">
+                            <!-- Parent Problem Type set to None and field disabled, as problem has no parent type -->
                             <th>Parent Problem Type</th>
                             <td><select id='parent-select' class="w3-input" disabled style="width: 100% !important;">
                                 <option selected>None</option>
@@ -17,7 +19,7 @@
                         <tr class="w3-hover-light-grey">
                             <th>Description</th>
                             <td>
-                                {{Form::text('desc', $problem_type->description, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$problem_type->description])}} 
+                                {{Form::text('desc', $problem_type->description, ['required', 'class'=>'w3-input w3-border w3-round', 'placeholder'=>$problem_type->description])}}
                             </td>
                         </tr>
                     </tbody>

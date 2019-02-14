@@ -6,6 +6,7 @@
   <hr />
   <h3>Problem Type: {{$type->description}}</h3>
 	<form id="addSpecialistForm">
+	<!-- List of specialists -->
 	<table id='problem-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
 			<tr>
@@ -66,7 +67,7 @@
 
 var skillCells;
 
-$(document).ready( function () 
+$(document).ready( function ()
 {
     var problem = <?php echo json_encode($problem); ?>;
     var parent = <?php echo json_encode($parent); ?>;
