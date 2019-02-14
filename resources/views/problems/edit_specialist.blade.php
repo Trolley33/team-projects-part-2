@@ -4,7 +4,10 @@
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
 	<h2>Select Specialist For Problem: {{sprintf('%04d', $problem->id)}}</h2>
   <hr />
-  <h3>Problem Type: {{$type->description}}</h3>
+  <h3><span class="editbutton modalOpener" value="/problem_types/{{$type->id}}/compact">
+    @if (!is_null($parent)) 
+      ({{$parent->description}}) 
+    @endif{{$type->description}}</span></h3>
 	<form id="addSpecialistForm">
 	<table id='problem-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
@@ -126,7 +129,7 @@ $(document).ready( function ()
             {
                 $(this).html("Match Found <span class='w3-text-green'>(?)</span><span class='tooltiptext'>Click for more info</span>");
                 var dir = $(this).attr('value').split('/');
-                $(this).attr('value', "/skills/"+dir[2]+"/compact?skill="+parent.id);
+                $(this).attr('value', "/skills/"+dir[2]+"/compact?skill="+problem.problem_type);
             }
             else
             {
@@ -151,7 +154,7 @@ $(document).ready( function ()
         {
             $(this).html("Match Found <span class='w3-text-green'>(?)</span><span class='tooltiptext'>Click for more info</span>");
             var dir = $(this).attr('value').split('/');
-            $(this).attr('value', "/skills/"+dir[2]+"/compact?skill="+parent.id);
+            $(this).attr('value', "/skills/"+dir[2]+"/compact?skill="+problem.problem_type);
         }
         else
         {

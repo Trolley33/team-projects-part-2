@@ -118,7 +118,7 @@ $(document).ready( function ()
             {
                 $(this).html("Match Found <span class='w3-text-green'>(?)</span><span class='tooltiptext'>Click for more info</span>");
                 var dir = $(this).attr('value').split('/');
-                $(this).attr('value', "/skills/"+dir[2]+"/compact?skill="+parent.id);
+                $(this).attr('value', "/skills/"+dir[2]+"/compact?skill="+problem.problem_type);
             }
             else
             {
@@ -142,7 +142,7 @@ $(document).ready( function ()
         {
             $(this).html("Match Found <span class='w3-text-green'>(?)</span><span class='tooltiptext'>Click for more info</span>");
             var dir = $(this).attr('value').split('/');
-            $(this).attr('value', "/skills/"+dir[2]+"/compact?skill="+parent.id);
+            $(this).attr('value', "/skills/"+dir[2]+"/compact?skill="+problem.problem_type);
         }
         else
         {
