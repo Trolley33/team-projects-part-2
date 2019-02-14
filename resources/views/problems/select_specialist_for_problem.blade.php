@@ -95,16 +95,6 @@ $(document).ready( function ()
         $('#addSpecialist').prop('disabled', false);
     });
 
-    $('input:radio[name="specialist"]').each(function (i, r)
-    {
-      var radio = $(r);
-      if (radio.val() == problem_type.id)
-      {
-        radio.prop('checked', true);
-        $('#addSpecialist').prop('disabled', false);
-      }
-    });
-    
    skillCells = $('.visisbleColumn');
 
     var table = $('#specialist-table').DataTable({
