@@ -7,12 +7,14 @@
             <h2>Reviewing Helper {{$specialist->forename}} {{$specialist->surname}}</h2>
             <hr />
             <div style="width: 600px; margin: auto;">
+            	<!-- Dropdown for hotswapping datasets -->
             	<select id="data-changer" onchange="swapDataSet()" style="width: 50%">
             		@foreach ($datasets as $i=>$d)
             			<option value="{{$i}}">{{$d['yLabel']}}</option>
             		@endforeach
             	</select>
             	<br /><br />
+            	<!-- Date selector for graph -->
             	<input id="start" type="date" /> - <input id="end" type="date" /> <button onclick="changeRange()">↺</button> <button onclick="resetRange()">✖</button>
             	<canvas width="600" height="300" id='graph'>
             	</canvas>
@@ -29,6 +31,7 @@ var sets = [];
 $(document).ready( function () 
 {
     var chart = $('#graph');
+    // Convert PHP array to json object(s), usable in chart.js
     <?php
     	foreach ($datasets as $key => $value) {
     		echo "sets.push({";
@@ -41,7 +44,7 @@ $(document).ready( function ()
 	    	echo "});";
     	}
     ?>
-
+    // Initialise graph with options
     myChart = new Chart(chart, {
 		type: 'bar',
 		data: {
@@ -88,7 +91,7 @@ $(document).ready( function ()
 			},
 	    }
 	});
-
+    // Select 1st dataset by default
 	swapDataSet(sets[0]);
 
 });
