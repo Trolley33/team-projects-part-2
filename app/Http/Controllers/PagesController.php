@@ -298,7 +298,7 @@ class PagesController extends Controller
         if (PagesController::hasAccess(2))
         {
             $user = PagesController::getCurrentUser();
-            $timeoff = TimeOff::where('user_id', $user->id)->where('startDate', '>', date('Y-m-d'))->get();
+            $timeoff = TimeOff::where('user_id', $user->id)->where('endDate', '>', date('Y-m-d'))->get();
 
             $data = array(
                 'title'=> "Manage Time Off",
@@ -375,9 +375,9 @@ class PagesController extends Controller
         $timeoff = TimeOff::find($id);
         if (!is_null($timeoff))
         {
-            if ($timeoff->startDate <= date('Y-m-d'))
+            if ($timeoff->endDate <= date('Y-m-d'))
             {
-                return redirect('/specialist/timeoff')->with('error', "Can't edit absence while active.");
+                return redirect('/specialist/timeoff')->with('error', "Can't edit absence from past.");
             }
             // If user allowed to access this page.
             if (PagesController::hasAccess(2))
