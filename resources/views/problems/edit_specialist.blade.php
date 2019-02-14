@@ -36,7 +36,7 @@
         </td>
         <!-- Remove duplicate skills, do rest of comma separated -->
         <td>
-            {{implode(',', array_unique(explode(',', $s->skills_list)))}}
+            {{$s->skill_list}}
         </td>
         <td style="text-align: right;">{{$s->jobs}}</td>
 				<td title="Select" class="selectBox editbutton" style="text-align: center;">

@@ -1100,7 +1100,7 @@ class ProblemController extends Controller
                 $parent = ProblemType::find($problem_type->parent);
                 // Grab all information about specialists, taking care to avoid specialists who are on holiday.
                 $specialists = DB::select(DB::raw(
-                    "SELECT speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id) - COUNT(resolved_problems.id), 0) as jobs, timeoff.startDate, users.*, NULL as skills_list
+                    "SELECT speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id) - COUNT(resolved_problems.id), 0) as jobs, timeoff.startDate, users.*, NULL as skill_list
                     FROM users
                     JOIN speciality
                     ON users.id = speciality.specialist_id
@@ -1127,25 +1127,22 @@ class ProblemController extends Controller
                 ));
                 /* NEED TO ADD TO OTHER FUNCTION. */
                 foreach ($specialists as $specialist) {
-                    if ($specialist->id == 11)
-                    {
-                        $skill_list = Skill::join('problem_types', 'problem_types.id', '=', 'skills.problem_type_id')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->where('specialist_id', $specialist->id)->select('problem_types.description as desc', 'parents.description as pDesc')->get();
-                        $skill_array = array();
-                        foreach ($skill_list as $skill) {
-                            $skill_string = "";
-                            if (is_null($skill->pDesc))
-                            {
-                                $skill_string = $skill->desc;
-                            }
-                            else
-                            {
-                                $skill_string = "(".$skill->pDesc.")".$skill->desc;
-                            }
-                            array_push($skill_array, $skill_string);
+                    $skill_list = Skill::join('problem_types', 'problem_types.id', '=', 'skills.problem_type_id')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->where('specialist_id', $specialist->id)->select('problem_types.description as desc', 'parents.description as pDesc')->get();
+                    $skill_array = array();
+                    foreach ($skill_list as $skill) {
+                        $skill_string = "";
+                        if (is_null($skill->pDesc))
+                        {
+                            $skill_string = $skill->desc;
                         }
-
-                        $specialist->skill_list = implode(',', $skill_array);
+                        else
+                        {
+                            $skill_string = "(".$skill->pDesc.")".$skill->desc;
+                        }
+                        array_push($skill_array, $skill_string);
                     }
+
+                    $specialist->skill_list = implode(',', $skill_array);
                 }
 
                 if (is_null($parent))
