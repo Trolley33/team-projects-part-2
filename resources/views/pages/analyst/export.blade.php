@@ -2,6 +2,7 @@
 
 @section('content')
 
+<!-- Table to show all database tables -->
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
 	<div id='errors'>
 	</div>
@@ -25,9 +26,8 @@
                 </tr>
             @endforeach
         </tbody>
-
-
     </table>
+    <!-- Submit selected tables to be exported -->
     <div style="text-align: center;">
         <input id="addTable" class="bigbutton w3-card w3-button w3-row" type="submit" value="Export Tables" disabled/>
     </div>
@@ -38,7 +38,8 @@
 <script>
 $(document).ready( function ()
 {
-		//Enable Export Tables button if 1 or more table is selected
+    // Table checkbox logic, lets surrounding box trigger check action
+    // Also only activates submit button if no. of checkboxes > 0.
     $('input:checkbox[name="table[]"]').change(
     function(){
         if ($('input:checkbox[name="table[]"]:checked').length > 0)
@@ -71,14 +72,16 @@ $(document).ready( function ()
         $(this).prop('checked', !$(this).prop('checked'));
     });
 
+    // Initialise table as datatable (styling + searching).
     var table = $('#table-table').DataTable({
         order: [[1, 'desc']]
     });
-    // Redirect to URL to properly submit inputs from checkboxes.
+
+    // In order to submit checkboxes hidden by datatable, must serialize them and redirect manually.
     $('#addTableForm').submit(function (event) {
-	var data = table.$('input, select').serialize();
-	window.location = '/analyst/export/download?'+data;
-	event.preventDefault();
+	   var data = table.$('input, select').serialize();
+	   window.location = '/analyst/export/download?'+data;
+	   event.preventDefault();
     });
 
 });

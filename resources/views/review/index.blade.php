@@ -8,16 +8,19 @@
             <hr />
             <div style="width: 600px; margin: auto;">
             	<h2>Overview</h2>
+            	<!-- Dropdown for changing graph datasets -->
             	<select id="data-changer" onchange="swapDataSet()" style="width: 50%">
             		@foreach ($datasets as $i=>$d)
             			<option value="{{$i}}">{{$d['yLabel']}}</option>
             		@endforeach
             	</select>
             	<br /><br />
+            	<!-- Start and end date pickers -->
             	<input id="start" type="date" /> - <input id="end" type="date" /> <button onclick="changeRange()">↺</button> <button onclick="resetRange()">✖</button>
             	<canvas width="600" height="300" id='graph'>
             	</canvas>
             	<hr />
+            	<!-- Graph of most commonly submitted types of problem -->
             	<h2>Most Common Problem Types</h2>
             	<canvas width="600" height="300" id='graph2'>
             	</canvas>
@@ -33,8 +36,11 @@ var sets = [];
 
 $(document).ready( function () 
 {
+	// Time graph
     var chart = $('#graph');
+    // Labelled graph
     var chart2 = $('#graph2');
+    // Convert PHP array to json object(s), usable in chart.js
     <?php
     	foreach ($datasets as $key => $value) {
     		echo "sets.push({";
@@ -47,7 +53,7 @@ $(document).ready( function ()
 	    	echo "});";
     	}
     ?>
-
+    // Initialise graph with options
     myChart = new Chart(chart, {
 		type: 'bar',
 		data: {
@@ -94,9 +100,9 @@ $(document).ready( function ()
 			},
 	    }
 	});
-
+    // Select 1st dataset by default
 	swapDataSet(sets[0]);
-
+	// Create labelled graph with options set, using random colours for each bar
 	var myChart2 = new Chart(chart2, {
 		type: 'bar',
 		data: {
@@ -129,7 +135,9 @@ $(document).ready( function ()
 	});
 
 });
-
+/**
+ * Helper function to generate random RGB colour code.
+ */
 function makeRandomColors (n)
 {
 	colors = []
@@ -141,43 +149,6 @@ function makeRandomColors (n)
 		colors.push('rgb(' + r + "," + g + "," + b + ")");
 	}
 	return colors;
-}
-function swapDataSet()
-{
-	var to = sets[$('#data-changer').val()];
-
-	myChart.options.scales.yAxes[0].scaleLabel.labelString = to.yLabel;
-	myChart.data.datasets[0] = to.dataset;
-	myChart.update();
-}
-
-function changeRange()
-{
-	var start = $('#start');
-	var end = $('#end');
-	var startDate = new Date(start.val());
-	var endDate = new Date(end.val());
-	if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) 
-	{
-		resetRange();
-		return;
-	}
-	if (start.val() > end.val())
-	{
-		alert('Start date cannot be after end date.');
-		return;
-	}
-
-	myChart.options.scales.xAxes[0].time.min = start.val();
-	myChart.options.scales.xAxes[0].time.max = end.val();
-	myChart.update();
-}
-
-function resetRange()
-{
-	myChart.options.scales.xAxes[0].time.min = null;
-	myChart.options.scales.xAxes[0].time.max = null;
-	myChart.update();
 }
 </script>
 

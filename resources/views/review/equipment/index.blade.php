@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<!-- Table of all equipment -->
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
 	<table id='equipment-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
@@ -26,6 +27,7 @@
 <script>
 $(document).ready( function () 
 {
+	// Initialise datatable
     var table = $('#equipment-table').DataTable();
     // If we provide some sort of search term through the redirect, search it here.
     var search = "<?php if (session('search')) echo session('search'); ?>";

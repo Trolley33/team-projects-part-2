@@ -37,9 +37,9 @@
         <td class="editbutton modalOpener visisbleColumn tooltip" id='{{$s->id}}' value='/skills/{{$s->id}}/compact'>
             View
         </td>
-        <!-- Remove duplicate skills; print skills comma separated. -->
+        <!-- List of comma separated skills -->
         <td>
-            {{implode(',', array_unique(explode(',', $s->skills_list)))}}
+            {{$s->skill_list}}
         </td>
         <td style="text-align: right;">{{$s->jobs}}</td>
         <td title="Select" class="selectBox editbutton" style="text-align: center;">
@@ -95,16 +95,6 @@ $(document).ready( function ()
         $('#addSpecialist').prop('disabled', false);
     });
 
-    $('input:radio[name="specialist"]').each(function (i, r)
-    {
-      var radio = $(r);
-      if (radio.val() == problem_type.id)
-      {
-        radio.prop('checked', true);
-        $('#addSpecialist').prop('disabled', false);
-      }
-    });
-    
    skillCells = $('.visisbleColumn');
 
     var table = $('#specialist-table').DataTable({
@@ -128,7 +118,7 @@ $(document).ready( function ()
             {
                 $(this).html("Match Found <span class='w3-text-green'>(?)</span><span class='tooltiptext'>Click for more info</span>");
                 var dir = $(this).attr('value').split('/');
-                $(this).attr('value', "/skills/"+dir[2]+"/compact?skill="+parent.id);
+                $(this).attr('value', "/skills/"+dir[2]+"/compact?skill="+problem.problem_type);
             }
             else
             {
@@ -152,7 +142,7 @@ $(document).ready( function ()
         {
             $(this).html("Match Found <span class='w3-text-green'>(?)</span><span class='tooltiptext'>Click for more info</span>");
             var dir = $(this).attr('value').split('/');
-            $(this).attr('value', "/skills/"+dir[2]+"/compact?skill="+parent.id);
+            $(this).attr('value', "/skills/"+dir[2]+"/compact?skill="+problem.problem_type);
         }
         else
         {

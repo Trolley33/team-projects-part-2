@@ -60,7 +60,9 @@
             modal.hide();
         }
 
-        // Graphing helper functions
+        /**
+         * Helper function to swap the displayed dataset, triggered by dropdown.
+         */
         function swapDataSet()
         {
             var to = sets[$('#data-changer').val()];
@@ -70,13 +72,16 @@
             myChart.update();
         }
 
+        /**
+         * Helper function to modify the chart viewport based on the dates selected, triggered by refresh button
+         */
         function changeRange()
         {
             var start = $('#start');
             var end = $('#end');
             var startDate = new Date(start.val());
             var endDate = new Date(end.val());
-            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime()))
+            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) 
             {
                 resetRange();
                 return;
@@ -92,6 +97,9 @@
             myChart.update();
         }
 
+        /**
+         * Helper function to set chart viewport back to default (fit to data).
+         */
         function resetRange()
         {
             myChart.options.scales.xAxes[0].time.min = null;

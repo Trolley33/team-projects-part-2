@@ -7,16 +7,19 @@
             <h2>Reviewing Specialist {{$caller->forename}} {{$caller->surname}}</h2>
             <hr />
             <div style="width: 600px; margin: auto;">
+            	<!-- Dropdown for hotswapping datasets -->
             	<select id="data-changer" onchange="swapDataSet()" style="width: 50%">
             		@foreach ($datasets as $i=>$d)
             			<option value="{{$i}}">{{$d['yLabel']}}</option>
             		@endforeach
             	</select>
             	<br /><br />
+            	<!-- Date selector for graph -->
             	<input id="start" type="date" /> - <input id="end" type="date" /> <button onclick="changeRange()">↺</button> <button onclick="resetRange()">✖</button>
             	<canvas width="600" height="300" id='graph'>
             	</canvas>
             	<hr />
+            	<!-- Table of this users most commonly called about types of problems -->
             	<h3>Most Common Types of Problem</h3>
             	<table id="pt-table" class="display cell-border stripe hover slidable" style="width:100%;">
 					<thead>
@@ -51,6 +54,7 @@ var sets = [];
 $(document).ready( function () 
 {
     var chart = $('#graph');
+    // Convert PHP array to json object(s), usable in chart.js
     <?php
     	foreach ($datasets as $key => $value) {
     		echo "sets.push({";
@@ -63,7 +67,7 @@ $(document).ready( function ()
 	    	echo "});";
     	}
     ?>
-
+    // Initialise graph with options
     myChart = new Chart(chart, {
 		type: 'bar',
 		data: {
@@ -110,9 +114,9 @@ $(document).ready( function ()
 			},
 	    }
 	});
-
+    // Select 1st dataset by default
 	swapDataSet(sets[0]);
-
+	// Initialise datatable, sorting by calls in descending order
 	$('#pt-table').DataTable({
 		order: [[1, 'desc']]
 	});
