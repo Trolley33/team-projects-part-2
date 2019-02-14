@@ -288,8 +288,7 @@ class ProblemController extends Controller
             {
                 // Get all information about specialists, raw query used due to complexity.
                 $specialists = DB::select(DB::raw(
-                    "SELECT speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id) - COUNT(resolved_problems.id), 0) as jobs, timeoff.startDate, users.*,
-                        GROUP_CONCAT(skill_types.description) as skills_list
+                    "SELECT speciality.id as sID, problem_types.id as pID, problem_types.description, IFNULL(parents.description,0) as parent_description, problem_types.parent, IFNULL(COUNT(problems.id) - COUNT(resolved_problems.id), 0) as jobs, timeoff.startDate, users.*, NULL as skill_list
                     FROM users
                     JOIN speciality
                     ON users.id = speciality.specialist_id
@@ -308,16 +307,31 @@ class ProblemController extends Controller
                             ORDER BY timeoff.created_at desc
                             LIMIT 1)
                         )
-                    LEFT JOIN skills
-                    ON users.id = skills.specialist_id
-                    LEFT JOIN problem_types as skill_types
-                    ON skills.problem_type_id = skill_types.id
                     WHERE
                         (DATE(NOW()) NOT BETWEEN timeoff.startDate AND timeoff.endDate)
                         OR timeoff.id IS NULL
                     GROUP BY users.id, speciality.id, timeoff.startDate
                         "
                 ));
+                /* NEED TO ADD TO OTHER FUNCTION. */
+                foreach ($specialists as $specialist) {
+                    $skill_list = Skill::join('problem_types', 'problem_types.id', '=', 'skills.problem_type_id')->leftJoin('problem_types as parents', 'problem_types.parent', '=', 'parents.id')->where('specialist_id', $specialist->id)->select('problem_types.description as desc', 'parents.description as pDesc')->get();
+                    $skill_array = array();
+                    foreach ($skill_list as $skill) {
+                        $skill_string = "";
+                        if (is_null($skill->pDesc))
+                        {
+                            $skill_string = $skill->desc;
+                        }
+                        else
+                        {
+                            $skill_string = "(".$skill->pDesc.")".$skill->desc;
+                        }
+                        array_push($skill_array, $skill_string);
+                    }
+                    $specialist->skill_list = implode(',', $skill_array);
+                }
+
                 // Supply data to view.
                 $data = array(
                     'title' => "Edit Assigned Specialist",

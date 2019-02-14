@@ -34,7 +34,7 @@
         <td class="editbutton modalOpener visibleColumn tooltip" id='{{$s->id}}' value='/skills/{{$s->id}}/compact'>
             View
         </td>
-        <!-- Remove duplicate skills, do rest of comma separated -->
+        <!-- List of comma separated skills -->
         <td>
             {{$s->skill_list}}
         </td>
