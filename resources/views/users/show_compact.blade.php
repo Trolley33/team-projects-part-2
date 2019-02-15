@@ -40,10 +40,6 @@
                             <th>Username</th>
                             <td>{{$user->username}}</td>
                         </tr>
-                        <tr class="w3-hover-light-grey">
-                            <th>Password</th>
-                            <td>{{$user->password}}</td>
-                        </tr>
                     @endif
                     <tr class="w3-hover-light-grey">
                         <th>Account Creation Date</th>
