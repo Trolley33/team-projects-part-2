@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
-	<!-- Get department name based on department selected on the previous page -->
+	<!-- Get department name based on department selected from the previous page -->
 	<h2>{{$department->name}}</h2>
 	<table id='job-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>

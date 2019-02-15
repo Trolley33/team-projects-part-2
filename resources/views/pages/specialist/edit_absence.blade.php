@@ -5,9 +5,9 @@
     <div>
         <div class="w3-padding-large w3-white">
             <h2>Editing Time Off For: {{$user->forename}} {{$user->surname}}</h2>
+            <!-- Table of form entries -->
             <table>
                 {!!Form::open(['action' => ['PagesController@update_absence', $timeoff->id], 'method' => 'POST']) !!}
-
                 <tbody>
                     <tr class="w3-hover-light-grey">
                         <th>Start Date</th>
@@ -33,30 +33,33 @@
 </div>
 <script>
 $(document).ready(function () {
+    // When starting datapicker is changed:
     $('#start').change(function () {
+        // Get selected date as string.
         var startDate = new Date($('#start').val());
+        // If no date is selected, disable end date picker and set as same value (blank).
         if (isNaN(startDate.getTime())) {
             $('#end').prop('disabled', true);
             $('#end').val($('#start').val());
         }
+        // If date is valid, and the new start data is greater than the old end date.
         else if ($('#start').val() >= $('#end').val()) {
+            // Set end date as 1 day after new start date.
             endTime = startDate.getTime() + (1000*60*60*24);
             endDate = new Date(endTime);
             $('#end').val(endDate.getFullYear() + "-" + zfill(endDate.getMonth() + 1, 2) + "-" + zfill(endDate.getDate(), 2));
             $('#end').attr('min', $('#end').val());
             $('#end').prop('disabled', false);
         }
+        // Valid date, but before end date.
         else {
+            // Set minimum selectable date to be the day after the startDate.
             minTime = startDate.getTime() + (1000*60*60*24);
             minDate = new Date(minTime);
             $('#end').attr('min', minDate.getFullYear() + "-" + zfill(minDate.getMonth() + 1, 2) + "-" + zfill(minDate.getDate(), 2));
         }
     });
 });
-// Zero padding function for YYYY-MM-DD
-// *(https://stackoverflow.com/a/7379989)
-function zfill(num, len) {
-    return (Array(len).join("0") + num).slice(-len);
-}
+
 </script>
 @endsection

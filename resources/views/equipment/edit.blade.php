@@ -39,10 +39,6 @@
 <script>
 $(document).ready(function()
 {
-    $('#back-btn').click(function()
-    {
-        // window.location.replace('/users/');
-    })
 });
 </script>
 @endsection

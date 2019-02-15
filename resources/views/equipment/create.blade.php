@@ -5,7 +5,7 @@
     <div>
         <div class="w3-padding-large w3-white">
             <h2>Register New Equipment</h2>
-            <!-- Form to Register a new item of Equipment my submitting the Serial Number, Equipment Description and Equipment Model -->
+            <!-- Form to Register a new item of Equipment by submitting the Serial Number, Equipment Description and Equipment Model -->
             {!! Form::open(['action' => 'EquipmentController@store', 'method' => 'POST']) !!}
             <table>
                 <tbody>

@@ -2,6 +2,7 @@
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <h2>Planned Time Off For: {{$user->forename}} {{$user->surname}}</h2>
+    <!-- Table of upcoming time off for selected specialist -->
     <table id='timeoff-table' class="display cell-border stripe hover" style="width:100%;">
         <thead>
             <tr>

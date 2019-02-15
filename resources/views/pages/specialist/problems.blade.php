@@ -2,6 +2,7 @@
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <h2>Assigned Problems for {{$user->forename}} {{$user->surname}}</h2>
+    <!-- Unsolved problems that have been assigned to this specialist -->
     <table id='ongoing-table' class="display cell-border stripe hover" style="width:100%;">
         <thead>
             <tr>
@@ -20,7 +21,7 @@
 
         </tbody>
     </table>
-
+    <!-- Problems which were solved by this specialist -->
     <h2>Previously Solved Problems</h2>
     <table id='resolved-table' class="display cell-border stripe hover" style="width:100%;">
         <thead>

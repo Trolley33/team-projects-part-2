@@ -18,12 +18,12 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js">
     </script>
-    <!-- -->
     <script type="text/javascript">
 
+        // Global modal variable, allows a modal box to be drawn on any page.
         var modal;
         $(document).ready(function () {
-
+            // Modal functions, submit ajax tp 'val' of .modalOpener class
             modal = $('#myModal');
 
             $(".modalOpener").click(function() {
@@ -36,7 +36,7 @@
                 );
                 modal.show();
             });
-
+            // For closing modal opener when offscreen clicked.
             $(window).click(function(event) {
                 var target = $(event.target);
 
@@ -48,7 +48,7 @@
                   }
                 }
             });
-
+            // Slideable header controller.
             $('.slideHeader').click(function(){
                 $(this).next('.slideable').slideToggle();
             });
@@ -124,6 +124,7 @@
             <h4>{{$desc}}</h4>
         </div>
     </div>
+    <!-- Create navbar using supplied '$links', and highlighting the '$active' one. -->
     <ul class="navbar">
         @if (isset($links))
             @foreach ($links as $link)
@@ -136,12 +137,14 @@
             @endif
 
             @endforeach
+            <!-- logout button -->
             <li class="navbar-item" style="float: right !important; background-color: #515151;"><a href="/logout">Logout</a></li>
         @endif
     </ul>
     @include('messages')
     @yield('content')
 
+<!-- Script here uses content created from page itself, so is below main content. -->
 <script>
     $(document).ready (function () {
         // On pages with a chart object.
@@ -168,12 +171,12 @@
             // Select first graph that has valid data.
             $('#data-changer').val(flag).trigger('change');
 
-            // Perform date manipulation, in order to get start -> end = 1 quarter, with current month in center.
+            // Perform date manipulation, in order to get start -> end = 1 quarter (3 months), with current month in center.
             var startDate = new Date();
             // Shift back 1 month
             startDate.setMonth(startDate.getMonth()-1);
             startDate.setDate(1);
-            // Set start to first sunday of month
+            // Set start to first sunday of month (cleaner bars)
             startDate.setDate((7+1) - startDate.getDay());
 
             // Shift forward 3 months.

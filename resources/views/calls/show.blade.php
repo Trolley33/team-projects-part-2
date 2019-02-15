@@ -72,13 +72,13 @@ $(document).ready(function () {
 
     var this_call = <?php echo json_encode($call); ?>
 
-    //Disable buttons to edit and delete call, if this call is the first call for the problem
+    // Disable buttons to edit and delete call, if this call is the first call for the problem
     if (first_call.id == this_call.id)
     {
         $('.but').prop('disabled', true);
     }
 
-    //Redirects to page where you can edit call notes
+    // Redirects to page where you can edit call notes
     $('#editForm').submit(function () {
         window.location.href = "/calls/{{$call->id}}/edit";
         return false;

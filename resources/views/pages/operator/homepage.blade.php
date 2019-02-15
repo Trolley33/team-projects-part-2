@@ -4,7 +4,7 @@
 <div class="">
         <div  class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto; text-align: center;">
             <a class="blank" href="calls/create">
-                <!-- Button to log new calla -->
+                <!-- Button to log new call -->
                 <div class="bigbutton w3-card w3-button w3-row">
                     <h3>Log New Call</h3>
                 </div>
@@ -50,46 +50,7 @@
                 </tbody>
             </table>
         </div>
-        <!-- removed
-        <div class="call_menu w3-center w3-padding" style='text-align:center'>
-            <h3>Database Management Options</h3><hr />
-            <a class="blank" href="/problems/">
-                <div class="bigbutton w3-card w3-button w3-row">
-                    Problem Manager
-                </div>
-            </a><br />
-            <a class="blank" href="/users/">
-                <div class="bigbutton w3-card w3-button w3-row">
-                    User Manager
-                </div>
-            </a><br />
-            <a class="blank" href="/departments/">
-                <div class="bigbutton w3-card w3-button w3-row">
-                    Department Manager
-                </div>
-            </a><br />
-            <a class="blank" href="/jobs/">
-                <div class="bigbutton w3-card w3-button w3-row">
-                    Job Manager
-                </div>
-            </a><br />
-            <a class="blank" href="/equipment/">
-                <div class="bigbutton w3-card w3-button w3-row">
-                    Equipment Manager
-                </div>
-            </a><br />
-            <a class="blank" href="/software/">
-                <div class="bigbutton w3-card w3-button w3-row">
-                    Software Manager
-                </div>
-            </a><br />
-            <a class="blank" href="/problem_types/">
-                <div class="bigbutton w3-card w3-button w3-row">
-                    Problem Type Manager
-                </div>
-            </a><br />
-          </div>
-          -->
+        <!-- Pie chart of currently solved vs unsolved problems. -->
           <div  class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto; text-align: center;">
                 <h2>Current Problems Overview</h2>
                 <div id='noData'>No data to show.</div>

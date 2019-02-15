@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="">
+    <!-- List of links for specialist to use, functionally same as navbar but gives homepage a bit of bulk -->
         <div class="call_menu w3-center w3-padding" style='text-align:center'>
             <h3>Main Links</h3><hr />
             <a class="blank" href="/problems/">
@@ -30,9 +31,6 @@
 
     <script>
     $(document).ready(function () {
-        $('.todo').click(function () {
-            alert('Not implemented.');
-        });
     });
     </script>
 @endsection

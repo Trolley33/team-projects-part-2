@@ -33,7 +33,7 @@
         var types = <?php echo json_encode($types) ;?>;
 
         var selected = <?php echo json_encode($selected);?>;
-        //List of Exisiting problem types added to drop down, that can be selected as a parent Problem to the new problem type
+        // List of Exisiting problem types added to drop down, that can be selected as a parent Problem to the new problem type
         $("#parent-select").append(new Option("None", '-1'));
         types.forEach(function (type)
         {

@@ -49,7 +49,7 @@
 
         var currentDepartment = <?php echo json_encode($dept);?>
 
-        //If the department ID is 1, that means it is the Technical Support Department, this is a special department with special job titles in this department can't be edited or deleted
+        // If the department ID is 1, that means it is the Technical Support Department, this is a special department with special job titles in this department can't be edited or deleted
         departments.forEach(function (department)
         {
             var o = new Option(department.name, department.id, false, currentDepartment.id == department.id);

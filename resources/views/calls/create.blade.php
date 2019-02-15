@@ -3,7 +3,7 @@
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <form id="addCallForm">
-    <!-- Table with details about Problems -->
+    <!-- Table with details about active problems -->
     <table id='problem-table' class="display cell-border stripe hover">
         <!-- Table headers -->
         <thead>
@@ -80,7 +80,7 @@ $(document).ready( function ()
       $(this).children('.selectRadio').prop('checked', true);
       $('#addCall').prop('disabled', false);
     });
-     //When problem selected is changed Add Call to Problem button is enabled
+     // When problem selected is changed Add Call to Problem button is enabled
     $('input:radio[name="existing"]').change(
     function(){
         $('#addCall').prop('disabled', false);

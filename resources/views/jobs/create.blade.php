@@ -36,7 +36,7 @@
 
         var currentDept = <?php echo json_encode($dept);?>;
 
-        //Append role to database for the Department the role is for
+        // Append role to database for the Department the role is for
         departments.forEach(function (department)
         {
             var o = new Option(department.name, department.id, false, currentDept.id == department.id);

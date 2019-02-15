@@ -1,3 +1,5 @@
+<!-- Template to display error/success messages under navbar if they are set in the session -->
+
 <div class="w3-center" id='messages'>
 @if (count($errors) > 0)
 	@foreach ($errors->all() as $error)
