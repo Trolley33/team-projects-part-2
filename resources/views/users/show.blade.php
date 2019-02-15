@@ -4,6 +4,7 @@
 <div class="call_menu w3-center w3-padding w3-light-grey">
     <div>
         <div class="w3-padding-large w3-white">
+          	<!-- Name of user based on selection and information about them -->
             <h2>{{$user->forename}} {{$user->surname}} - ID: {{sprintf('%04d',$user->employee_id)}}</h2>
             <table id="info-table">
                 <tbody>
@@ -39,13 +40,14 @@
                         <th>Account Creation Date</th>
                         <td>{{$user->created_at}}</td>
                     </tr>
+                    <!-- Information to be added if user is a Specialist -->
                     @if ($job_info->access_level == '2')
                         <tr class="w3-hover-light-grey">
                             <th>Problem Specialism</th>
                             @if (!is_null($problem_type))
                             <td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';">
                                 @if (!is_null($parent))
-                                    ({{$parent->description}}) 
+                                    ({{$parent->description}})
                                 @endif
                                 {{$problem_type->description}}
                             <span class="icon">View</span>
@@ -79,7 +81,7 @@
                     @endif
                 </tbody>
             </table>
-
+	          <!-- Button to edit information about User -->
             <div style="text-align: center;">
                 <a class="blank" href="/users/{{$user->id}}/edit">
                     <div class="bigbutton w3-card w3-button w3-row">
@@ -87,13 +89,13 @@
                     </div>
                 </a><br />
             </div>
-            
+            <!-- Button to Delete user -->
             {!!Form::open(['action' => ['UserController@destroy', $user->id], 'method' => 'POST', 'onsubmit'=>"return confirm('Delete User? This action cannot be undone, and may lead to unintended consequences.');"]) !!}
 
             {{Form::hidden('_method', 'DELETE')}}
-            
+
             {{Form::submit('Delete Account', ['class'=> "bigbutton w3-card w3-button w3-row w3-red"])}}
-            
+
             {!!Form::close() !!}
 
             <br />
@@ -102,7 +104,7 @@
 </div>
 
 <script>
-$(document).ready(function() 
+$(document).ready(function()
 {
 });
 </script>

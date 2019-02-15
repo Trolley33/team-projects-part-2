@@ -2,8 +2,10 @@
 
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
+	<!-- Name of user Specialism is being edited for -->
 	<h2>Set Problem Specialism For: {{$user->forename}} {{$user->surname}}</h2>
 	<form id="addSpecialismForm">
+	<!-- List of problems types, where you can choose what problem type the Specialism is related to -->
 	<table id='problem-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
 			<tr>
@@ -38,18 +40,18 @@
 
 var modal;
 
-$(document).ready( function () 
+$(document).ready( function ()
 {
     var user = <?php echo json_encode($user); ?>;
     var pt = <?php echo ($pt_id ?? -1); ?>;
     var page = 0;
-
+		//Enable button if a problem type is selected
     $('.selectBox').click(function ()
     {
     	$(this).children('.selectRadio').prop('checked', true);
     	$('#addSpecialism').prop('disabled', false);
     });
-
+	//Enable button if a problem type is changed
 	$('input:radio[name="ptype"]').change(
     	function(){
         $('#addSpecialism').prop('disabled', false);
@@ -65,7 +67,7 @@ $(document).ready( function ()
         $('#addSpecialism').prop('disabled', false);
       }
     });
-
+		//Form submit action
     $('#addSpecialismForm').submit(function ()
     {
         window.location.href = '/users/' + user.id + '/add_specialism/' + $("input[name='ptype']:checked").val();

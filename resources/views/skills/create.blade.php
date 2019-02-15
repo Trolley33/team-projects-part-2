@@ -3,8 +3,10 @@
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
   <h2>Select Problem Type To Add as Skill</h2>
+  <!-- Name of user skill is being added for -->
   <h3>Adding Skill for: <span class="editbutton modalOpener" value="/users/{{$user->id}}/compact">{{$user->forename}} {{$user->surname}}</span></h3>
   <form id="addProblemTypeForm">
+  <!-- List of problems types, where you can choose what problem type the skill is related to -->
   <table id='problem-table' class="display cell-border stripe hover">
     <thead>
       <tr>
@@ -35,20 +37,20 @@
 </div>
 
 <script>
-$(document).ready( function () 
+$(document).ready( function ()
 {
-
+    //Enable button if a problem type is selected
     $('.selectBox').click(function ()
     {
       $(this).children('.selectRadio').prop('checked', true);
       $('#addProblemType').prop('disabled', false);
     });
-
+  //Enable button if a problem type is changed
   $('input:radio[name="ptype"]').change(
       function(){
         $('#addProblemType').prop('disabled', false);
     });
-
+    //Form submit action
     $('#addProblemTypeForm').submit(function ()
     {
         window.location.href = '/skills/{{$user->id}}/create/' + $("input[name='ptype']:checked").val();

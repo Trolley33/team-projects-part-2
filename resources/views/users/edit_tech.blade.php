@@ -5,6 +5,7 @@
 <div class="call_menu w3-center w3-padding w3-light-grey">
     <div>
         <div class="w3-padding-large w3-white">
+            <!-- Form to edit user information for Technical support Account -->
             <h2>{{$user->forename}} {{$user->surname}} - ID: {{sprintf('%04d',$user->employee_id)}}</h2>
             {!! Form::open(['action' => ['UserController@update', $user->id], 'method' => 'POST']) !!}
             <table>
@@ -39,13 +40,14 @@
                         <th>Password</th>
                         <td>{{Form::text('password', $user->password, ['class'=>'w3-input w3-border w3-round', 'placeholder'=>$user->password, 'id'=>'password'])}}</td>
                     </tr>
+                    <!-- Information to be added if user is a Specialist -->
                     @if ($job->access_level == '2')
                         <tr class="w3-hover-light-grey">
                             <th>Problem Specialism</th>
                             @if (!is_null($problem_type))
                             <td class="editbutton" onclick="window.location.href = '/users/{{$user->id}}/edit_specialism';" title="Edit">
                                 @if (!is_null($parent))
-                                    ({{$parent->description}}) 
+                                    ({{$parent->description}})
                                 @endif
                                 {{$problem_type->description}}<span class="icon">Edit</span>
                             </td>
@@ -77,7 +79,7 @@
 
         var jobs = <?php echo json_encode($jobs); ?>;
         var currentJobID = <?php echo json_encode($user->job_id); ?>;
-
+        //List of Job Titles for Technical Support
         jobs.forEach(function (job)
         {
             if (job.department_id == '1')
@@ -86,6 +88,7 @@
                 $("#job-select").append(o);
             }
         });
+        //Show hide password
         $('#password').attr('type', 'password');
         $('#pass-visible').change(function()
         {

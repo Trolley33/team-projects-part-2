@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
+	<!-- List of users and Information about them -->
 	<table id='user-table' class="display cell-border stripe hover" style="width:100%;">
 		<thead>
 			<tr>
@@ -31,13 +32,14 @@
 
 		</tbody>
 	</table>
-
+	<!-- Button to create new Technical Support Account -->
 	<div style="text-align: center;">
         <a class="blank" href="/users/create/tech-support">
             <div class="bigbutton w3-card w3-button w3-row">
                 Create New Technical Support Account
             </div>
         </a><br />
+				<!-- Button to create new Caller Account -->
         <a class="blank" href="/users/create/caller">
             <div class="bigbutton w3-card w3-button w3-row">
                 Create New Caller Account
@@ -47,7 +49,7 @@
 </div>
 
 <script>
-$(document).ready( function () 
+$(document).ready( function ()
 {
     var table = $('#user-table').DataTable();
     // If we provide some sort of search term through the redirect, search it here.

@@ -5,6 +5,7 @@
 <div class="call_menu w3-center w3-padding w3-light-grey">
     <div>
         <div class="w3-padding-large w3-white">
+            <!-- Form to edit user information for Caller Account -->
             <h2>{{$user->forename}} {{$user->surname}} - ID: {{sprintf('%04d',$user->employee_id)}}</h2>
             {!! Form::open(['action' => ['UserController@update', $user->id], 'method' => 'POST']) !!}
             <table>
@@ -55,8 +56,8 @@
         var departments = <?php echo json_encode($departments) ;?>;
         var jobs = <?php echo json_encode($jobs); ?>;
 
-        var currentJob = 
-        <?php 
+        var currentJob =
+        <?php
         foreach($jobs as $job)
         {
             if ($job->id == $user->job_id)
@@ -68,13 +69,13 @@
         ?>;
 
         var currentDepartment = currentJob.department_id;
-
+        //List of departments
         departments.forEach(function (department)
         {
             var o = new Option(department.name, department.id, false, currentDepartment == department.id);
             $("#department-select").append(o);
         });
-
+        //List of jobs in selected department
         jobs.forEach(function (job)
         {
             if (job.department_id == $('#department-select :selected').val())
@@ -83,7 +84,7 @@
                 $("#job-select").append(o);
             }
         });
-
+        //New List of jobs in selected department, if department is changed
         $('#department-select').change(function() {
             $("#job-select").empty();
             jobs.forEach(function (job)

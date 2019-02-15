@@ -6,6 +6,7 @@
     <div>
         <div class="w3-padding-large w3-white">
             <h2>Create New Technical Support Account</h2>
+            <!-- Form to creat user with a Technical support Account -->
             {!! Form::open(['action' => 'UserController@store', 'method' => 'POST']) !!}
             <table>
                 <tbody>
@@ -59,7 +60,7 @@
 
         var jobs = <?php echo json_encode($jobs); ?>;
         var selectedJob = <?php echo json_encode($job); ?>;
-
+        //List of Job Titles for Technical Support
         jobs.forEach(function (job)
         {
             if (job.department_id == '1')
@@ -68,7 +69,7 @@
                 $("#job-select").append(o);
             }
         });
-
+        //Show hide password
         $('#password').attr('type', 'password');
         $('#pass-visible').change(function()
         {

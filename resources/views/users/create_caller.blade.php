@@ -6,6 +6,7 @@
     <div>
         <div class="w3-padding-large w3-white">
             <h2>Create New Caller Account</h2>
+            <!-- Form to creat user with a Caller Account -->
             {!! Form::open(['action' => 'UserController@store', 'method' => 'POST']) !!}
             <table>
                 <tbody>
@@ -56,13 +57,13 @@
 
         var selectedDept = <?php echo json_encode($dept); ?>;
         var selectedJob = <?php echo json_encode($job); ?>;
-
+        //List of departments
         departments.forEach(function (department)
         {
             var o = new Option(department.name, department.id, false, selectedDept.id == department.id);
             $("#department-select").append(o);
         });
-
+        //List of jobs in selected department
         jobs.forEach(function (job)
         {
             if (job.department_id == $('#department-select :selected').val())
@@ -71,7 +72,7 @@
                 $("#job-select").append(o);
             }
         });
-
+        //New List of jobs in selected department, if department is changed
         $('#department-select').change(function() {
             $("#job-select").empty();
             jobs.forEach(function (job)

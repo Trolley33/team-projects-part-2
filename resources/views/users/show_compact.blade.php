@@ -3,6 +3,7 @@
 <div class="call_menu w3-center w3-padding w3-light-grey">
     <div>
         <div class="w3-padding-large w3-white">
+            <!-- Name of user based on selection and information about them -->
             <h2>{{$user->forename}} {{$user->surname}} - ID: {{sprintf('%04d',$user->employee_id)}}</h2>
             <table>
                 <tbody>
@@ -48,6 +49,7 @@
                         <th>Account Creation Date</th>
                         <td>{{$user->created_at}}</td>
                     </tr>
+                    <!-- Information to be added if user is a Specialist -->
                     @if ($job_info->access_level == '2')
                         <tr class="w3-hover-light-grey">
                             <th>Problem Specialism</th>
@@ -55,14 +57,14 @@
                             @if ($level == 1)
                              <td class="editbutton" onclick="window.location.href = '/problem_types/{{$problem_type->id}}';">
                                 @if (!is_null($parent))
-                                    ({{$parent->description}}) 
+                                    ({{$parent->description}})
                                 @endif
                                 {{$problem_type->description}}<span class="icon">View</span></td>
                             </td>
                             @elseif ($level == 2)
                             <td>
                                 @if (!is_null($parent))
-                                    ({{$parent->description}}) 
+                                    ({{$parent->description}})
                                 @endif
                                 {{$problem_type->description}}
                             </td>
