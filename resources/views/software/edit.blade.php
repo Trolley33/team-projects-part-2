@@ -5,6 +5,7 @@
     <div>
         <div class="w3-padding-large w3-white">
             <h2>{{$software->description}}</h2>
+            <!-- Textboxes autofilled with previous information, that can be edited -->
             {!! Form::open(['action' => ['SoftwareController@update', $software->id], 'method' => 'POST']) !!}
             <table>
                 <tbody>
@@ -30,7 +31,7 @@
 </div>
 
 <script>
-$(document).ready(function() 
+$(document).ready(function()
 {
 });
 </script>

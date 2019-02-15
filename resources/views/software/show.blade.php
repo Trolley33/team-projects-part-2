@@ -4,6 +4,7 @@
 <div class="call_menu w3-center w3-padding w3-light-grey">
     <div>
         <div class="w3-padding-large w3-white">
+            <!-- Get software name based on Job on the previous page and information about the software-->
             <h2>{{$software->description}}</h2>
             <table>
                 <tbody>
@@ -25,20 +26,20 @@
                     </tr>
                 </tbody>
             </table>
-
+            <!-- Button to Edit software information -->
             <div style="text-align: center;">
                 <a class="blank" href="/software/{{$software->id}}/edit">
                     <div class="bigbutton w3-card w3-button w3-row">
                         Edit Information
                     </div>
                 </a><br />
-
+                <!-- Form for deleting software information -->
                 {!!Form::open(['action' => ['SoftwareController@destroy', $software->id], 'method' => 'POST', 'onsubmit'=>"return confirm('Delete software? This action cannot be undone.');"]) !!}
 
                 {{Form::hidden('_method', 'DELETE')}}
-                
+
                 {{Form::submit('Delete Software', ['class'=> "bigbutton w3-card w3-button w3-row w3-red"])}}
-                
+
                 {!!Form::close() !!}
                     <br />
             </div>
@@ -49,7 +50,7 @@
 </div>
 
 <script>
-$(document).ready(function() 
+$(document).ready(function()
 {
     $('#back-btn').click(function()
     {

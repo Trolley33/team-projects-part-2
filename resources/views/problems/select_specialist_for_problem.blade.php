@@ -4,10 +4,10 @@
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
   <h2>Select Specialist For New Problem</h2>
   <h3>Creating New Problem for: <span class="editbutton modalOpener" value="/users/{{$user->id}}/compact">{{$user->forename}} {{$user->surname}}</span></h3>
-  <h3>Problem Type: 
+  <h3>Problem Type:
   <span class="editbutton modalOpener" value="/problem_types/{{$problem_type->id}}/compact">
-    @if (!is_null($parent)) 
-      ({{$parent->description}}) 
+    @if (!is_null($parent))
+      ({{$parent->description}})
     @endif{{$problem_type->description}}</span></h3>
   {!! Form::open(['action' => 'ProblemController@store', 'method' => 'POST']) !!}
   <table id='specialist-table' class="display cell-border stripe hover" style="width:100%;">
@@ -20,7 +20,7 @@
       @foreach ($specialists as $s)
       <tr>
         <td style="text-align: right;">{{sprintf('%04d', $s->employee_id)}}</td>
-        <td title="View" class="editbutton modalOpener tooltip" value='/users/{{$s->id}}/compact'>{{$s->forename}} {{$s->surname}}  
+        <td title="View" class="editbutton modalOpener tooltip" value='/users/{{$s->id}}/compact'>{{$s->forename}} {{$s->surname}}
           @if (!is_null($s->startDate))
             <!-- Check if time off within next week, only give warning (!) if so.-->
             @if (time() + (60*60*24*7) >= strtotime($s->startDate))
@@ -50,7 +50,7 @@
 
     </tbody>
   </table>
-  <div style="text-align: center;"> 
+  <div style="text-align: center;">
     {{Form::hidden('desc', $problem_description)}}
     {{Form::hidden('notes', $problem_notes)}}
     {{Form::hidden('importance', $problem_importance)}}
@@ -68,11 +68,11 @@
 <script>
 var skillCells;
 
-$(document).ready( function () 
+$(document).ready( function ()
 {
 
     var problem_type = <?php echo json_encode($problem_type); ?>;
-    var parent = <?php 
+    var parent = <?php
         if (!is_null($parent))
         {
             echo json_encode($parent);
@@ -80,10 +80,10 @@ $(document).ready( function ()
         else
         {
             echo json_encode($problem_type);
-        } 
+        }
         ?>;
 
-
+    //Enable button if a specialist is selected
     $('.selectBox').click(function ()
     {
       $(this).children('.selectRadio').prop('checked', true);
@@ -96,7 +96,7 @@ $(document).ready( function ()
     });
 
    skillCells = $('.visisbleColumn');
-
+   //Limit the number of specialists per page
     var table = $('#specialist-table').DataTable({
         order: [
           ['5', 'asc'],

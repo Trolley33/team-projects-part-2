@@ -2,10 +2,12 @@
 
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
+    <!-- Problem ID for problem equipment needs to be added to -->
     <h2>Problem ID: {{$problem->id}}</h2>
     {!! Form::open(['action' => ['ProblemController@append_equipment', $problem->id], 'method' => 'GET', 'id'=>'addEquipmentForm']) !!}
 
     {{Form::hidden('problem-id', $problem->id)}}
+    <!-- List of equipment -->
     <table id='equipment-table' class="display cell-border stripe hover">
         <thead>
             <tr>
@@ -18,7 +20,7 @@
                 @foreach ($affected as $a)
                     @if ($e->id == $a->equipment_id)
                             <?php
-                            $flag = false; 
+                            $flag = false;
                             break
                             ;?>
                     @endif
@@ -35,7 +37,7 @@
             @endforeach
         </tbody>
 
-        
+
     </table>
     <div style="text-align: center;">
         <input id="addEquipment" class="bigbutton w3-card w3-button w3-row" type="submit" value="Add Equipment to Problem" disabled/>
@@ -46,10 +48,10 @@
 
 <script>
 var problem;
-$(document).ready( function () 
+$(document).ready( function ()
 {
     problem = <?php echo json_encode($problem) ?>;
-
+    //If one or more item of equipment is selected, enable the button to Add the equipment to the problem when checkbox is selected
     $('input:checkbox[name="equipment[]"]').change(
     function(){
         if ($('input:checkbox[name="equipment[]"]:checked').length > 0)
@@ -61,12 +63,12 @@ $(document).ready( function ()
             $('#addEquipment').prop('disabled', true);
         }
     });
-
+    //If one or more item of equipment is selected, enable the button to Add the equipment to the problem when area around the select box is clicked on
     $('.selectBox').click(function ()
     {
         var child = $(this).children('.selectChecked');
         child.prop('checked', !child.prop('checked'));
-        
+
         if ($('input:checkbox[name="equipment[]"]:checked').length > 0)
         {
             $('#addEquipment').prop('disabled', false);
@@ -76,6 +78,7 @@ $(document).ready( function ()
             $('#addEquipment').prop('disabled', true);
         }
     });
+    //When area around the select box is clicked on, select/deselect the box
     $('.selectChecked').click(function ()
     {
         $(this).prop('checked', !$(this).prop('checked'));
@@ -85,7 +88,7 @@ $(document).ready( function ()
    		event.preventDefault();
    		var data = table.$('input, select').serialize() + "&problem-id="+problem.id;
        	window.location.href = "/problems/"+problem.id+'/equipment/add?'+data;
-   	});	 
+   	});
 });
 </script>
 

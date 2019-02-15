@@ -5,6 +5,7 @@
     <div>
         <div class="w3-padding-large w3-white">
             <h2>Register New Software</h2>
+            <!-- Form to Register New Software -->
             {!! Form::open(['action' => 'SoftwareController@store', 'method' => 'POST']) !!}
             <table>
                 <tbody>

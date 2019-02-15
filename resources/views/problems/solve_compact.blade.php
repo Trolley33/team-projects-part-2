@@ -2,6 +2,7 @@
 @section('content')
 <div class="call_menu w3-center w3-padding w3-light-grey">
         <div class="compact">
+            <!-- Pop up when solve Problem is selected, where Solution notes can be entered -->
             <div class="w3-padding-large w3-white">
                 <h2>Mark Problem {{sprintf('%04d', $problem->id)}} as solved?</h2>
                 {!! Form::open(['action' => ['ProblemController@solve_problem', $problem->id], 'method' => 'POST']) !!}

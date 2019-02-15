@@ -3,8 +3,9 @@
 @section('content')
 <div class="w3-white w3-mobile" style="max-width: 1000px;padding: 20px 20px; margin: 50px auto;">
     <h2>Select User to Create Problem For</h2>
-    
+
     <form id="addUserForm">
+    <!-- List of Users -->
     <table id='user-table' class="display cell-border stripe hover">
         <thead>
             <tr>
@@ -23,8 +24,9 @@
             @endforeach
         </tbody>
 
-        
+
     </table>
+    <!-- Button to Create call for user -->
     <div style="text-align: center;">
         <input id="addUser" class="bigbutton w3-card w3-button w3-row" type="submit" value="Create Call for User" disabled/>
     </div>
@@ -34,9 +36,9 @@
 
 <script>
 var problem;
-$(document).ready( function () 
+$(document).ready( function ()
 {
-
+    //Enable button if a user is selected or changed
     $('input:radio[name="existing"]').change(
     function(){
         $('#addUser').prop('disabled', false);
@@ -47,7 +49,7 @@ $(document).ready( function ()
       $(this).children('.selectRadio').prop('checked', true);
       $('#addUser').prop('disabled', false);
     });
-
+    //Submit action for form
     $('#addUserForm').submit(function ()
     {
         window.location.href = '/problems/create/' + $("input[name='existing']:checked").val();

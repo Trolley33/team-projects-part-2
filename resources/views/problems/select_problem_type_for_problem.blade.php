@@ -5,6 +5,7 @@
 	<h2>Select Problem Type For New Problem</h2>
 	<h3>Creating problem for: {{$user->forename}} {{$user->surname}}</h3>
 	<form id="addProblemTypeForm">
+	<!-- List of problem types -->
 	<table id='problem-table' class="display cell-border stripe hover">
 		<thead>
 			<tr>
@@ -36,15 +37,15 @@
 </div>
 
 <script>
-$(document).ready( function () 
+$(document).ready( function ()
 {
-
+		//Enable Choose Problem type button if a Radio button is selected
     $('.selectBox').click(function ()
     {
     	$(this).children('.selectRadio').prop('checked', true);
     	$('#addProblemType').prop('disabled', false);
     });
-
+	//Enable Choose Problem type button if a different problem is selected
 	$('input:radio[name="ptype"]').change(
     	function(){
         $('#addProblemType').prop('disabled', false);
