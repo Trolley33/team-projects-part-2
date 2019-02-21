@@ -1,6 +1,5 @@
 # Team4 Help Desk
-This github is a clone of /var/www/html/team-projects found on the Google Cloud Platform SSH connection.
-Any changes made there should be reflected here (short of some log files).
+Clone of Team Project Coursework 2018-2019 for laravel section. Content is a help desk system for logging calls.
 
 # Deliverable 1 Documentation
 [Notes Doc](https://docs.google.com/document/d/1hxA8y80uuC4m_X78gpybCNT0ur6G8_B8W0bJle8Bcr4/edit).
